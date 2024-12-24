@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
@@ -32,6 +34,7 @@ fun AppButton(
     buttonType: ButtonType,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    minHeight: Dp = 56.dp,
     isEnabled: Boolean = true,
     colors: ButtonColors = AppButtonDefaults.colors(buttonType),
     border: BorderStroke = AppButtonDefaults.border(buttonType, isEnabled),
@@ -41,7 +44,7 @@ fun AppButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.sizeIn(minHeight = minHeight),
         onClick = onClick,
         interactionSource = interactionSource,
         enabled = isEnabled,
@@ -59,6 +62,7 @@ fun AppButton(
     buttonType: ButtonType,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    minHeight: Dp = 56.dp,
     isEnabled: Boolean = true,
     colors: ButtonColors = AppButtonDefaults.colors(buttonType),
     border: BorderStroke = AppButtonDefaults.border(buttonType, isEnabled),
@@ -70,6 +74,7 @@ fun AppButton(
 ) {
     AppButton(
         modifier = modifier,
+        minHeight = minHeight,
         buttonType = buttonType,
         onClick = onClick,
         interactionSource = interactionSource,

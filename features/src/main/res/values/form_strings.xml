@@ -1,3 +1,5 @@
 <resources>
     <string name="form_phone_placeholder">Phone</string>
+    <string name="form_password_placeholder">Password</string>
+    <string name="form_login">Log-in</string>
 </resources>

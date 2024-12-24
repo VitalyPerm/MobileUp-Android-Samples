@@ -1,5 +1,7 @@
 digraph {
+form
 menu
 root
+root -> form
 root -> menu
 }
