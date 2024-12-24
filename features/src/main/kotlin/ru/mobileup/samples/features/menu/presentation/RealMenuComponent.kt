@@ -1,10 +1,15 @@
 package ru.mobileup.samples.features.menu.presentation
 
 import com.arkivanov.decompose.ComponentContext
+import ru.mobileup.samples.features.menu.domain.Sample
 
 class RealMenuComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val onOutput: (MenuComponent.Output) -> Unit
+
 ) : ComponentContext by componentContext, MenuComponent {
 
-    override fun onButtonClick() = Unit
+    override fun onButtonClick(sample: Sample) {
+        onOutput(MenuComponent.Output.SampleChosen(sample))
+    }
 }

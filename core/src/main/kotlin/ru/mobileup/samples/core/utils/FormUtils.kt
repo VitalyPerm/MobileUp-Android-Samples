@@ -1,6 +1,8 @@
 package ru.mobileup.samples.core.utils
 
 import com.arkivanov.decompose.ComponentContext
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.kmm_form_validation.control.CheckControl
 import ru.mobileup.kmm_form_validation.control.InputControl
@@ -41,3 +43,6 @@ fun ComponentContext.formValidator(
 fun ComponentContext.dynamicValidationResult(
     formValidator: FormValidator
 ): StateFlow<FormValidationResult> = componentScope.dynamicValidationResult(formValidator)
+
+@OptIn(DelicateCoroutinesApi::class)
+fun fakeInputControl() = InputControl(GlobalScope)

@@ -15,6 +15,7 @@ import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
+import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 
 @Suppress("ModifierReused")
@@ -30,6 +31,7 @@ fun RootUi(
     Children(childStack, modifier) { child ->
         when (val instance = child.instance) {
             is RootComponent.Child.Menu -> MenuUi(instance.component)
+            is RootComponent.Child.Form -> FormUi(instance.component)
         }
     }
 

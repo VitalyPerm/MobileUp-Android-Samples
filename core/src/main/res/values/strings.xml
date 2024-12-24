@@ -11,4 +11,8 @@
     <string name="error_ssl_handshake">Failed to establish a connection due to network security settings. Check your device\'s date and time.</string>
     <string name="error_server">Server error. Please try again later.</string>
     <string name="error_matching_application_not_found">No applications found to perform the action.</string>
+
+    <!-- Validation -->
+    <string name="field_error_is_blank">Input is required</string>
+    <string name="field_error_invalid_format">Invalid input format</string>
 </resources>

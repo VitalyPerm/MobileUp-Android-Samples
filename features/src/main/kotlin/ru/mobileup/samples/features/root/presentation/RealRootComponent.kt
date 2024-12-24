@@ -7,8 +7,11 @@ import com.arkivanov.decompose.router.stack.childStack
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
+import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
+import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
+import ru.mobileup.samples.features.menu.presentation.MenuComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -35,8 +38,20 @@ class RealRootComponent(
     ): RootComponent.Child = when (config) {
         is ChildConfig.Menu -> {
             RootComponent.Child.Menu(
-                componentFactory.createMenuComponent(componentContext)
+                componentFactory.createMenuComponent(componentContext, ::onMenuOutput)
             )
+        }
+
+        is ChildConfig.Form -> {
+            RootComponent.Child.Form(
+                componentFactory.createFormComponent(componentContext)
+            )
+        }
+    }
+
+    private fun onMenuOutput(output: MenuComponent.Output) {
+        when (output) {
+            is MenuComponent.Output.SampleChosen -> navigation.safePush(ChildConfig.Form)
         }
     }
 
@@ -45,5 +60,8 @@ class RealRootComponent(
 
         @Serializable
         data object Menu : ChildConfig
+
+        @Serializable
+        data object Form : ChildConfig
     }
 }

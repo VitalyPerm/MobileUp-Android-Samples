@@ -6,7 +6,8 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.menu.presentation.RealMenuComponent
 
 fun ComponentFactory.createMenuComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    onOutput: (MenuComponent.Output) -> Unit
 ): MenuComponent {
-    return RealMenuComponent(componentContext)
+    return RealMenuComponent(componentContext, onOutput)
 }
