@@ -1,3 +1,4 @@
 <resources>
     <string name="menu_item_form">Form</string>
+    <string name="menu_item_video">Video</string>
 </resources>

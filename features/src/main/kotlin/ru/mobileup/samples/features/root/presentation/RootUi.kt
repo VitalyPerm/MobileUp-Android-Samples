@@ -17,6 +17,7 @@ import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
+import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
 @Composable
@@ -32,6 +33,7 @@ fun RootUi(
         when (val instance = child.instance) {
             is RootComponent.Child.Menu -> MenuUi(instance.component)
             is RootComponent.Child.Form -> FormUi(instance.component)
+            is RootComponent.Child.Video -> VideoUi(instance.component)
         }
     }
 

@@ -8,6 +8,7 @@ data class CustomColors(
     val background: BackgroundColors,
     val text: TextColors,
     val icon: IconColors,
+    val palette: PaletteColors,
     val button: ButtonColors,
     val border: BorderColors,
     val textField: TextFieldColors,
@@ -25,6 +26,7 @@ data class TextColors(
     val secondaryDisabled: Color,
     val invert: Color,
     val invertDisabled: Color,
+    val warning: Color,
     val error: Color
 )
 
@@ -33,7 +35,21 @@ data class IconColors(
     val primaryDisabled: Color,
     val secondary: Color,
     val invert: Color,
+    val warning: Color,
     val error: Color,
+)
+
+data class PaletteColors(
+    val white: Color,
+    val white10: Color,
+    val black: Color,
+    val black50: Color,
+    val black10: Color,
+    val grayscale: ExtendedPaletteColor
+)
+
+data class ExtendedPaletteColor(
+    val l900: Color
 )
 
 data class ButtonColors(
