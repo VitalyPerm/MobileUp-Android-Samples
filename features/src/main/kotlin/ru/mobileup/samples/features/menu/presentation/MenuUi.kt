@@ -37,6 +37,15 @@ fun MenuUi(
                 component.onButtonClick(Sample.Form)
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_video),
+            onClick = {
+                component.onButtonClick(Sample.Video)
+            }
+        )
     }
 }
 

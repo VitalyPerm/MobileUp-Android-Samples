@@ -5,7 +5,9 @@ import ru.mobileup.samples.core.theme.custom.BackgroundColors
 import ru.mobileup.samples.core.theme.custom.BorderColors
 import ru.mobileup.samples.core.theme.custom.ButtonColors
 import ru.mobileup.samples.core.theme.custom.CustomColors
+import ru.mobileup.samples.core.theme.custom.ExtendedPaletteColor
 import ru.mobileup.samples.core.theme.custom.IconColors
+import ru.mobileup.samples.core.theme.custom.PaletteColors
 import ru.mobileup.samples.core.theme.custom.TextColors
 import ru.mobileup.samples.core.theme.custom.TextFieldColors
 
@@ -22,6 +24,7 @@ val LightAppColors = CustomColors(
         secondaryDisabled = Color(0xFF797979).copy(alpha = 0.4f),
         invert = Color(0xFFFFFFFF),
         invertDisabled = Color(0xFFFFFFFF).copy(alpha = 0.4f),
+        warning = Color(0xFFFAA105),
         error = Color(0xFFB00020)
     ),
     icon = IconColors(
@@ -29,7 +32,18 @@ val LightAppColors = CustomColors(
         primaryDisabled = Color(0xFF000000).copy(alpha = 0.4f),
         secondary = Color(0xFF797979),
         invert = Color(0xFFFFFFFF),
+        warning = Color(0xFFFAA105),
         error = Color(0xFFB00020)
+    ),
+    palette = PaletteColors(
+        white = Color(0xFFFFFFFF),
+        white10 = Color(0x1AFFFFFF),
+        black = Color(0xFF000000),
+        black50 = Color(0x80000000),
+        black10 = Color(0x1A000000),
+        grayscale = ExtendedPaletteColor(
+            l900 = Color(0xFF151515)
+        )
     ),
     button = ButtonColors(
         primary = Color(0xFF6750A4),

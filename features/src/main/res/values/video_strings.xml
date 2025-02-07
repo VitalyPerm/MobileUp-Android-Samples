@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="confirm_btn">Save</string>
+    <string name="dismiss_btn">Cancel</string>
+    <string name="reset_btn">Reset</string>
+
+    <string name="menu_item_recorder">Recorder</string>
+    <string name="menu_item_player">Player</string>
+
+    <string name="recorder_initialization_failed">Camera initialization failed</string>
+    <string name="recorder_failed">Recording failed</string>
+    <string name="recorder_stop_failed">Minimum duration is 1 second</string>
+
+    <string name="recorder_enable">Enable</string>
+    <string name="recorder_disable">Disable</string>
+
+    <string name="player_cut_start">Start</string>
+    <string name="player_cut_end">End</string>
+
+    <string name="player_reset_transform_title">Reset cropping</string>
+    <string name="player_reset_transform_message">Are you sure you want to reset the cropping?</string>
+
+    <string name="save_dialog_title">Save video</string>
+    <string name="save_dialog_message">Are you sure you want to save the video?</string>
+
+    <string name="render_success">Video saved to the location "%s"</string>
+    <string name="render_canceled">Video render canceled</string>
+    <string name="render_error">Video render failed</string>
+</resources>

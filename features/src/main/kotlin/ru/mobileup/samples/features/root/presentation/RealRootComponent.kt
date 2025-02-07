@@ -11,7 +11,9 @@ import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
+import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
+import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -47,11 +49,22 @@ class RealRootComponent(
                 componentFactory.createFormComponent(componentContext)
             )
         }
+
+        is ChildConfig.Video -> {
+            RootComponent.Child.Video(
+                componentFactory.createVideoComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
         when (output) {
-            is MenuComponent.Output.SampleChosen -> navigation.safePush(ChildConfig.Form)
+            is MenuComponent.Output.SampleChosen -> navigation.safePush(
+                when (output.sample) {
+                    Sample.Form -> ChildConfig.Form
+                    Sample.Video -> ChildConfig.Video
+                }
+            )
         }
     }
 
@@ -63,5 +76,8 @@ class RealRootComponent(
 
         @Serializable
         data object Form : ChildConfig
+
+        @Serializable
+        data object Video : ChildConfig
     }
 }

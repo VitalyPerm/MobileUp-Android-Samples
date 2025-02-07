@@ -44,6 +44,19 @@ dependencies {
     implementation(libs.bundles.replica)
     api(libs.moko.resources)
     implementation(libs.moko.resourcesCompose)
+
+    // Camera
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.video)
+    implementation(libs.camera.view)
+
+    // Player
+    implementation(libs.media3.exoplayer)
+
+    // Transformer
+    implementation(libs.media3.transformer)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles
