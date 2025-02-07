@@ -16,6 +16,8 @@ interface VideoPlayerComponent {
 
     val playerState: StateFlow<PlayerState>
 
+    val resetTransformDialog: StandardDialogControl
+
     val saveDialog: StandardDialogControl
 
     fun onUpdateConfig(playerConfig: PlayerConfig)
@@ -27,6 +29,8 @@ interface VideoPlayerComponent {
     fun onUpdateSpeed(speed: Float)
 
     fun onUpdateVideoTransform(videoTransform: VideoTransform)
+
+    fun onResetVideoTransform()
 
     fun onCut(startPositionMs: Long, endPositionMs: Long)
 

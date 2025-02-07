@@ -20,6 +20,8 @@ class FakeVideoPlayerComponent : VideoPlayerComponent {
         PlayerState.build()
     )
 
+    override val resetTransformDialog: StandardDialogControl = fakeStandardDialogControl()
+
     override val saveDialog: StandardDialogControl = fakeStandardDialogControl()
 
     override fun onUpdateConfig(playerConfig: PlayerConfig) = Unit
@@ -31,6 +33,8 @@ class FakeVideoPlayerComponent : VideoPlayerComponent {
     override fun onUpdateSpeed(speed: Float) = Unit
 
     override fun onUpdateVideoTransform(videoTransform: VideoTransform) = Unit
+
+    override fun onResetVideoTransform() = Unit
 
     override fun onCut(startPositionMs: Long, endPositionMs: Long) = Unit
 

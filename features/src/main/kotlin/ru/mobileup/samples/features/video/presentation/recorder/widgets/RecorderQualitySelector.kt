@@ -52,7 +52,7 @@ private fun RecorderQualitySelectorPreview() {
         Box(modifier = Modifier.fillMaxWidth()) {
             RecorderQualitySelector(
                 recorderConfig = RecorderConfig.Quality,
-                quality = Quality.UHD,
+                quality = Quality.FHD,
                 onQualitySelected = { }
             )
         }

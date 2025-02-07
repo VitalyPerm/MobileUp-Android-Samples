@@ -5,9 +5,9 @@ import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.dialog.standard.DialogButton
-import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.core.dialog.standard.StandardDialogData
 import ru.mobileup.samples.core.dialog.standard.standardDialogControl
 import ru.mobileup.samples.core.message.data.MessageService
@@ -45,10 +45,14 @@ class RealVideoPlayerComponent(
         }
     )
 
-    override val saveDialog: StandardDialogControl = standardDialogControl("saveDialog")
+    override val saveDialog = standardDialogControl("saveDialog")
+
+    override val resetTransformDialog = standardDialogControl("resetTransformDialog")
 
     override fun onUpdateConfig(playerConfig: PlayerConfig) {
-        this.playerConfig.value = playerConfig
+        this.playerConfig.update {
+            playerConfig
+        }
     }
 
     override fun onSaveClick() = saveDialog.show(
@@ -67,33 +71,52 @@ class RealVideoPlayerComponent(
     )
 
     override fun onUpdateVolume(volume: Float) {
-        playerState.value = playerState.value.copy(
-            volume = volume
-        )
+        playerState.update {
+            it.copy(volume = volume)
+        }
     }
 
     override fun onUpdateSpeed(speed: Float) {
-        playerState.value = playerState.value.copy(
-            speed = speed
-        )
+        playerState.update {
+            it.copy(speed = speed)
+        }
     }
 
     override fun onUpdateVideoTransform(videoTransform: VideoTransform) {
-        playerState.value = playerState.value.copy(
-            videoTransform = videoTransform
+        playerState.update {
+            it.copy(videoTransform = videoTransform)
+        }
+    }
+
+    override fun onResetVideoTransform() {
+        resetTransformDialog.show(
+            StandardDialogData(
+                title = R.string.player_reset_transform_title.strResDesc(),
+                message = R.string.player_reset_transform_message.strResDesc(),
+                confirmButton = DialogButton(
+                    text = R.string.reset_btn.strResDesc(),
+                    action = {
+                        onUpdateVideoTransform(VideoTransform.defaultValue)
+                    }
+                ),
+                dismissButton = DialogButton(
+                    text = R.string.dismiss_btn.strResDesc(),
+                    action = resetTransformDialog::dismiss
+                )
+            )
         )
     }
 
     override fun onCut(startPositionMs: Long, endPositionMs: Long) {
-        playerState.value = playerState.value.copy(
-            startPositionMs = startPositionMs, endPositionMs = endPositionMs
-        )
+        playerState.update {
+            it.copy(startPositionMs = startPositionMs, endPositionMs = endPositionMs)
+        }
     }
 
     override fun onUpdateFilter(glFilter: GlFilter) {
-        playerState.value = playerState.value.copy(
-            glFilter = glFilter
-        )
+        playerState.update {
+            it.copy(glFilter = glFilter)
+        }
     }
 
     override fun onCancelRender() {
@@ -113,13 +136,15 @@ class RealVideoPlayerComponent(
                 videoTransform = state.videoTransform,
                 glFilter = state.glFilter
             ).collect { renderState ->
-                playerState.value = playerState.value.copy(
-                    renderProgress = if (renderState is RenderState.InProgress) {
-                        renderState.value
-                    } else {
-                        null
-                    }
-                )
+                playerState.update {
+                    it.copy(
+                        renderProgress = if (renderState is RenderState.InProgress) {
+                            renderState.value
+                        } else {
+                            null
+                        }
+                    )
+                }
 
                 when (renderState) {
                     is RenderState.Error -> {

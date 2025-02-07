@@ -26,8 +26,8 @@ import ru.mobileup.samples.features.video.presentation.widgets.SlideAnimation
 fun BoxScope.PlayerCropSelector(
     modifier: Modifier = Modifier,
     playerConfig: PlayerConfig,
-    onCropCompleted: () -> Unit,
-    onCropCanceled: () -> Unit
+    onCompleteClick: () -> Unit,
+    onResetClick: () -> Unit
 ) {
     SlideAnimation(
         modifier = modifier.align(Alignment.BottomStart),
@@ -44,7 +44,7 @@ fun BoxScope.PlayerCropSelector(
                     .background(CustomTheme.colors.palette.black50)
                     .padding(12.dp)
                     .clickable {
-                        onCropCanceled()
+                        onResetClick()
                     }
             )
 
@@ -56,7 +56,7 @@ fun BoxScope.PlayerCropSelector(
                     .background(CustomTheme.colors.palette.black50)
                     .padding(12.dp)
                     .clickable {
-                        onCropCompleted()
+                        onCompleteClick()
                     }
             )
         }
@@ -70,8 +70,8 @@ private fun PlayerCropSelectorPreview() {
         Box(modifier = Modifier.fillMaxWidth()) {
             PlayerCropSelector(
                 playerConfig = PlayerConfig.Crop,
-                onCropCompleted = { },
-                onCropCanceled = { }
+                onCompleteClick = { },
+                onResetClick = { }
             )
         }
     }

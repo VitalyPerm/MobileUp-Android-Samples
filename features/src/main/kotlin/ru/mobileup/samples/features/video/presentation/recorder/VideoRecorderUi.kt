@@ -39,7 +39,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
-import ru.mobileup.samples.core.utils.millisToMS
+import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
 import ru.mobileup.samples.features.video.data.utils.name
@@ -177,7 +177,7 @@ private fun VideoRecorderContent(
     onUpdateConfig: (RecorderConfig) -> Unit
 ) {
     val recorderDurationString by remember(recorderState.durationMs) {
-        derivedStateOf { millisToMS(recorderState.durationMs) }
+        derivedStateOf { formatMillisToMS(recorderState.durationMs) }
     }
 
     val fling = PagerDefaults.flingBehavior(
@@ -352,7 +352,11 @@ private fun VideoRecorderContent(
                     isRecording = recorderState.isRecording,
                     onClick = {
                         if (recorderState.isRecording) {
-                            cameraController.stopRecording()
+                            if (recorderState.durationMs < 1000) {
+                                component.onRecordStopFailed()
+                            } else {
+                                cameraController.stopRecording()
+                            }
                         } else {
                             cameraController.startRecording()
                         }

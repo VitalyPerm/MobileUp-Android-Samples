@@ -6,12 +6,13 @@ import androidx.camera.video.Quality
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.Resource
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.video.domain.states.RecorderState
 import ru.mobileup.samples.features.video.domain.RecorderConfig
+import ru.mobileup.samples.features.video.domain.states.RecorderState
 
 class RealVideoRecorderComponent(
     componentContext: ComponentContext,
@@ -24,19 +25,21 @@ class RealVideoRecorderComponent(
     override val recorderState = MutableStateFlow(RecorderState.build())
 
     override fun onUpdateConfig(recorderConfig: RecorderConfig) {
-        this.recorderConfig.value = recorderConfig
+        this.recorderConfig.update {
+            recorderConfig
+        }
     }
 
     override fun onUpdateIsRecording(isRecording: Boolean) {
-        recorderState.value = recorderState.value.copy(
-            isRecording = isRecording
-        )
+        recorderState.update {
+            it.copy(isRecording = isRecording)
+        }
     }
 
     override fun onUpdateDuration(durationMs: Long) {
-        recorderState.value = recorderState.value.copy(
-            durationMs = durationMs
-        )
+        recorderState.update {
+            it.copy(durationMs = durationMs)
+        }
     }
 
     override fun onRecordInitializationFailed() {
@@ -63,27 +66,37 @@ class RealVideoRecorderComponent(
         )
     }
 
-    override fun onUpdateCameraSelector(cameraSelector: CameraSelector) {
-        recorderState.value = recorderState.value.copy(
-            cameraSelector = cameraSelector
+    override fun onRecordStopFailed() {
+        messageService.showMessage(
+            Message(
+                text = StringDesc.Resource(
+                    R.string.recorder_stop_failed
+                )
+            )
         )
+    }
+
+    override fun onUpdateCameraSelector(cameraSelector: CameraSelector) {
+        recorderState.update {
+            it.copy(cameraSelector = cameraSelector)
+        }
     }
 
     override fun onUpdateFps(fps: Int) {
-        recorderState.value = recorderState.value.copy(
-            fps = fps
-        )
+        recorderState.update {
+            it.copy(fps = fps)
+        }
     }
 
     override fun onUpdateQuality(quality: Quality) {
-        recorderState.value = recorderState.value.copy(
-            quality = quality
-        )
+        recorderState.update {
+            it.copy(quality = quality)
+        }
     }
 
     override fun onUpdateTorchState(torchState: Boolean) {
-        recorderState.value = recorderState.value.copy(
-            torchState = torchState
-        )
+        recorderState.update {
+            it.copy(torchState = torchState)
+        }
     }
 }

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.millisToMS
+import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.domain.PlayerConfig
 import ru.mobileup.samples.features.video.presentation.widgets.SlideAnimation
@@ -62,7 +62,7 @@ fun BoxScope.PlayerCutSelector(
                 )
 
                 Text(
-                    text = millisToMS((startPositionMs / speed).toLong()),
+                    text = formatMillisToMS((startPositionMs / speed).toLong()),
                     color = CustomTheme.colors.text.invert,
                     modifier = Modifier
                 )
@@ -122,7 +122,7 @@ fun BoxScope.PlayerCutSelector(
                 )
 
                 Text(
-                    text = millisToMS((endPositionMs / speed).toLong()),
+                    text = formatMillisToMS((endPositionMs / speed).toLong()),
                     color = CustomTheme.colors.text.invert,
                     modifier = Modifier
                 )

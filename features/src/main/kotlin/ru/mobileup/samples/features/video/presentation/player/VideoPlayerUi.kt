@@ -57,11 +57,10 @@ import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
-import ru.mobileup.samples.core.utils.millisToMS
+import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
 import ru.mobileup.samples.features.video.domain.PlayerConfig
-import ru.mobileup.samples.features.video.domain.VideoTransform
 import ru.mobileup.samples.features.video.domain.events.PlayerEvent
 import ru.mobileup.samples.features.video.domain.rotate
 import ru.mobileup.samples.features.video.domain.states.PlayerState
@@ -209,6 +208,7 @@ fun VideoPlayerUi(
     }
 
     SystemBars(transparentNavigationBar = true)
+    StandardDialog(component.resetTransformDialog)
     StandardDialog(component.saveDialog)
 
     VideoPlayerContent(
@@ -446,11 +446,11 @@ private fun VideoPlayerContent(
 
                         PlayerCropSelector(
                             playerConfig = playerConfig,
-                            onCropCompleted = {
+                            onCompleteClick = {
                                 component.onUpdateConfig(PlayerConfig.Off)
                             },
-                            onCropCanceled = {
-                                component.onUpdateVideoTransform(VideoTransform.defaultValue)
+                            onResetClick = {
+                                component.onResetVideoTransform()
                             }
                         )
 
@@ -478,7 +478,7 @@ private fun VideoPlayerContent(
                             .padding(horizontal = 12.dp)
                     ) {
                         Text(
-                            text = millisToMS((videoProgress * playerState.duration).toLong()),
+                            text = formatMillisToMS((videoProgress * playerState.duration).toLong()),
                             color = CustomTheme.colors.text.invert,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
@@ -506,7 +506,7 @@ private fun VideoPlayerContent(
                         )
 
                         Text(
-                            text = millisToMS(playerState.duration),
+                            text = formatMillisToMS(playerState.duration),
                             color = CustomTheme.colors.text.invert,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )

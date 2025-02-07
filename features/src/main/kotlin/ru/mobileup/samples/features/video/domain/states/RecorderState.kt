@@ -26,7 +26,7 @@ data class RecorderState(
         fun build() = RecorderState(
             cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
             fps = 60,
-            quality = Quality.UHD,
+            quality = Quality.FHD,
             torchState = false,
             isRecording = false,
             durationMs = 0L
