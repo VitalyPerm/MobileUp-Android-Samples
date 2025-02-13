@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
+import ru.mobileup.samples.core.utils.clickableNoRipple
 import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
@@ -216,6 +217,19 @@ private fun VideoRecorderContent(
 
     val blurStrength = remember { Animatable(0f) }
 
+    fun animateBlur() {
+        scope.launch {
+            blurStrength.snapTo(0f)
+            blurStrength.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize().background(CustomTheme.colors.palette.black)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -325,7 +339,9 @@ private fun VideoRecorderContent(
                 )
             }
 
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().clickableNoRipple {
+                onUpdateConfig(RecorderConfig.Off)
+            }) {
                 AndroidView(
                     modifier = Modifier
                         .fillMaxSize()
@@ -354,6 +370,9 @@ private fun VideoRecorderContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
+                .clickableNoRipple {
+                    // Do nothing
+                }
         ) {
             Box {
                 RecorderCameraSelector(
@@ -361,30 +380,26 @@ private fun VideoRecorderContent(
                     cameraSelector = recorderState.cameraSelector,
                     onCameraSelected = {
                         component.onUpdateCameraSelector(it)
-
-                        scope.launch {
-                            blurStrength.snapTo(0f)
-                            blurStrength.animateTo(
-                                targetValue = 1f,
-                                animationSpec = tween(
-                                    durationMillis = 1000,
-                                    easing = FastOutSlowInEasing
-                                )
-                            )
-                        }
+                        animateBlur()
                     }
                 )
 
                 RecorderFpsSelector(
                     recorderConfig = recorderConfig,
                     fps = recorderState.fps,
-                    onFpsSelected = component::onUpdateFps
+                    onFpsSelected = {
+                        component.onUpdateFps(it)
+                        animateBlur()
+                    }
                 )
 
                 RecorderQualitySelector(
                     recorderConfig = recorderConfig,
                     quality = recorderState.quality,
-                    onQualitySelected = component::onUpdateQuality
+                    onQualitySelected = {
+                        component.onUpdateQuality(it)
+                        animateBlur()
+                    }
                 )
 
                 RecorderTorchSelector(
