@@ -1,11 +1,13 @@
 package ru.mobileup.samples.features.video.presentation.recorder.controller
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Range
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraEffect
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.MirrorMode
 import androidx.camera.core.Preview
 import androidx.camera.core.UseCaseGroup
@@ -37,6 +39,7 @@ class CameraController(
     private val previewView: PreviewView,
     private val onCameraRecordingEvent: (CameraEvent) -> Unit,
     private val onCameraInitializationFailed: () -> Unit,
+    private val onPlaceHolderUpdated: (Bitmap?) -> Unit
 ) {
     private val cameraProvider = ProcessCameraProvider.getInstance(context).get()
 
@@ -102,6 +105,9 @@ class CameraController(
                 val isCameraUpdated = field.cameraSelector != value.cameraSelector
 
                 field = value
+
+                onPlaceHolderUpdated(previewView.bitmap)
+
                 setupVideoUseCase()
 
                 if (isCameraUpdated) {
@@ -185,9 +191,19 @@ class CameraController(
             it.setGlFilter(glFilter)
         }
 
+        val imageAnalysis = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+
+        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) {
+            onPlaceHolderUpdated(null)
+            imageAnalysis.clearAnalyzer()
+        }
+
         val useCaseGroup = UseCaseGroup.Builder()
             .addUseCase(preview)
             .addUseCase(videoCapture)
+            .addUseCase(imageAnalysis)
             .apply {
                 cameraEffect?.let { addEffect(it) }
             }

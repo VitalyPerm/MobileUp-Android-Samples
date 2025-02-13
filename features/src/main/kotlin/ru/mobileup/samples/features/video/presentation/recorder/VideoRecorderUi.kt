@@ -1,6 +1,14 @@
 package ru.mobileup.samples.features.video.presentation.recorder
 
+import android.graphics.Bitmap
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
@@ -27,15 +35,22 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import androidx.compose.ui.viewinterop.AndroidView
+import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
@@ -72,6 +87,10 @@ fun VideoRecorderUi(
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
         )
+    }
+
+    var cameraPlaceHolder: Pair<Bitmap?, Boolean> by remember {
+        mutableStateOf(null to false)
     }
 
     val filtersPagerState = rememberPagerState(
@@ -113,6 +132,12 @@ fun VideoRecorderUi(
                 onCameraInitializationFailed = {
                     component.onRecordInitializationFailed()
                 },
+                onPlaceHolderUpdated = {
+                    cameraPlaceHolder = Pair(
+                        first = it ?: cameraPlaceHolder.first,
+                        second = it != null
+                    )
+                }
             )
         )
     }
@@ -149,6 +174,7 @@ fun VideoRecorderUi(
         filtersPagerState = filtersPagerState,
         previewTransformableState = previewTransformableState,
         previewView = previewView,
+        cameraPlaceHolder = cameraPlaceHolder,
         cameraController = cameraController,
         onUpdateConfig = {
             if (!recorderState.isRecording) {
@@ -173,9 +199,12 @@ private fun VideoRecorderContent(
     filtersPagerState: PagerState,
     previewTransformableState: TransformableState,
     previewView: PreviewView,
+    cameraPlaceHolder: Pair<Bitmap?, Boolean>,
     cameraController: CameraController,
     onUpdateConfig: (RecorderConfig) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     val recorderDurationString by remember(recorderState.durationMs) {
         derivedStateOf { formatMillisToMS(recorderState.durationMs) }
     }
@@ -185,7 +214,9 @@ private fun VideoRecorderContent(
         pagerSnapDistance = PagerSnapDistance.atMost(15)
     )
 
-    Box(modifier = modifier.fillMaxSize()) {
+    val blurStrength = remember { Animatable(0f) }
+
+    Box(modifier = modifier.fillMaxSize().background(CustomTheme.colors.palette.black)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier = Modifier
@@ -294,12 +325,29 @@ private fun VideoRecorderContent(
                 )
             }
 
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .transformable(previewTransformableState),
-                factory = remember { { previewView } },
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .transformable(previewTransformableState),
+                    factory = remember { { previewView } },
+                )
+
+                this@Column.AnimatedVisibility(
+                    visible = cameraPlaceHolder.second,
+                    enter = EnterTransition.None,
+                    exit = fadeOut()
+                ) {
+                    cameraPlaceHolder.first?.let {
+                        Image(
+                            modifier = Modifier.fillMaxSize().blur((blurStrength.value * 32.dp)),
+                            bitmap = it.asImageBitmap(),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
         }
 
         Column(
@@ -311,7 +359,20 @@ private fun VideoRecorderContent(
                 RecorderCameraSelector(
                     recorderConfig = recorderConfig,
                     cameraSelector = recorderState.cameraSelector,
-                    onCameraSelected = component::onUpdateCameraSelector
+                    onCameraSelected = {
+                        component.onUpdateCameraSelector(it)
+
+                        scope.launch {
+                            blurStrength.snapTo(0f)
+                            blurStrength.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(
+                                    durationMillis = 1000,
+                                    easing = FastOutSlowInEasing
+                                )
+                            )
+                        }
+                    }
                 )
 
                 RecorderFpsSelector(
