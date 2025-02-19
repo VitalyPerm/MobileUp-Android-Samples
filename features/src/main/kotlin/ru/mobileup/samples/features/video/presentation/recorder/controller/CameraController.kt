@@ -7,6 +7,7 @@ import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraEffect
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.MirrorMode
 import androidx.camera.core.Preview
@@ -30,6 +31,7 @@ import ru.mobileup.samples.features.video.domain.events.CameraEvent
 import ru.mobileup.samples.features.video.domain.events.RecordingError
 import ru.mobileup.samples.features.video.domain.events.RecordingResult
 import ru.mobileup.samples.features.video.domain.states.RecorderState
+import kotlin.math.abs
 
 private const val TAG = "Camera"
 
@@ -46,6 +48,7 @@ class CameraController(
     private var cameraLink: Camera? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var isReleased = false
+    private var exposureRange: Range<Int> = Range(0, 0)
 
     private var recording: Recording? = null
     private var recordingInProgress: Boolean = false
@@ -139,6 +142,26 @@ class CameraController(
         cameraLink?.cameraControl?.setZoomRatio(zoomValue)
     }
 
+    fun focusChange(focusMeteringAction: FocusMeteringAction) {
+        cameraLink?.cameraControl?.startFocusAndMetering(focusMeteringAction)
+    }
+
+    fun exposureChange(exposure: Float) {
+        val newExposure = when {
+            exposure > 0 -> {
+                exposureRange.upper * exposure
+            }
+
+            exposure < 0 -> {
+                exposureRange.lower * abs(exposure)
+            }
+
+            else -> 0
+        }.toInt()
+
+        cameraLink?.cameraControl?.setExposureCompensationIndex(newExposure)
+    }
+
     fun changeTorchState(enabled: Boolean) {
         if (cameraLink?.cameraInfo?.hasFlashUnit() == true &&
             recorderState.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
@@ -216,6 +239,7 @@ class CameraController(
                 useCaseGroup = useCaseGroup
             ).also {
                 cameraLink = it
+                exposureRange = it.cameraInfo.exposureState.exposureCompensationRange
             }
         } catch (e: Exception) {
             Logger.withTag(TAG).d("Camera initialization failed: $e")

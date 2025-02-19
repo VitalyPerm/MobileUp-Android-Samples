@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -33,7 +34,7 @@ private const val ANIMATION_DURATION_MS = 500
 private const val BUTTON_SIZE_DP = 64
 
 @Composable
-fun ColumnScope.RecordingButton(
+fun RecordingButton(
     isRecording: Boolean,
     onClick: () -> Unit,
 ) {
@@ -78,7 +79,6 @@ fun ColumnScope.RecordingButton(
     CircleButton(
         modifier = Modifier
             .size(BUTTON_SIZE_DP.dp)
-            .align(Alignment.CenterHorizontally)
             .clip(CircleShape)
             .clickable {
                 onClick()
