@@ -10,6 +10,7 @@ import ru.mobileup.samples.core.createMessageComponent
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
+import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
@@ -62,6 +63,12 @@ class RealRootComponent(
                 componentFactory.createCalendarComponent(componentContext)
             )
         }
+
+        ChildConfig.Chart -> {
+            RootComponent.Child.Chart(
+                componentFactory.createChartComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -71,6 +78,7 @@ class RealRootComponent(
                     Sample.Form -> ChildConfig.Form
                     Sample.Video -> ChildConfig.Video
                     Sample.Calendar -> ChildConfig.Calendar
+                    Sample.Chart -> ChildConfig.Chart
                 }
             )
         }
@@ -90,5 +98,8 @@ class RealRootComponent(
 
         @Serializable
         data object Calendar : ChildConfig
+
+        @Serializable
+        data object Chart : ChildConfig
     }
 }

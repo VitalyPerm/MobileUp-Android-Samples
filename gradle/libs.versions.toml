@@ -1,6 +1,6 @@
 [versions]
 minSdk = "26"
-compileSdk = "34"
+compileSdk = "35"
 targetSdk = "34"
 versionCode = "1"
 versionName = "1.0.0"
@@ -33,6 +33,7 @@ form = "1.0.0"
 securityCrypto = "1.1.0-alpha06"
 camera = "1.4.1"
 media3 = "1.4.1"
+vico = "2.0.1"
 calendar = "2.6.2"
 
 [libraries]
@@ -111,6 +112,8 @@ hyperion-addons-chucker = { module = "me.nemiron.hyperion:chucker", version.ref 
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 
 [bundles]
 decompose = ["decompose-core", "decompose-compose"]

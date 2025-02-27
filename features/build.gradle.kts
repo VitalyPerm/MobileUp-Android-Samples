@@ -60,6 +60,9 @@ dependencies {
 
     // Calendar
     implementation(libs.compose.calendar)
+
+    // Charts
+    implementation(libs.vico.compose)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles
