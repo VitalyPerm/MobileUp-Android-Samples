@@ -23,6 +23,9 @@ val AppTypography = CustomTypography(
     caption = CaptionTypography(
         regular = TextStyle(
             fontSize = 12.sp
+        ),
+        small = TextStyle(
+            fontSize = 9.sp
         )
     ),
     button = ButtonTypography(

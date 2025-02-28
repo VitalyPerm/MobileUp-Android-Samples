@@ -19,7 +19,8 @@ data class BodyTypography(
 )
 
 data class CaptionTypography(
-    val regular: TextStyle
+    val regular: TextStyle,
+    val small: TextStyle
 )
 
 data class ButtonTypography(
