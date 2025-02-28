@@ -33,6 +33,7 @@ form = "1.0.0"
 securityCrypto = "1.1.0-alpha06"
 camera = "1.4.1"
 media3 = "1.4.1"
+calendar = "2.6.2"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -72,6 +73,8 @@ compose-ui = { module = "androidx.compose.ui:ui" }
 compose-material = { module = "androidx.compose.material3:material3" }
 compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+
+compose-calendar = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "calendar"}
 
 security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCrypto" }

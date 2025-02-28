@@ -57,6 +57,9 @@ dependencies {
 
     // Transformer
     implementation(libs.media3.transformer)
+
+    // Calendar
+    implementation(libs.compose.calendar)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles

@@ -46,6 +46,15 @@ fun MenuUi(
                 component.onButtonClick(Sample.Video)
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_calendar),
+            onClick = {
+                component.onButtonClick(Sample.Calendar)
+            }
+        )
     }
 }
 
