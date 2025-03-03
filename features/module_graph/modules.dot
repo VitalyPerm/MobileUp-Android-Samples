@@ -1,7 +1,13 @@
 digraph {
+calendar
 form
 menu
+qr_code
 root
+video
+root -> calendar
 root -> form
 root -> menu
+root -> qr_code
+root -> video
 }
