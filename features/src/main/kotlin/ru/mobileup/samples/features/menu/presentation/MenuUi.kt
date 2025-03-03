@@ -55,6 +55,24 @@ fun MenuUi(
                 component.onButtonClick(Sample.Calendar)
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_qr_code_generator),
+            onClick = {
+                component.onButtonClick(Sample.QrCodeGenerator)
+            }
+        )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_qr_code_scanner),
+            onClick = {
+                component.onButtonClick(Sample.QrCodeScanner)
+            }
+        )
     }
 }
 
