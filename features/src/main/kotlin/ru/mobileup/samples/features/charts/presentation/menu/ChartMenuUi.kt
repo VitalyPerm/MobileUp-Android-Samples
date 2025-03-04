@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.menu.presentation
+package ru.mobileup.samples.features.charts.presentation.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,17 +9,15 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.menu.domain.Sample
+import ru.mobileup.samples.features.charts.domain.ChartMenu
 
 @Composable
-fun MenuUi(
-    component: MenuComponent,
+fun ChartMenuUi(
+    component: ChartMenuComponent,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -32,45 +30,19 @@ fun MenuUi(
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_form),
+            text = stringResource(R.string.chart_menu_cartesian_charts),
             onClick = {
-                component.onButtonClick(Sample.Form)
+                component.onChartMenuClick(ChartMenu.Cartesian)
             }
         )
 
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_video),
+            text = stringResource(R.string.chart_menu_radial_charts),
             onClick = {
-                component.onButtonClick(Sample.Video)
+                component.onChartMenuClick(ChartMenu.Radial)
             }
         )
-
-        AppButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_calendar),
-            onClick = {
-                component.onButtonClick(Sample.Calendar)
-            }
-        )
-
-        AppButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_chart),
-            onClick = {
-                component.onButtonClick(Sample.Chart)
-            }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MenuUiPreview() {
-    AppTheme {
-        MenuUi(FakeMenuComponent())
     }
 }
