@@ -1,7 +1,15 @@
 digraph {
+calendar
+charts
 form
 menu
+qr_code
 root
+video
+root -> calendar
+root -> charts
 root -> form
 root -> menu
+root -> qr_code
+root -> video
 }

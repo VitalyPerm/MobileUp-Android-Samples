@@ -103,7 +103,10 @@ fun CircleChart(
                     val color by remember(index) {
                         mutableStateOf(radialChartColors[index % radialChartColors.size])
                     }
-                    Box(Modifier.size(16.dp).background(color))
+                    Box(
+                        Modifier
+                            .size(16.dp)
+                            .background(color))
                     Text(text = slice.label)
                 }
             }

@@ -61,6 +61,12 @@ dependencies {
     // Calendar
     implementation(libs.compose.calendar)
 
+    // Qr code generation
+    implementation(libs.qrose)
+
+    // Qr code scanning
+    implementation(libs.barcode.scanning)
+
     // Charts
     implementation(libs.vico.compose)
 }

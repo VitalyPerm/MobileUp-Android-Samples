@@ -11,9 +11,11 @@ class RealRadialChartComponent(
     componentContext: ComponentContext
 ) : ComponentContext by componentContext, RadialChartComponent {
 
-    override val donutChartProducer = CircleChartDataProducer(ChartsData.CircleDiagramData.donutData())
+    override val donutChartProducer =
+        CircleChartDataProducer(ChartsData.CircleDiagramData.donutData())
 
-    override val pieChartDataProducer = CircleChartDataProducer(ChartsData.CircleDiagramData.pieData())
+    override val pieChartDataProducer =
+        CircleChartDataProducer(ChartsData.CircleDiagramData.pieData())
 
     init {
         componentScope.launch {

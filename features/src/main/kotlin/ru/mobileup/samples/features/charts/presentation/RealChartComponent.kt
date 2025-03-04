@@ -35,9 +35,11 @@ class RealChartComponent(
         ChildConfig.Menu -> ChartComponent.Child.Menu(
             componentFactory.createChartMenuComponent(componentContext, ::onChartMenuOutput)
         )
+
         ChildConfig.Cartesian -> ChartComponent.Child.Cartesian(
             componentFactory.createCartesianChartComponent(componentContext)
         )
+
         ChildConfig.Radial -> ChartComponent.Child.Radial(
             componentFactory.createRadialChartComponent(componentContext)
         )

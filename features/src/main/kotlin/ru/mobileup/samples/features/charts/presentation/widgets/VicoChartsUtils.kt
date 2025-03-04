@@ -21,7 +21,6 @@ val CandlestickRangeProvider = object : CartesianLayerRangeProvider {
         Y_STEP * ceil(maxY / Y_STEP)
 }
 
-
 fun markerBackground(
     backgroundColor: Color,
     borderColor: Color,

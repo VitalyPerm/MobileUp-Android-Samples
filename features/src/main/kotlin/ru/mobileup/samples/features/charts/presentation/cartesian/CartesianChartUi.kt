@@ -112,7 +112,12 @@ fun CartesianChartUi(
                             fill = LineCartesianLayer.LineFill.single(fill(lineColor1)),
                             pointConnector = LineCartesianLayer.PointConnector.cubic(0.2f),
                             areaFill = LineCartesianLayer.AreaFill.single(
-                                fill(verticalGradient(lineColor1.toArgb(), Color.Transparent.toArgb())),
+                                fill(
+                                    verticalGradient(
+                                        lineColor1.toArgb(),
+                                        Color.Transparent.toArgb()
+                                    )
+                                ),
                             )
                         ),
                     ),
@@ -208,7 +213,12 @@ fun CartesianChartUi(
                             fill = LineCartesianLayer.LineFill.single(comboChartsLineColors[1]),
                             pointConnector = LineCartesianLayer.PointConnector.cubic(0.2f),
                             areaFill = LineCartesianLayer.AreaFill.single(
-                                fill(verticalGradient(lineColor1.toArgb(), Color.Transparent.toArgb())),
+                                fill(
+                                    verticalGradient(
+                                        lineColor1.toArgb(),
+                                        Color.Transparent.toArgb()
+                                    )
+                                ),
                             )
                         ),
                         LineCartesianLayer.Line(
@@ -225,7 +235,10 @@ fun CartesianChartUi(
                         extraStore[LegendLabelKey].forEachIndexed { index, label ->
                             add(
                                 LegendItem(
-                                    shapeComponent(comboChartsLineColors[index], CorneredShape.Pill),
+                                    shapeComponent(
+                                        comboChartsLineColors[index],
+                                        CorneredShape.Pill
+                                    ),
                                     legendItemLabelComponent,
                                     label,
                                 )
