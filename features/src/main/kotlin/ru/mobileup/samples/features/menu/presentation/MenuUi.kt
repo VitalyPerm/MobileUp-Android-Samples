@@ -73,6 +73,15 @@ fun MenuUi(
                 component.onButtonClick(Sample.QrCodeScanner)
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_chart),
+            onClick = {
+                component.onButtonClick(Sample.Chart)
+            }
+        )
     }
 }
 

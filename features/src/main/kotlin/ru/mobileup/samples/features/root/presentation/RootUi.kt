@@ -16,6 +16,7 @@ import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
+import ru.mobileup.samples.features.charts.presentation.ChartUi
 import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.qr_code.presentation.generator.QrCodeGeneratorUi
@@ -40,6 +41,7 @@ fun RootUi(
             is RootComponent.Child.Calendar -> CalendarUi(instance.component)
             is RootComponent.Child.QrCodeGenerator -> QrCodeGeneratorUi(instance.component)
             is RootComponent.Child.QrCodeScanner -> QrCodeScannerUi(instance.component)
+            is RootComponent.Child.Chart -> ChartUi(instance.component)
         }
     }
 

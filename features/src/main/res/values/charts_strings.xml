@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_menu_cartesian_charts">Cartesian charts</string>
+    <string name="chart_menu_radial_charts">Radial charts</string>
+    <string name="chart_line">Line chart</string>
+    <string name="chart_column">Column chart</string>
+    <string name="chart_combo">Combo chart</string>
+    <string name="chart_candlestick">Candlestick chart</string>
+    <string name="chart_donut">Donut chart</string>
+    <string name="chart_pie">Pie chart</string>
+</resources>

@@ -66,6 +66,9 @@ dependencies {
 
     // Qr code scanning
     implementation(libs.barcode.scanning)
+
+    // Charts
+    implementation(libs.vico.compose)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles
