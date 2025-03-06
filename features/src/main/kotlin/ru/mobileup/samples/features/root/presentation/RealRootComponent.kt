@@ -15,10 +15,8 @@ import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
-import ru.mobileup.samples.features.qr_code.createQrCodeComponent
-import ru.mobileup.samples.features.qr_code.createQrCodeGeneratorComponent
-import ru.mobileup.samples.features.qr_code.createQrCodeScannerComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
+import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(

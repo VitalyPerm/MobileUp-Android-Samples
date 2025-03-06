@@ -16,4 +16,6 @@ class FakeNavigationNestedComponent : NavigationNestedComponent {
                 )
             )
         )
+
+    override val isBottomBarVisible = MutableStateFlow(false)
 }

@@ -5,11 +5,15 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
+import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.navigation.NavigationComponent.Tab
@@ -53,7 +57,13 @@ class RealNavigationComponent(
         }
     }
 
-    override val isBottomBarVisible = MutableStateFlow(true)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val isBottomBarVisible = stack.flatMapLatest {
+        when (val instance = it.active.instance) {
+            is NavigationComponent.Child.Nested -> instance.component.isBottomBarVisible
+            else -> flowOf(true)
+        }
+    }.stateIn(componentScope, SharingStarted.Eagerly, true)
 
     override fun onTabSelect(tab: Tab) = navigation.bringToFront(
         when (tab) {
@@ -62,8 +72,6 @@ class RealNavigationComponent(
             Tab.AlertDialogs -> Config.AlertDialogs
         }
     )
-
-    override fun onBottomBarVisibilityChange(isVisible: Boolean) = isBottomBarVisible.update { isVisible }
 
     @Serializable
     sealed interface Config {

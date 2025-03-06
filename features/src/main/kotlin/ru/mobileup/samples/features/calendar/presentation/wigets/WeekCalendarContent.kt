@@ -40,7 +40,6 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
-@Suppress("ModifierNotUsedAtRoot")
 @Composable
 fun WeekCalendarContent(
     selectedCalendarDay: CalendarDay?,
@@ -60,9 +59,10 @@ fun WeekCalendarContent(
         firstVisibleWeekDate = currentDate,
         firstDayOfWeek = daysOfWeek.first()
     )
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         WeekCalendar(
-            modifier = modifier,
             state = state,
             dayContent = { day ->
                 Day(

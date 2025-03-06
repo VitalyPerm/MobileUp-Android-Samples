@@ -9,6 +9,8 @@ interface NavigationNestedComponent {
 
     val stack: StateFlow<ChildStack<*, Child>>
 
+    val isBottomBarVisible: StateFlow<Boolean>
+
     sealed interface Child {
         class Main(val component: NavigationNestedMainComponent) : Child
         class LeafWithBottomBar(val component: NavigationNestedLeafComponent) : Child

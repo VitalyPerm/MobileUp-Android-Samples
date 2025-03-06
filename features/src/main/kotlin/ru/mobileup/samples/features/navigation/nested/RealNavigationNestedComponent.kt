@@ -8,6 +8,7 @@ import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
+import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.R
@@ -30,6 +31,10 @@ class RealNavigationNestedComponent(
             handleBackButton = true,
             childFactory = ::createChild
         ).toStateFlow(lifecycle)
+
+    override val isBottomBarVisible = computed(stack) {
+        it.active.instance !is NavigationNestedComponent.Child.LeafWithoutBottomBar
+    }
 
     private fun createChild(
         config: Config,

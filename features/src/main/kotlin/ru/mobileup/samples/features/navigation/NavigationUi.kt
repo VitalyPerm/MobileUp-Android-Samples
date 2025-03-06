@@ -71,7 +71,6 @@ fun NavigationUi(
 
                     is Nested -> NavigationNestedUi(
                         component = instance.component,
-                        onBottomBarVisibilityChange = component::onBottomBarVisibilityChange,
                         paddingValues = paddingValues
                     )
                 }

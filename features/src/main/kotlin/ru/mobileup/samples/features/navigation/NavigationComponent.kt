@@ -17,7 +17,6 @@ interface NavigationComponent {
     val isBottomBarVisible: StateFlow<Boolean>
 
     fun onTabSelect(tab: Tab)
-    fun onBottomBarVisibilityChange(isVisible: Boolean)
 
     enum class Tab {
         Nested,

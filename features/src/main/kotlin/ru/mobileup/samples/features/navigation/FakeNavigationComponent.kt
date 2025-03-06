@@ -23,6 +23,4 @@ class FakeNavigationComponent : NavigationComponent {
     override val isBottomBarVisible: StateFlow<Boolean> = MutableStateFlow(true)
 
     override fun onTabSelect(tab: Tab): Unit = Unit
-
-    override fun onBottomBarVisibilityChange(isVisible: Boolean): Unit = Unit
 }

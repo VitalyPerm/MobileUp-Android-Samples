@@ -33,7 +33,10 @@ class RealNavigationAlertDialogsComponent(
         simpleDialogControl.show(nameInputControl.text.value)
     }
 
-    override fun onClearTextClick() = nameInputControl.setText("")
+    override fun onClearTextClick() {
+        nameInputControl.setText("")
+        simpleDialogControl.dismiss()
+    }
 
     // StandardDialogControl logic
 
