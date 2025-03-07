@@ -19,6 +19,7 @@ import ru.mobileup.samples.features.calendar.presentation.CalendarUi
 import ru.mobileup.samples.features.charts.presentation.ChartUi
 import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
+import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
@@ -40,6 +41,7 @@ fun RootUi(
             is RootComponent.Child.Calendar -> CalendarUi(instance.component)
             is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
             is RootComponent.Child.Chart -> ChartUi(instance.component)
+            is RootComponent.Child.Navigation -> NavigationUi(instance.component)
         }
     }
 

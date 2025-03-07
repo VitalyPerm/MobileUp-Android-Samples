@@ -7,6 +7,7 @@ import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
+import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 
@@ -28,5 +29,6 @@ interface RootComponent {
         class Calendar(val component: CalendarComponent) : Child
         class QrCode(val component: QrCodeComponent) : Child
         class Chart(val component: ChartComponent) : Child
+        class Navigation(val component: NavigationComponent) : Child
     }
 }

@@ -59,9 +59,10 @@ fun WeekCalendarContent(
         firstVisibleWeekDate = currentDate,
         firstDayOfWeek = daysOfWeek.first()
     )
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         WeekCalendar(
-            modifier = modifier,
             state = state,
             dayContent = { day ->
                 Day(

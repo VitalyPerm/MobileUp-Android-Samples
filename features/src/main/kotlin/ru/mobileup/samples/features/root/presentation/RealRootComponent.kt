@@ -15,6 +15,7 @@ import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
+import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
@@ -76,6 +77,12 @@ class RealRootComponent(
                 componentFactory.createChartComponent(componentContext)
             )
         }
+
+        ChildConfig.Navigation -> {
+            RootComponent.Child.Navigation(
+                componentFactory.createNavigationComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -87,6 +94,7 @@ class RealRootComponent(
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
+                    Sample.Navigation -> ChildConfig.Navigation
                 }
             )
         }
@@ -112,5 +120,8 @@ class RealRootComponent(
 
         @Serializable
         data object Chart : ChildConfig
+
+        @Serializable
+        data object Navigation : ChildConfig
     }
 }
