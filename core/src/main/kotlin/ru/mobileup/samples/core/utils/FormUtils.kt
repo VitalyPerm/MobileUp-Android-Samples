@@ -46,3 +46,6 @@ fun ComponentContext.dynamicValidationResult(
 
 @OptIn(DelicateCoroutinesApi::class)
 fun fakeInputControl() = InputControl(GlobalScope)
+
+@OptIn(DelicateCoroutinesApi::class)
+fun fakeCheckControl() = CheckControl(GlobalScope)

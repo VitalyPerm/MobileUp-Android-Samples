@@ -9,5 +9,5 @@ import ru.mobileup.samples.features.form.presentation.RealFormComponent
 fun ComponentFactory.createFormComponent(
     componentContext: ComponentContext
 ): FormComponent {
-    return RealFormComponent(componentContext, get(), get())
+    return RealFormComponent(componentContext, get(), get(), get())
 }
