@@ -36,12 +36,13 @@ import ru.mobileup.samples.features.video.presentation.widgets.SlideAnimation
 fun BoxScope.RecorderFilterSelector(
     recorderConfig: RecorderConfig,
     filtersPagerState: PagerState,
-    fling: TargetedFlingBehavior
+    fling: TargetedFlingBehavior,
+    modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
 
     SlideAnimation(
-        modifier = Modifier.align(Alignment.BottomStart),
+        modifier = modifier.align(Alignment.BottomStart),
         isVisible = recorderConfig == RecorderConfig.Filter
     ) {
         HorizontalPager(

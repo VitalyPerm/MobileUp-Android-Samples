@@ -3,8 +3,12 @@ package ru.mobileup.samples.features.root.presentation
 import com.arkivanov.decompose.router.stack.ChildStack
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.message.presentation.MessageComponent
+import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
+import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
+import ru.mobileup.samples.features.navigation.NavigationComponent
+import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 
 /**
@@ -22,5 +26,9 @@ interface RootComponent {
         class Menu(val component: MenuComponent) : Child
         class Form(val component: FormComponent) : Child
         class Video(val component: VideoComponent) : Child
+        class Calendar(val component: CalendarComponent) : Child
+        class QrCode(val component: QrCodeComponent) : Child
+        class Chart(val component: ChartComponent) : Child
+        class Navigation(val component: NavigationComponent) : Child
     }
 }

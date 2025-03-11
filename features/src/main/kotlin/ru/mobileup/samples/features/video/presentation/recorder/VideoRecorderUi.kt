@@ -203,7 +203,6 @@ fun VideoRecorderUi(
 
 @Composable
 private fun VideoRecorderContent(
-    modifier: Modifier = Modifier,
     component: VideoRecorderComponent,
     recorderConfig: RecorderConfig,
     recorderState: RecorderState,
@@ -212,7 +211,8 @@ private fun VideoRecorderContent(
     previewView: PreviewView,
     cameraPlaceHolder: Pair<Bitmap?, Boolean>,
     cameraController: CameraController,
-    onUpdateConfig: (RecorderConfig) -> Unit
+    onUpdateConfig: (RecorderConfig) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
 
@@ -381,7 +381,7 @@ private fun VideoRecorderContent(
                 RecorderFpsSelector(
                     recorderConfig = recorderConfig,
                     fps = recorderState.fps,
-                    onFpsSelected = {
+                    onFpsSelect = {
                         component.onUpdateFps(it)
                         animateBlur()
                     }
@@ -390,7 +390,7 @@ private fun VideoRecorderContent(
                 RecorderQualitySelector(
                     recorderConfig = recorderConfig,
                     quality = recorderState.quality,
-                    onQualitySelected = {
+                    onQualitySelect = {
                         component.onUpdateQuality(it)
                         animateBlur()
                     }
@@ -399,7 +399,7 @@ private fun VideoRecorderContent(
                 RecorderTorchSelector(
                     recorderConfig = recorderConfig,
                     torchState = recorderState.torchState,
-                    onTorchSelected = {
+                    onTorchSelect = {
                         component.onUpdateTorchState(it)
                         cameraController.changeTorchState(it)
                     }

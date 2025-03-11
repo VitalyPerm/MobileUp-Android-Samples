@@ -6,11 +6,15 @@ import me.aartikov.replica.client.ReplicaClient
 import me.aartikov.replica.network.AndroidNetworkConnectivityProvider
 import me.aartikov.replica.network.NetworkConnectivityProvider
 import org.koin.core.component.get
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.mobileup.samples.core.activity.ActivityProvider
 import ru.mobileup.samples.core.debug_tools.DebugTools
 import ru.mobileup.samples.core.debug_tools.RealDebugTools
 import ru.mobileup.samples.core.error_handling.ErrorHandler
+import ru.mobileup.samples.core.external_apps.data.ExternalAppService
+import ru.mobileup.samples.core.external_apps.data.ExternalAppServiceImpl
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.data.MessageServiceImpl
 import ru.mobileup.samples.core.message.presentation.MessageComponent
@@ -38,6 +42,7 @@ fun coreModule(backendUrl: String) = module {
     }
     single(createdAtStart = true) { PermissionService(get(), get()) }
     single<SettingsFactory> { AndroidSettingsFactory(get(), Dispatchers.IO) }
+    singleOf(::ExternalAppServiceImpl) bind ExternalAppService::class
 }
 
 fun ComponentFactory.createMessageComponent(

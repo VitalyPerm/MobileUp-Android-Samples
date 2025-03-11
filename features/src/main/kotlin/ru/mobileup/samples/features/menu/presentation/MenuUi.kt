@@ -46,6 +46,42 @@ fun MenuUi(
                 component.onButtonClick(Sample.Video)
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_calendar),
+            onClick = {
+                component.onButtonClick(Sample.Calendar)
+            }
+        )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_qr_code),
+            onClick = {
+                component.onButtonClick(Sample.QrCode)
+            }
+        )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_chart),
+            onClick = {
+                component.onButtonClick(Sample.Chart)
+            }
+        )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.menu_item_navigation),
+            onClick = {
+                component.onButtonClick(Sample.Navigation)
+            }
+        )
     }
 }
 

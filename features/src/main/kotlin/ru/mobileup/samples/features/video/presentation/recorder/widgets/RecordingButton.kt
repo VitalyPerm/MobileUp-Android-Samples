@@ -37,6 +37,7 @@ private const val BUTTON_SIZE_DP = 64
 fun RecordingButton(
     isRecording: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val animationDuration by remember { mutableIntStateOf(ANIMATION_DURATION_MS) }
 
@@ -79,6 +80,7 @@ fun RecordingButton(
     CircleButton(
         modifier = Modifier
             .size(BUTTON_SIZE_DP.dp)
+			.align(Alignment.CenterHorizontlly)
             .clip(CircleShape)
             .clickable {
                 onClick()

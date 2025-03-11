@@ -31,10 +31,11 @@ import ru.mobileup.samples.features.video.presentation.widgets.SlideAnimation
 fun BoxScope.RecorderTorchSelector(
     recorderConfig: RecorderConfig,
     torchState: Boolean,
-    onTorchSelected: (Boolean) -> Unit
+    onTorchSelect: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SlideAnimation(
-        modifier = Modifier.align(Alignment.BottomStart),
+        modifier = modifier.align(Alignment.BottomStart),
         isVisible = recorderConfig == RecorderConfig.Torch
     ) {
         Row(
@@ -47,9 +48,8 @@ fun BoxScope.RecorderTorchSelector(
                     modifier = Modifier
                         .weight(1f)
                         .clickable {
-                            onTorchSelected(it)
-                        }
-                        .padding(vertical = 8.dp),
+                            onTorchSelect(it)
+                        },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
@@ -99,7 +99,7 @@ private fun RecorderTorchSelectorPreview() {
             RecorderTorchSelector(
                 recorderConfig = RecorderConfig.FPS,
                 torchState = false,
-                onTorchSelected = { }
+                onTorchSelect = { }
             )
         }
     }

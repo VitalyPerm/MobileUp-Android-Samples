@@ -9,10 +9,14 @@ import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
+import ru.mobileup.samples.features.calendar.createCalendarComponent
+import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
+import ru.mobileup.samples.features.navigation.createNavigationComponent
+import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
@@ -55,6 +59,30 @@ class RealRootComponent(
                 componentFactory.createVideoComponent(componentContext)
             )
         }
+
+        ChildConfig.Calendar -> {
+            RootComponent.Child.Calendar(
+                componentFactory.createCalendarComponent(componentContext)
+            )
+        }
+
+        ChildConfig.QrCode -> {
+            RootComponent.Child.QrCode(
+                componentFactory.createQrCodeComponent(componentContext)
+            )
+        }
+
+        ChildConfig.Chart -> {
+            RootComponent.Child.Chart(
+                componentFactory.createChartComponent(componentContext)
+            )
+        }
+
+        ChildConfig.Navigation -> {
+            RootComponent.Child.Navigation(
+                componentFactory.createNavigationComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -63,6 +91,10 @@ class RealRootComponent(
                 when (output.sample) {
                     Sample.Form -> ChildConfig.Form
                     Sample.Video -> ChildConfig.Video
+                    Sample.Calendar -> ChildConfig.Calendar
+                    Sample.QrCode -> ChildConfig.QrCode
+                    Sample.Chart -> ChildConfig.Chart
+                    Sample.Navigation -> ChildConfig.Navigation
                 }
             )
         }
@@ -79,5 +111,17 @@ class RealRootComponent(
 
         @Serializable
         data object Video : ChildConfig
+
+        @Serializable
+        data object Calendar : ChildConfig
+
+        @Serializable
+        data object QrCode : ChildConfig
+
+        @Serializable
+        data object Chart : ChildConfig
+
+        @Serializable
+        data object Navigation : ChildConfig
     }
 }
