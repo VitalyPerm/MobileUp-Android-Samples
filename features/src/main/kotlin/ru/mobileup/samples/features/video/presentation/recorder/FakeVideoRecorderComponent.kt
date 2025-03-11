@@ -1,11 +1,10 @@
 package ru.mobileup.samples.features.video.presentation.recorder
 
 import android.net.Uri
-import androidx.camera.core.CameraSelector
 import androidx.camera.video.Quality
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.mobileup.samples.features.video.domain.states.RecorderState
 import ru.mobileup.samples.features.video.domain.RecorderConfig
+import ru.mobileup.samples.features.video.domain.states.RecorderState
 
 class FakeVideoRecorderComponent : VideoRecorderComponent {
 
