@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -47,7 +46,6 @@ fun BoxScope.RecorderTorchSelector(
                 Row(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(vertical = 8.dp)
                         .clickable {
                             onTorchSelect(it)
                         },
