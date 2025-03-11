@@ -26,7 +26,8 @@ private const val ANIMATION_DURATION_MS = 500
 
 @Composable
 fun BoxScope.CameraFlipIcon(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
     val rotation = remember { Animatable(0f) }
@@ -35,7 +36,7 @@ fun BoxScope.CameraFlipIcon(
         painter = painterResource(id = R.drawable.ic_camera_filp),
         contentDescription = "camera",
         tint = Color.Unspecified,
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 16.dp)
             .align(Alignment.CenterStart)
             .graphicsLayer {
@@ -63,7 +64,9 @@ fun BoxScope.CameraFlipIcon(
 private fun CameraFlipIconPreview() {
     AppTheme {
         Box {
-            CameraFlipIcon { }
+            CameraFlipIcon(
+                onClick = { }
+            )
         }
     }
 }

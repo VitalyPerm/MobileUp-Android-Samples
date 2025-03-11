@@ -24,7 +24,8 @@ import ru.mobileup.samples.features.video.domain.RecorderConfig
 @Composable
 fun BoxScope.CameraEffectIcon(
     recorderConfig: RecorderConfig,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Icon(
         painter = painterResource(id = R.drawable.ic_filter),
@@ -34,7 +35,7 @@ fun BoxScope.CameraEffectIcon(
         } else {
             Color.Unspecified
         },
-        modifier = Modifier
+        modifier = modifier
             .padding(end = 16.dp)
             .size(32.dp)
             .align(Alignment.CenterEnd)

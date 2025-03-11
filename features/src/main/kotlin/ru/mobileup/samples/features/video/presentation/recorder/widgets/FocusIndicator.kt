@@ -56,7 +56,8 @@ private const val INDICATOR_VISIBILITY_DURATION_MS = 2000L
 @Composable
 fun FocusIndicator(
     offset: Offset,
-    onExposureChanged: (Float) -> Unit
+    onExposureChange: (Float) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val widthPx = SLIDER_WIDTH_DP.dp.toPx()
     val heightPx = ((INDICATOR_SIZE_DP + SLIDER_HEIGHT_DP).dp + 8.dp).toPx()
@@ -123,7 +124,7 @@ fun FocusIndicator(
 
     if (isVisible) {
         Column(
-            modifier = Modifier.offset {
+            modifier = modifier.offset {
                 intOffset
             }
         ) {
@@ -171,7 +172,7 @@ fun FocusIndicator(
                     valueRange = -1f..1f,
                     onValueChange = {
                         exposureValue = it
-                        onExposureChanged(it)
+                        onExposureChange(it)
                         hide()
                     }
                 )
@@ -190,7 +191,7 @@ private fun FocusIndicatorPreview() {
                     x = 150.dp.toPx(),
                     y = 150.dp.toPx()
                 ),
-                onExposureChanged = { }
+                onExposureChange = { }
             )
         }
     }

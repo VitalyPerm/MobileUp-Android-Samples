@@ -362,7 +362,7 @@ private fun VideoRecorderContent(
 
                 FocusIndicator(
                     offset = focusPoint,
-                    onExposureChanged = {
+                    onExposureChange = {
                         cameraController.exposureChange(it)
                     }
                 )

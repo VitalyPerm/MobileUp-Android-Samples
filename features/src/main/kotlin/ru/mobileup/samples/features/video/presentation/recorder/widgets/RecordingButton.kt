@@ -90,11 +90,11 @@ fun RecordingButton(
 
 @Composable
 private fun CircleButton(
-    modifier: Modifier = Modifier,
     outerCircleColor: Color,
     innerCircleColor: Color,
     stopIconColor: Color,
-    cornerRadius: Dp
+    cornerRadius: Dp,
+    modifier: Modifier = Modifier
 ) {
     Canvas(modifier = modifier) {
         drawCircle(
