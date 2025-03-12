@@ -79,7 +79,7 @@ fun TutorialSampleUi(
                     Text(
                         text = it.toString(),
                         style = CustomTheme.typography.button.bold,
-                        color = CustomTheme.colors.text.primary,
+                        color = CustomTheme.colors.text.invert,
                         modifier = Modifier
                             .background(
                                 color = CustomTheme.colors.button.primary,
