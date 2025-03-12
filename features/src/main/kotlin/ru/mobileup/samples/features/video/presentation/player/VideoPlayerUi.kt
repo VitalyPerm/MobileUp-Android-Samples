@@ -406,7 +406,8 @@ private fun VideoPlayerContent(
 
                 PlayerIndication(
                     modifier = Modifier
-                        .align(Alignment.Center),
+                        .align(Alignment.Center)
+                        .padding(bottom = 72.dp),
                     state = playingIndicationState,
                     isVisible = true
                 )
