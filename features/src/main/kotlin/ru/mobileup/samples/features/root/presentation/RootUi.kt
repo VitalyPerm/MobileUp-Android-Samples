@@ -18,6 +18,7 @@ import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
 import ru.mobileup.samples.features.charts.presentation.ChartUi
 import ru.mobileup.samples.features.form.presentation.FormUi
+import ru.mobileup.samples.features.image.presentation.ImageUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
@@ -42,6 +43,7 @@ fun RootUi(
             is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
             is RootComponent.Child.Chart -> ChartUi(instance.component)
             is RootComponent.Child.Navigation -> NavigationUi(instance.component)
+            is RootComponent.Child.Image -> ImageUi(instance.component)
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.root.presentation
 
+import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -12,6 +13,7 @@ import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.form.createFormComponent
+import ru.mobileup.samples.features.image.createImageComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
@@ -83,6 +85,12 @@ class RealRootComponent(
                 componentFactory.createNavigationComponent(componentContext)
             )
         }
+
+        ChildConfig.Image -> {
+            RootComponent.Child.Image(
+                componentFactory.createImageComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -95,6 +103,7 @@ class RealRootComponent(
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
                     Sample.Navigation -> ChildConfig.Navigation
+                    Sample.Image -> ChildConfig.Image
                 }
             )
         }
@@ -123,5 +132,8 @@ class RealRootComponent(
 
         @Serializable
         data object Navigation : ChildConfig
+
+        @Serializable
+        data object Image : ChildConfig
     }
 }

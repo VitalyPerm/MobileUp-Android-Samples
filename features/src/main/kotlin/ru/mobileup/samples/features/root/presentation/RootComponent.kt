@@ -6,6 +6,7 @@ import ru.mobileup.samples.core.message.presentation.MessageComponent
 import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
+import ru.mobileup.samples.features.image.presentation.ImageComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
@@ -30,5 +31,6 @@ interface RootComponent {
         class QrCode(val component: QrCodeComponent) : Child
         class Chart(val component: ChartComponent) : Child
         class Navigation(val component: NavigationComponent) : Child
+        class Image(val component: ImageComponent) : Child
     }
 }

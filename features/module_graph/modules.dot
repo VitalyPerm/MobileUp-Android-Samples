@@ -2,6 +2,7 @@ digraph {
 calendar
 charts
 form
+image
 menu
 navigation
 qr_code
@@ -10,6 +11,7 @@ video
 root -> calendar
 root -> charts
 root -> form
+root -> image
 root -> menu
 root -> navigation
 root -> qr_code
