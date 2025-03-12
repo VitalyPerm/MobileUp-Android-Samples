@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toSize
 import ru.mobileup.samples.features.tutorial.domain.HighlightableItem
 import ru.mobileup.samples.features.tutorial.domain.TutorialManager
-import ru.mobileup.samples.features.tutorial.presentation.toHighlightableItem
 
 object TutorialHighlightedItem {
     var current by mutableStateOf<HighlightableItem?>(null)

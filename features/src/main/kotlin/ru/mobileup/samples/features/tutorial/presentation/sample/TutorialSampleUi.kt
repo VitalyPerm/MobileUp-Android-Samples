@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,13 +29,13 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
-import ru.mobileup.samples.features.tutorial.presentation.sample.tutorial.TutorialMessageKeys
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.dispatchOnBackPressed
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.tutorial.domain.TutorialFilter
 import ru.mobileup.samples.features.tutorial.domain.TutorialManager
 import ru.mobileup.samples.features.tutorial.presentation.highlightableItem
+import ru.mobileup.samples.features.tutorial.presentation.sample.tutorial.TutorialMessageKeys
 
 @Composable
 fun TutorialSampleUi(
@@ -188,4 +187,3 @@ fun TutorialFilter.toTutorialMsssageKey() = when (this) {
     TutorialFilter.Second -> TutorialMessageKeys.Second
     TutorialFilter.Third -> TutorialMessageKeys.Third
 }
-

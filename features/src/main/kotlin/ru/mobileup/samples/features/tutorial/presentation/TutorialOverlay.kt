@@ -35,16 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import dev.icerock.moko.resources.compose.localized
-import io.ktor.client.plugins.logging.Logging
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
+import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.tutorial.domain.HighlightableItem
 import ru.mobileup.samples.features.tutorial.domain.TutorialManager
 import ru.mobileup.samples.features.tutorial.domain.TutorialMessage
 import kotlin.math.roundToInt
-import ru.mobileup.samples.features.R
 
 @Composable
 fun TutorialOverlay(
