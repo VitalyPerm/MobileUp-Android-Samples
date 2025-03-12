@@ -1,6 +1,7 @@
 digraph {
 calendar
 charts
+collapsing_toolbar
 form
 menu
 navigation
@@ -9,6 +10,7 @@ root
 video
 root -> calendar
 root -> charts
+root -> collapsing_toolbar
 root -> form
 root -> menu
 root -> navigation

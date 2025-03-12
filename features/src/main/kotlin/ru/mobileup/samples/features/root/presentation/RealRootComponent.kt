@@ -12,6 +12,7 @@ import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
+import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
@@ -24,7 +25,7 @@ import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
-    private val componentFactory: ComponentFactory
+    private val componentFactory: ComponentFactory,
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<ChildConfig>()
@@ -43,15 +44,15 @@ class RealRootComponent(
 
     private fun createChild(
         config: ChildConfig,
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): RootComponent.Child = when (config) {
-        is ChildConfig.Menu -> {
+        ChildConfig.Menu -> {
             RootComponent.Child.Menu(
                 componentFactory.createMenuComponent(componentContext, ::onMenuOutput)
             )
         }
 
-        is ChildConfig.Form -> {
+        ChildConfig.Form -> {
             RootComponent.Child.Form(
                 componentFactory.createFormComponent(componentContext)
             )
@@ -63,7 +64,7 @@ class RealRootComponent(
             )
         }
 
-        is ChildConfig.Video -> {
+        ChildConfig.Video -> {
             RootComponent.Child.Video(
                 componentFactory.createVideoComponent(componentContext)
             )
@@ -92,6 +93,12 @@ class RealRootComponent(
                 componentFactory.createNavigationComponent(componentContext)
             )
         }
+
+        ChildConfig.CollapsingToolbar -> {
+            RootComponent.Child.CollapsingToolbar(
+                componentFactory.createCollapsingToolbarComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -105,6 +112,7 @@ class RealRootComponent(
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
                     Sample.Navigation -> ChildConfig.Navigation
+                    Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
                 }
             )
         }
@@ -142,5 +150,8 @@ class RealRootComponent(
 
         @Serializable
         data object Navigation : ChildConfig
+
+        @Serializable
+        data object CollapsingToolbar : ChildConfig
     }
 }
