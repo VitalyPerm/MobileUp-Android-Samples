@@ -29,28 +29,28 @@ fun TextWithLinks(
     annotationsTags: List<String>,
     onLinkClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    mainSpanStyle: TextStyle = CustomTheme.typography.body.regular.copy(
+    linkTextStyle: TextStyle = CustomTheme.typography.body.regular.copy(
         color = CustomTheme.colors.text.secondary,
         textDecoration = TextDecoration.Underline
     ),
-    annotationSpanStyle: TextStyle = CustomTheme.typography.body.regular.copy(
+    normalTextStyle: TextStyle = CustomTheme.typography.body.regular.copy(
         color = CustomTheme.colors.text.secondary,
     ),
     textAlign: TextAlign? = null
 ) {
     val annotatedString = remember(
         text,
-        annotationSpanStyle,
-        mainSpanStyle,
+        normalTextStyle,
+        linkTextStyle,
         annotationsTags,
         textAlign
     ) {
         buildLinkText(
-            text,
-            annotationsTags,
-            annotationSpanStyle,
-            mainSpanStyle,
-            onLinkClick
+            text = text,
+            annotationsTags = annotationsTags,
+            normalTextStyle = normalTextStyle,
+            linkTextStyle = linkTextStyle,
+            onLinkClick = onLinkClick
         )
     }
 
