@@ -23,11 +23,13 @@ import ru.mobileup.samples.features.R
 class RealOtpComponent(
     componentContext: ComponentContext,
     private val errorHandler: ErrorHandler,
+    private val onOutput: (OtpComponent.Output) -> Unit
 ) : ComponentContext by componentContext, OtpComponent {
 
     companion object {
         private const val RESEND_CODE_AGAIN_TIMER_LOCK = 10L
         private const val CONFIRMATION_CODE_LENGTH = 4
+        private const val SUCCESSFULLY_ANIMATION_DELAY = 1000L
     }
 
     override val confirmationCodeInputControl = numberInputControl(
@@ -100,6 +102,8 @@ class RealOtpComponent(
                 delay(2000)
                 if (confirmationCodeInputControl.text.value == "1234") {
                     isConfirmCodeCorrect.value = true
+                    delay(SUCCESSFULLY_ANIMATION_DELAY)
+                    onOutput(OtpComponent.Output.OtpSuccessfullyVerified)
                 } else {
                     confirmationCodeInputControl.setText("")
                     confirmationCodeInputControl.error.value =
@@ -118,13 +122,5 @@ class RealOtpComponent(
                 confirmationCodeInputControl.onFocusChanged(true)
             }
         }
-    }
-
-    override fun resetState() {
-        timer.start(RESEND_CODE_AGAIN_TIMER_LOCK)
-        isConfirmCodeCorrect.value = false
-        confirmationCodeInputControl.setText("")
-        confirmationCodeInputControl.error.value = null
-        confirmationCodeInputControl.onFocusChanged(true)
     }
 }

@@ -7,7 +7,8 @@ import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.otp.presentation.RealOtpComponent
 
 fun ComponentFactory.createOtpComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    onOutput: (OtpComponent.Output) -> Unit
 ): OtpComponent {
-    return RealOtpComponent(componentContext, get())
+    return RealOtpComponent(componentContext, get(), onOutput)
 }

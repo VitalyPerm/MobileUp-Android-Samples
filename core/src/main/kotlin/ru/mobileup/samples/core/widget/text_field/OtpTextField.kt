@@ -28,10 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -43,9 +41,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.addOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,22 +52,14 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.mobileup.kmm_form_validation.control.InputControl
 import ru.mobileup.kmm_form_validation.options.ImeAction
+import ru.mobileup.kmm_form_validation.toCompose
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.widget.text_field.AppTextFieldDefaults.otpBorder
 import kotlin.math.roundToInt
-
-private val TextRangeSaver = listSaver(
-    save = { listOf(it.start, it.end) },
-    restore = { TextRange(it[0], it[1]) }
-)
-
-private val NullableTextRangeSaver = listSaver<TextRange?, Int>(
-    save = { if (it != null) listOf(it.start, it.end) else emptyList() },
-    restore = { TextRange(it[0], it[1]) }
-)
 
 private const val MAX_OTP_COUNT = 10
 
@@ -112,6 +103,7 @@ fun OtpTextField(
         onTextChange = inputControl::onTextChanged,
         onFocusChange = inputControl::onFocusChanged,
         hasFocus = hasFocus,
+        keyboardOptions = inputControl.keyboardOptions.toCompose()
     )
 }
 
@@ -127,34 +119,35 @@ fun OtpTextField(
     isEnabled: Boolean = true,
     hasFocus: Boolean = false,
     shape: Shape = AppTextFieldDefaults.otpShape,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(hasFocus) {
-        if (hasFocus) {
-            focusRequester.requestFocus()
-        }
-    }
+    val focusManager = LocalFocusManager.current
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
+    val coroutineScope = rememberCoroutineScope()
+
     val currentValue by rememberUpdatedState(text)
 
-    var currentSelection by rememberSaveable(stateSaver = TextRangeSaver) {
-        mutableStateOf(TextRange(0))
-    }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    var currentComposition by rememberSaveable(stateSaver = NullableTextRangeSaver) {
-        mutableStateOf(null)
-    }
-
-    val currentTextFieldValue by remember(currentValue, currentSelection, currentComposition) {
+    val currentTextFieldValue by remember(currentValue) {
         mutableStateOf(
-            TextFieldValue(currentValue, currentSelection, currentComposition)
+            TextFieldValue(currentValue, selection = TextRange(currentValue.length))
         )
     }
 
     val shakeAnimation = remember { Animatable(0f) }
+
+    LaunchedEffect(hasFocus) {
+        if (hasFocus) {
+            focusRequester.requestFocus()
+        } else {
+            focusManager.clearFocus()
+        }
+    }
 
     LaunchedEffect(textFieldStatus) {
         if (textFieldStatus == OtpTextFieldStatus.Error) {
@@ -191,19 +184,23 @@ fun OtpTextField(
             }
             .bringIntoViewRequester(bringIntoViewRequester)
             .focusRequester(focusRequester)
-            .onFocusChanged {
-                onFocusChange(it.isFocused)
+            .onFocusChanged { focusState ->
+                if (focusState.isFocused) {
+                    keyboardController?.show()
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                } else {
+                    keyboardController?.hide()
+                }
+                onFocusChange(focusState.isFocused)
             },
         value = currentTextFieldValue,
-        onValueChange = {
-            onTextChange(it.text)
-            currentSelection = it.selection
-            currentComposition = it.composition
-        },
+        onValueChange = { onTextChange(it.text) },
         enabled = isEnabled,
         readOnly = !isEnabled,
         keyboardActions = AppTextFieldDefaults.defaultKeyboardActions,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+        keyboardOptions = keyboardOptions,
         singleLine = true,
     ) { _ ->
         DecorationBox(

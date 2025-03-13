@@ -37,8 +37,6 @@ import ru.mobileup.samples.core.utils.DisableTextFieldContextMenu
 import ru.mobileup.samples.core.utils.Resource
 import ru.mobileup.samples.core.utils.ResourceFormatted
 import ru.mobileup.samples.core.utils.clickableNoRipple
-import ru.mobileup.samples.core.widget.button.AppButton
-import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.core.widget.text_field.OtpTextField
 import ru.mobileup.samples.features.R
 
@@ -98,22 +96,6 @@ fun OtpUi(
                     color = CustomTheme.colors.button.primary,
                     strokeWidth = 5.dp,
                     strokeCap = StrokeCap.Round
-                )
-            }
-        }
-
-        if (isConfirmCodeCorrect) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp, horizontal = 10.dp)
-                    .imePadding(),
-                contentAlignment = Alignment.Center
-            ) {
-                AppButton(
-                    buttonType = ButtonType.Secondary,
-                    onClick = component::resetState,
-                    text = stringResource(R.string.otp_reset_state)
                 )
             }
         }

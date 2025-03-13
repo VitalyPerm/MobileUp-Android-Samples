@@ -1,14 +1,14 @@
 package ru.mobileup.samples.core.timer
 
-import ru.mobileup.samples.core.utils.formatSecondsToMs
+import ru.mobileup.samples.core.utils.formatSecondsToMS
 
-fun TimerState.isTicking() = this is TimerState.Tick
+fun TimerState.isTicking() = this is TimerState.CountingDown
 
 fun TimerState.timerFormat(): String {
     return when (this) {
-        TimerState.Finish -> ""
-        is TimerState.Tick -> timerFormat()
+        TimerState.Idle -> ""
+        is TimerState.CountingDown -> timerFormat()
     }
 }
 
-fun TimerState.Tick.timerFormat() = formatSecondsToMs(this.time)
+fun TimerState.CountingDown.timerFormat() = formatSecondsToMS(this.time)

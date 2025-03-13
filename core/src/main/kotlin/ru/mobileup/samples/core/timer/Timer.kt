@@ -10,15 +10,15 @@ import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
 sealed interface TimerState {
-    data class Tick(val time: Long) : TimerState
-    data object Finish : TimerState
+    data class CountingDown(val time: Long) : TimerState
+    data object Idle : TimerState
 }
 
 class Timer(private val coroutineScope: CoroutineScope) {
 
     private var timerJob: Job? = null
 
-    private val _timerState = MutableStateFlow<TimerState>(TimerState.Finish)
+    private val _timerState = MutableStateFlow<TimerState>(TimerState.Idle)
     val timerState = _timerState.asStateFlow()
 
     fun start(timerTimeInSeconds: Long) {
@@ -28,12 +28,12 @@ class Timer(private val coroutineScope: CoroutineScope) {
             var tick = timerTimeInSeconds
             while (tick != 0L) {
                 tick = (timeInTheFuture - Clock.System.now().epochSeconds).coerceAtLeast(0)
-                _timerState.value = TimerState.Tick(tick)
+                _timerState.value = TimerState.CountingDown(tick)
                 delay(1.seconds)
             }
         }.apply {
             invokeOnCompletion {
-                _timerState.value = TimerState.Finish
+                _timerState.value = TimerState.Idle
             }
         }
     }

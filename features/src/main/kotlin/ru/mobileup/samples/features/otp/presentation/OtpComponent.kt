@@ -13,5 +13,8 @@ interface OtpComponent {
     val isConfirmationInProgress: StateFlow<Boolean>
 
     fun onResendCodeClick()
-    fun resetState()
+
+    sealed interface Output {
+        data object OtpSuccessfullyVerified : Output
+    }
 }

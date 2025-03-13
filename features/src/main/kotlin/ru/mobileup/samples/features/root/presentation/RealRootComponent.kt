@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
@@ -17,6 +18,7 @@ import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
+import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
@@ -57,7 +59,7 @@ class RealRootComponent(
 
         ChildConfig.Otp -> {
             RootComponent.Child.Otp(
-                componentFactory.createOtpComponent(componentContext)
+                componentFactory.createOtpComponent(componentContext, ::onOtpOutput)
             )
         }
 
@@ -105,6 +107,12 @@ class RealRootComponent(
                     Sample.Navigation -> ChildConfig.Navigation
                 }
             )
+        }
+    }
+
+    private fun onOtpOutput(output: OtpComponent.Output) {
+        when (output) {
+            OtpComponent.Output.OtpSuccessfullyVerified -> navigation.pop()
         }
     }
 
