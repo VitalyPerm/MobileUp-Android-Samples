@@ -1,5 +1,6 @@
-package ru.mobileup.samples.features.tutorial.presentation
+package ru.mobileup.samples.core.tutorial.presentation.overlay
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -11,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import ru.mobileup.samples.features.tutorial.domain.HighlightableItem
-import ru.mobileup.samples.features.tutorial.domain.TutorialManager
+import ru.mobileup.samples.core.tutorial.domain.HighlightableItem
+import ru.mobileup.samples.core.tutorial.domain.TutorialManager
 
 object TutorialHighlightedItem {
     var current by mutableStateOf<HighlightableItem?>(null)
@@ -25,7 +28,8 @@ object TutorialHighlightedItem {
 
 fun Modifier.highlightableItem(
     key: Any,
-    tutorialManager: TutorialManager
+    tutorialManager: TutorialManager,
+    shape: Shape = RoundedCornerShape(16.dp)
 ): Modifier = composed {
     var size by remember {
         mutableStateOf(IntSize(0, 0))
@@ -45,7 +49,7 @@ fun Modifier.highlightableItem(
 
     LaunchedEffect(key, visibleMessageKey, rect) {
         if (key == visibleMessageKey) {
-            TutorialHighlightedItem.current = rect.toHighlightableItem()
+            TutorialHighlightedItem.current = HighlightableItem(rect, shape)
         }
     }
 

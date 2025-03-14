@@ -1,6 +1,5 @@
 package ru.mobileup.samples.features.root.presentation
 
-import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -8,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
+import ru.mobileup.samples.core.createTutorialOverlayComponent
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
@@ -19,13 +19,11 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
-import ru.mobileup.samples.features.tutorial.domain.TutorialManager
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
-    private val componentFactory: ComponentFactory,
-    override val tutorialManager: TutorialManager
+    private val componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<ChildConfig>()
@@ -40,6 +38,10 @@ class RealRootComponent(
 
     override val messageComponent = componentFactory.createMessageComponent(
         childContext(key = "message")
+    )
+
+    override val tutorialOverlayComponent = componentFactory.createTutorialOverlayComponent(
+        childContext("tutorialOverlay")
     )
 
     private fun createChild(

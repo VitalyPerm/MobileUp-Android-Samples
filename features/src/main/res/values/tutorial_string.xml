@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tutorial_button_skip">Skip</string>
-    <string name="tutorial_button_ok">OK</string>
     <string name="tutorial_toolbar_title">Tutorial</string>
     <string name="tutorial_filter_all">All</string>
     <string name="tutorial_filter_first">Mod 0</string>

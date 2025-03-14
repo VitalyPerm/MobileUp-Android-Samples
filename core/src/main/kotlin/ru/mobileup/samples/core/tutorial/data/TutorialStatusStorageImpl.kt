@@ -1,7 +1,7 @@
-package ru.mobileup.samples.features.tutorial.data
+package ru.mobileup.samples.core.tutorial.data
 
 import ru.mobileup.samples.core.settings.SettingsFactory
-import ru.mobileup.samples.features.tutorial.domain.TutorialStatus
+import ru.mobileup.samples.core.tutorial.domain.TutorialStatus
 
 class TutorialStatusStorageImpl(
     settingsFactory: SettingsFactory
@@ -12,14 +12,14 @@ class TutorialStatusStorageImpl(
     }
     private val settings = settingsFactory.createSettings("tutorial_status")
 
-    override suspend fun getStatus(): TutorialStatus {
+    override suspend fun getStatus(tutorialName: String): TutorialStatus {
         return settings
-            .getInt(KEY_TUTORIAL_STATUS)
+            .getInt("${KEY_TUTORIAL_STATUS}_$tutorialName")
             .mapToTutorialStatus()
     }
 
-    override suspend fun setStatus(status: TutorialStatus) {
-        settings.putInt(KEY_TUTORIAL_STATUS, status.mapToInt())
+    override suspend fun setStatus(tutorialName: String, status: TutorialStatus) {
+        settings.putInt("${KEY_TUTORIAL_STATUS}_$tutorialName", status.mapToInt())
     }
 }
 

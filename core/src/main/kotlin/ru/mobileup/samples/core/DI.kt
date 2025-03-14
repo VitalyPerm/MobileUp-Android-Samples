@@ -24,6 +24,11 @@ import ru.mobileup.samples.core.network.createOkHttpEngine
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.settings.AndroidSettingsFactory
 import ru.mobileup.samples.core.settings.SettingsFactory
+import ru.mobileup.samples.core.tutorial.domain.Tutorial
+import ru.mobileup.samples.core.tutorial.presentation.management.RealTutorialManagementComponent
+import ru.mobileup.samples.core.tutorial.presentation.management.TutorialManagementComponent
+import ru.mobileup.samples.core.tutorial.presentation.overlay.RealTutorialOverlayComponent
+import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayComponent
 
 fun coreModule(backendUrl: String) = module {
     single { ActivityProvider() }
@@ -49,4 +54,23 @@ fun ComponentFactory.createMessageComponent(
     componentContext: ComponentContext
 ): MessageComponent {
     return RealMessageComponent(componentContext, get())
+}
+
+fun ComponentFactory.createTutorialManagementComponent(
+    componentContext: ComponentContext,
+    tutorial: Tutorial
+): TutorialManagementComponent {
+    return RealTutorialManagementComponent(
+        componentContext,
+        tutorial,
+        get(),
+        get(),
+        get()
+    )
+}
+
+fun ComponentFactory.createTutorialOverlayComponent(
+    componentContext: ComponentContext
+): TutorialOverlayComponent {
+    return RealTutorialOverlayComponent(componentContext, get())
 }

@@ -17,4 +17,8 @@
     <!-- Validation -->
     <string name="field_error_is_blank">Input is required</string>
     <string name="field_error_invalid_format">Invalid input format</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_button_skip">Skip</string>
+    <string name="tutorial_button_ok">OK</string>
 </resources>

@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.tutorial.presentation.sample
+package ru.mobileup.samples.features.tutorial.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,9 +35,8 @@ import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.dispatchOnBackPressed
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.tutorial.domain.TutorialFilter
-import ru.mobileup.samples.features.tutorial.domain.TutorialManager
-import ru.mobileup.samples.features.tutorial.presentation.highlightableItem
-import ru.mobileup.samples.features.tutorial.presentation.sample.tutorial.TutorialMessageKeys
+import ru.mobileup.samples.core.tutorial.domain.TutorialManager
+import ru.mobileup.samples.core.tutorial.presentation.overlay.highlightableItem
 
 @Composable
 fun TutorialSampleUi(
@@ -146,10 +147,11 @@ private fun Toolbar(
         IconButton(
             onClick = { dispatchOnBackPressed(context) },
             modifier = Modifier
-                .align(Alignment.CenterStart)
+                .align(Alignment.CenterEnd)
                 .highlightableItem(
                     key = TutorialMessageKeys.Back,
-                    tutorialManager = tutorialManager
+                    tutorialManager = tutorialManager,
+                    shape = CircleShape
                 )
         ) {
             Icon(
@@ -166,7 +168,8 @@ private fun Toolbar(
                 .align(Alignment.Center)
                 .highlightableItem(
                     key = TutorialMessageKeys.Title,
-                    tutorialManager = tutorialManager
+                    tutorialManager = tutorialManager,
+                    shape = RectangleShape
                 )
                 .padding(8.dp)
         )

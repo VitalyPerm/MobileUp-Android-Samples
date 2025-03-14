@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.tutorial.domain
+package ru.mobileup.samples.core.tutorial.domain
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -11,8 +11,10 @@ class TutorialManagerImpl : TutorialManager {
         MutableStateFlow(null)
 
     private val skipTutorialEventChannel = Channel<Unit>()
-
     override val skipTutorialEventFlow: Flow<Unit> = skipTutorialEventChannel.receiveAsFlow()
+
+    private val proceedWithTutorialEventChannel = Channel<Unit>()
+    override val proceedWithTutorialEventFlow: Flow<Unit> = proceedWithTutorialEventChannel.receiveAsFlow()
 
     override fun showMessage(message: TutorialMessage) {
         visibleMessage.value = message
@@ -24,5 +26,9 @@ class TutorialManagerImpl : TutorialManager {
 
     override fun skipTutorial() {
         skipTutorialEventChannel.trySend(Unit)
+    }
+
+    override fun proceedWithTutorial() {
+        proceedWithTutorialEventChannel.trySend(Unit)
     }
 }

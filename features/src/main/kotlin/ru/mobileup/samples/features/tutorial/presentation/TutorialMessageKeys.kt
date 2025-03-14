@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.tutorial.presentation.sample.tutorial
+package ru.mobileup.samples.features.tutorial.presentation
 
 enum class TutorialMessageKeys {
     All,

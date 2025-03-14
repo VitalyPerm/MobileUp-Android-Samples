@@ -1,8 +1,8 @@
-package ru.mobileup.samples.features.tutorial.presentation.sample
+package ru.mobileup.samples.features.tutorial.presentation
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.features.tutorial.domain.TutorialFilter
-import ru.mobileup.samples.features.tutorial.presentation.sample.tutorial.TutorialManagementSampleComponent
+import ru.mobileup.samples.core.tutorial.presentation.management.TutorialManagementComponent
 
 interface TutorialSampleComponent {
     val items: StateFlow<List<Int>>
@@ -10,7 +10,7 @@ interface TutorialSampleComponent {
     val selectedFilter: StateFlow<TutorialFilter>
     val availableFilters: StateFlow<List<TutorialFilter>>
 
-    val tutorialManagementComponent: TutorialManagementSampleComponent
+    val tutorialManagementComponent: TutorialManagementComponent
 
     fun onFilterSelected(filter: TutorialFilter)
 }

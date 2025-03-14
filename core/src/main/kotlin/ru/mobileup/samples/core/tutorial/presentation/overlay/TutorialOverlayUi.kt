@@ -1,6 +1,5 @@
-package ru.mobileup.samples.features.tutorial.presentation
+package ru.mobileup.samples.core.tutorial.presentation.overlay
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -23,41 +23,43 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import dev.icerock.moko.resources.compose.localized
+import ru.mobileup.samples.core.R
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.tutorial.domain.HighlightableItem
+import ru.mobileup.samples.core.tutorial.domain.TutorialMessage
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
-import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.tutorial.domain.HighlightableItem
-import ru.mobileup.samples.features.tutorial.domain.TutorialManager
-import ru.mobileup.samples.features.tutorial.domain.TutorialMessage
 import kotlin.math.roundToInt
 
 @Composable
-fun TutorialOverlay(
-    tutorialManager: TutorialManager,
+fun TutorialOverlayUi(
+    component: TutorialOverlayComponent,
     modifier: Modifier = Modifier
 ) {
-    val currentVisibleMessage by tutorialManager.visibleMessage.collectAsState()
+    val currentVisibleMessage by component.visibleMessage.collectAsState()
 
     val message = currentVisibleMessage
     val item = TutorialHighlightedItem.current
 
     val navigationBarsPadding = WindowInsets.navigationBars.asPaddingValues()
 
-    Log.d("kursor1337", "TutorialOverlay: message=$message, item=$item")
+    val density = LocalDensity.current
+    val layoutDirection = LocalLayoutDirection.current
 
     if (message != null && item != null) {
         SystemBars(transparentNavigationBar = true)
@@ -66,17 +68,18 @@ fun TutorialOverlay(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
-                val path = Path().apply {
-                    addRoundRect(
-                        RoundRect(
-                            left = item.left,
-                            top = item.top,
-                            right = item.right,
-                            bottom = item.bottom,
-                            cornerRadius = CornerRadius(16.dp.toPx()),
-                        )
-                    )
-                }
+                val path = item.shape.createOutline(
+                    size = item.bounds.size,
+                    layoutDirection = layoutDirection,
+                    density = density
+                ).let {
+                    when (it) {
+                        is Outline.Generic -> it.path
+                        is Outline.Rectangle -> Path().apply { addRect(it.rect) }
+                        is Outline.Rounded -> Path().apply { addRoundRect(it.roundRect) }
+                    }
+                }.apply { translate(Offset(item.bounds.left, item.bounds.top)) }
+
                 clipPath(
                     path = path,
                     clipOp = ClipOp.Difference,
@@ -90,13 +93,14 @@ fun TutorialOverlay(
 
             TutorialMessagePopup(
                 message = message,
+                onOkClick = component::onOkClick,
                 highlightableItem = item,
             )
 
             AppButton(
                 buttonType = ButtonType.Secondary,
                 text = stringResource(id = R.string.tutorial_button_skip),
-                onClick = tutorialManager::skipTutorial,
+                onClick = component::onSkipClick,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -111,10 +115,11 @@ fun TutorialOverlay(
 @Composable
 private fun TutorialMessagePopup(
     message: TutorialMessage,
+    onOkClick: () -> Unit,
     highlightableItem: HighlightableItem,
 ) {
 
-    val properties = calculateTutorialMessagePopupProperties(highlightableItem.toRect())
+    val properties = calculateTutorialMessagePopupProperties(highlightableItem.bounds)
     val offset = properties.offset.let {
         IntOffset(
             x = it.x.roundToInt(),
@@ -134,18 +139,11 @@ private fun TutorialMessagePopup(
         Column {
             Canvas(
                 modifier = Modifier
-                    .padding(horizontal = 22.dp)
                     .requiredSize(
                         width = 14.dp,
                         height = 12.dp
                     )
-                    .align(
-                        when (properties.alignment) {
-                            TutorialMessagePopupPointerAlignment.Start -> Alignment.Start
-                            TutorialMessagePopupPointerAlignment.Center -> Alignment.CenterHorizontally
-                            TutorialMessagePopupPointerAlignment.End -> Alignment.End
-                        }
-                    )
+                    .offset { IntOffset(x = properties.pointerHorizontalOffset, y = 0) }
             ) {
                 Path().apply {
                     moveTo(0f, size.height)
@@ -183,10 +181,11 @@ private fun TutorialMessagePopup(
                     Text(
                         text = message.text.localized(),
                         style = CustomTheme.typography.body.regular,
-                        color = CustomTheme.colors.text.primary
+                        color = CustomTheme.colors.text.primary,
+                        modifier = Modifier.weight(1f)
                     )
                     TextButton(
-                        onClick = message.onActionClick,
+                        onClick = onOkClick,
                         modifier = Modifier.align(Alignment.End)
                     ) {
                         Text(

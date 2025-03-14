@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.tutorial.domain
+package ru.mobileup.samples.core.tutorial.domain
 
 sealed interface TutorialStatus {
     data object NotStarted : TutorialStatus
