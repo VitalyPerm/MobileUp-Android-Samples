@@ -3,8 +3,10 @@ calendar
 charts
 collapsing_toolbar
 form
+image
 menu
 navigation
+otp
 qr_code
 root
 video
@@ -12,8 +14,10 @@ root -> calendar
 root -> charts
 root -> collapsing_toolbar
 root -> form
+root -> image
 root -> menu
 root -> navigation
+root -> otp
 root -> qr_code
 root -> video
 }
