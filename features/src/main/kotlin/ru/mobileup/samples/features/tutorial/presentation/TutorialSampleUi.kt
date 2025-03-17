@@ -32,11 +32,10 @@ import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.tutorial.presentation.overlay.highlightableItem
 import ru.mobileup.samples.core.utils.dispatchOnBackPressed
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.tutorial.domain.TutorialFilter
-import ru.mobileup.samples.core.tutorial.domain.TutorialManager
-import ru.mobileup.samples.core.tutorial.presentation.overlay.highlightableItem
 
 @Composable
 fun TutorialSampleUi(
@@ -51,12 +50,7 @@ fun TutorialSampleUi(
     Scaffold(
         modifier = modifier.systemBarsPadding(),
         topBar = {
-            Toolbar(
-                tutorialManager = component
-                    .tutorialManagementComponent
-                    .tutorialManager,
-                modifier = Modifier.padding(horizontal = 4.dp)
-            )
+            Toolbar(modifier = Modifier.padding(horizontal = 4.dp))
         }
     ) { paddingValues ->
         Column(
@@ -67,10 +61,7 @@ fun TutorialSampleUi(
             FiltersSection(
                 availableFilters = availableFilters,
                 selectedFilter = selectedFilter,
-                onFilterSelect = component::onFilterSelected,
-                tutorialManager = component
-                    .tutorialManagementComponent
-                    .tutorialManager
+                onFilterSelect = component::onFilterSelected
             )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -100,7 +91,6 @@ fun FiltersSection(
     availableFilters: List<TutorialFilter>,
     selectedFilter: TutorialFilter,
     onFilterSelect: (TutorialFilter) -> Unit,
-    tutorialManager: TutorialManager,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -127,10 +117,7 @@ fun FiltersSection(
                         shape = RoundedCornerShape(16.dp)
                     )
                     .clickable { onFilterSelect(filter) }
-                    .highlightableItem(
-                        key = filter.toTutorialMsssageKey(),
-                        tutorialManager = tutorialManager
-                    )
+                    .highlightableItem(key = filter.toTutorialMsssageKey())
                     .padding(12.dp)
             )
         }
@@ -139,7 +126,6 @@ fun FiltersSection(
 
 @Composable
 private fun Toolbar(
-    tutorialManager: TutorialManager,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -147,10 +133,9 @@ private fun Toolbar(
         IconButton(
             onClick = { dispatchOnBackPressed(context) },
             modifier = Modifier
-                .align(Alignment.CenterEnd)
+                .align(Alignment.CenterStart)
                 .highlightableItem(
                     key = TutorialMessageKeys.Back,
-                    tutorialManager = tutorialManager,
                     shape = CircleShape
                 )
         ) {
@@ -168,7 +153,6 @@ private fun Toolbar(
                 .align(Alignment.Center)
                 .highlightableItem(
                     key = TutorialMessageKeys.Title,
-                    tutorialManager = tutorialManager,
                     shape = RectangleShape
                 )
                 .padding(8.dp)

@@ -66,7 +66,7 @@ class RealTutorialSampleComponent(
             }
         }
 
-    override val tutorialManagementComponent: TutorialManagementComponent =
+    private val tutorialManagementComponent: TutorialManagementComponent =
         componentFactory.createTutorialManagementComponent(
             childContext("tutorialManagement"),
             tutorial = tutorial

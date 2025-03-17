@@ -24,7 +24,11 @@ import ru.mobileup.samples.core.network.createOkHttpEngine
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.settings.AndroidSettingsFactory
 import ru.mobileup.samples.core.settings.SettingsFactory
+import ru.mobileup.samples.core.tutorial.data.TutorialStatusStorage
+import ru.mobileup.samples.core.tutorial.data.TutorialStatusStorageImpl
 import ru.mobileup.samples.core.tutorial.domain.Tutorial
+import ru.mobileup.samples.core.tutorial.domain.TutorialManager
+import ru.mobileup.samples.core.tutorial.domain.TutorialManagerImpl
 import ru.mobileup.samples.core.tutorial.presentation.management.RealTutorialManagementComponent
 import ru.mobileup.samples.core.tutorial.presentation.management.TutorialManagementComponent
 import ru.mobileup.samples.core.tutorial.presentation.overlay.RealTutorialOverlayComponent
@@ -48,6 +52,8 @@ fun coreModule(backendUrl: String) = module {
     single(createdAtStart = true) { PermissionService(get(), get()) }
     single<SettingsFactory> { AndroidSettingsFactory(get(), Dispatchers.IO) }
     singleOf(::ExternalAppServiceImpl) bind ExternalAppService::class
+    single<TutorialStatusStorage> { TutorialStatusStorageImpl(get()) }
+    single<TutorialManager> { TutorialManagerImpl() }
 }
 
 fun ComponentFactory.createMessageComponent(

@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -39,7 +38,6 @@ import androidx.compose.ui.window.PopupProperties
 import dev.icerock.moko.resources.compose.localized
 import ru.mobileup.samples.core.R
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.tutorial.domain.HighlightableItem
 import ru.mobileup.samples.core.tutorial.domain.TutorialMessage
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.widget.button.AppButton
@@ -53,60 +51,64 @@ fun TutorialOverlayUi(
 ) {
     val currentVisibleMessage by component.visibleMessage.collectAsState()
 
-    val message = currentVisibleMessage
-    val item = TutorialHighlightedItem.current
+    val message = currentVisibleMessage ?: return
+    val item = TutorialHighlightedItems.current[message.key] ?: return
 
     val navigationBarsPadding = WindowInsets.navigationBars.asPaddingValues()
 
+    SystemBars(transparentNavigationBar = true)
+    Box(modifier = modifier.fillMaxSize()) {
+        Background(item)
+
+        TutorialMessagePopup(
+            message = message,
+            onOkClick = component::onOkClick,
+            highlightableItem = item,
+        )
+
+        AppButton(
+            buttonType = ButtonType.Secondary,
+            text = stringResource(id = R.string.tutorial_button_skip),
+            onClick = component::onSkipClick,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 12.dp)
+                .padding(navigationBarsPadding)
+        )
+    }
+}
+
+@Composable
+private fun Background(
+    item: HighlightableItem,
+    modifier: Modifier = Modifier
+) {
     val density = LocalDensity.current
-    val layoutDirection = LocalLayoutDirection.current
-
-    if (message != null && item != null) {
-        SystemBars(transparentNavigationBar = true)
-        Box(modifier = modifier.fillMaxSize()) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize(),
-            ) {
-                val path = item.shape.createOutline(
-                    size = item.bounds.size,
-                    layoutDirection = layoutDirection,
-                    density = density
-                ).let {
-                    when (it) {
-                        is Outline.Generic -> it.path
-                        is Outline.Rectangle -> Path().apply { addRect(it.rect) }
-                        is Outline.Rounded -> Path().apply { addRoundRect(it.roundRect) }
-                    }
-                }.apply { translate(Offset(item.bounds.left, item.bounds.top)) }
-
-                clipPath(
-                    path = path,
-                    clipOp = ClipOp.Difference,
-                ) {
-                    drawRect(
-                        color = Color.Black.copy(alpha = 0.6f),
-                        size = this.size,
-                    )
-                }
+    Canvas(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        val path = item.shape.createOutline(
+            size = item.bounds.size,
+            layoutDirection = layoutDirection,
+            density = density
+        ).let {
+            when (it) {
+                is Outline.Generic -> it.path
+                is Outline.Rectangle -> Path().apply { addRect(it.rect) }
+                is Outline.Rounded -> Path().apply { addRoundRect(it.roundRect) }
             }
+        }.apply { translate(Offset(item.bounds.left, item.bounds.top)) }
 
-            TutorialMessagePopup(
-                message = message,
-                onOkClick = component::onOkClick,
-                highlightableItem = item,
-            )
-
-            AppButton(
-                buttonType = ButtonType.Secondary,
-                text = stringResource(id = R.string.tutorial_button_skip),
-                onClick = component::onSkipClick,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 12.dp)
-                    .padding(navigationBarsPadding)
+        clipPath(
+            path = path,
+            clipOp = ClipOp.Difference,
+        ) {
+            drawRect(
+                color = Color.Black.copy(alpha = 0.6f),
+                size = this.size,
             )
         }
     }
