@@ -7,14 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import ru.mobileup.samples.core.theme.AppTheme
-import ru.mobileup.samples.features.collapsing_toolbar.presentation.advanced.CollapsingToolbarAdvancedUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.common.CollapsingToolbarCommonUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.main.CollapsingToolbarMainUi
+import ru.mobileup.samples.features.collapsing_toolbar.presentation.specific.CollapsingToolbarSpecificUi
 
 @Composable
 fun CollapsingToolbarUi(
     component: CollapsingToolbarComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val stack by component.stack.collectAsState()
 
@@ -22,7 +22,7 @@ fun CollapsingToolbarUi(
         when (val instance = it.instance) {
             is CollapsingToolbarComponent.Child.Main -> CollapsingToolbarMainUi(instance.component)
             CollapsingToolbarComponent.Child.Common -> CollapsingToolbarCommonUi()
-            is CollapsingToolbarComponent.Child.Advanced -> CollapsingToolbarAdvancedUi(instance.component)
+            CollapsingToolbarComponent.Child.Specific -> CollapsingToolbarSpecificUi()
         }
     }
 }

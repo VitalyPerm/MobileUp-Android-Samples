@@ -9,7 +9,6 @@ import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
-import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarAdvancedComponent
 import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarMainComponent
 import ru.mobileup.samples.features.collapsing_toolbar.domain.ToolbarSample
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.main.CollapsingToolbarMainComponent
@@ -38,16 +37,13 @@ class RealCollapsingToolbarComponent(
         )
 
         Config.Common -> CollapsingToolbarComponent.Child.Common
-
-        Config.Advanced -> CollapsingToolbarComponent.Child.Advanced(
-            componentFactory.createCollapsingToolbarAdvancedComponent(componentContext)
-        )
+        Config.Specific -> CollapsingToolbarComponent.Child.Specific
     }
 
     private fun onMainOutput(output: CollapsingToolbarMainComponent.Output) = when (output) {
         is CollapsingToolbarMainComponent.Output.SampleChosen -> when (output.sample) {
             ToolbarSample.Common -> Config.Common
-            ToolbarSample.Advanced -> Config.Advanced
+            ToolbarSample.Specific -> Config.Specific
         }.run(navigation::safePush)
     }
 
@@ -61,6 +57,6 @@ class RealCollapsingToolbarComponent(
         data object Common : Config
 
         @Serializable
-        data object Advanced : Config
+        data object Specific : Config
     }
 }

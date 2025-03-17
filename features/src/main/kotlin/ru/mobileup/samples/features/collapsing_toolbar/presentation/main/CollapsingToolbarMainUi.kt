@@ -18,7 +18,7 @@ import ru.mobileup.samples.features.collapsing_toolbar.domain.ToolbarSample
 @Composable
 fun CollapsingToolbarMainUi(
     component: CollapsingToolbarMainComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
