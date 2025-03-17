@@ -32,10 +32,11 @@ fun RowScope.RecorderSelectorText(
         textAlign = TextAlign.Center,
         modifier = modifier
             .weight(1f)
-            .padding(vertical = 8.dp)
             .clickable {
                 onClick()
             }
+            .padding(vertical = 8.dp)
+
     )
 }
 

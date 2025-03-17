@@ -1,11 +1,11 @@
 <resources>
     <string name="menu_item_form">Form</string>
+    <string name="menu_item_otp">Otp</string>
     <string name="menu_item_video">Video</string>
     <string name="menu_item_calendar">Calendar</string>
     <string name="menu_item_navigation">Navigation</string>
-    <string name="menu_item_qr_code_generator">QR code generator</string>
-    <string name="menu_item_qr_code_scanner">QR code scanner</string>
     <string name="menu_item_qr_code">Qr code</string>
     <string name="menu_item_chart">Chart</string>
+    <string name="menu_item_collapsing_toolbar">Collapsing toolbar</string>
     <string name="menu_item_image">Image Carousel</string>
 </resources>

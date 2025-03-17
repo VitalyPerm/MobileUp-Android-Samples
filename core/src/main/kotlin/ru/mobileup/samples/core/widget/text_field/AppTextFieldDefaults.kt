@@ -10,7 +10,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
@@ -21,8 +24,13 @@ import ru.mobileup.samples.core.theme.custom.CustomTheme
 @Immutable
 object AppTextFieldDefaults {
 
+    const val CURSOR_ANIMATION_DURATION = 800
+
     @Stable
     val shape = RoundedCornerShape(28.dp)
+
+    @Stable
+    val otpShape = RoundedCornerShape(16.dp)
 
     @Stable
     val textStyle: TextStyle
@@ -112,6 +120,30 @@ object AppTextFieldDefaults {
             label = "animated border color"
         )
         return BorderStroke(width, color)
+    }
+
+    @Stable
+    @Composable
+    fun otpBorder(
+        textFieldStatus: OtpTextFieldStatus,
+        hasFocus: Boolean,
+        width: Dp = defaultBorderWidth
+    ): State<BorderStroke> {
+        val color by animateColorAsState(
+            targetValue = when (textFieldStatus) {
+                OtpTextFieldStatus.Neutral -> {
+                    if (hasFocus) {
+                        CustomTheme.colors.text.primary
+                    } else {
+                        CustomTheme.colors.text.secondary
+                    }
+                }
+                OtpTextFieldStatus.Correct -> CustomTheme.colors.text.positive
+                OtpTextFieldStatus.Error -> CustomTheme.colors.text.error
+            },
+            label = "animated border color"
+        )
+        return remember(color) { mutableStateOf(BorderStroke(width, color)) }
     }
 
     @Stable

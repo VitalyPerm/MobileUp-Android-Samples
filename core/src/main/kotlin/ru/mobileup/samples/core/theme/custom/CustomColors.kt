@@ -28,7 +28,8 @@ data class TextColors(
     val invert: Color,
     val invertDisabled: Color,
     val warning: Color,
-    val error: Color
+    val error: Color,
+    val positive: Color
 )
 
 data class IconColors(
@@ -42,6 +43,7 @@ data class IconColors(
 
 data class PaletteColors(
     val white: Color,
+    val white50: Color,
     val white10: Color,
     val black: Color,
     val black50: Color,

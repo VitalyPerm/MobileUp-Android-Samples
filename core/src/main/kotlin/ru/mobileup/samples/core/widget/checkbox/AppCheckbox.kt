@@ -9,12 +9,34 @@ import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.mobileup.kmm_form_validation.control.CheckControl
 import ru.mobileup.samples.core.theme.AppTheme
+
+@Composable
+fun AppCheckbox(
+    checkControl: CheckControl,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    colors: CheckboxColors = AppCheckboxDefaults.colors,
+) {
+    val value by checkControl.checked.collectAsState()
+    val enabled by checkControl.enabled.collectAsState()
+    AppCheckbox(
+        isChecked = value,
+        onCheckedChange = checkControl::onCheckedChanged,
+        modifier = modifier,
+        enabled = enabled,
+        interactionSource = interactionSource,
+        colors = colors
+    )
+}
 
 @Composable
 fun AppCheckbox(
