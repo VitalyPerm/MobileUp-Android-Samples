@@ -17,6 +17,7 @@ import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
 import ru.mobileup.samples.features.charts.presentation.ChartUi
+import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarUi
 import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
@@ -44,6 +45,7 @@ fun RootUi(
             is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
             is RootComponent.Child.Chart -> ChartUi(instance.component)
             is RootComponent.Child.Navigation -> NavigationUi(instance.component)
+            is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
         }
     }
 
