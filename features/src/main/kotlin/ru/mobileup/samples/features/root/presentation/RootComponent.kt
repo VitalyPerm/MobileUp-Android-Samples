@@ -8,6 +8,7 @@ import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
+import ru.mobileup.samples.features.image.presentation.ImageComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
@@ -38,6 +39,7 @@ interface RootComponent {
         class Chart(val component: ChartComponent) : Child
         class Navigation(val component: NavigationComponent) : Child
         class CollapsingToolbar(val component: CollapsingToolbarComponent) : Child
+        class Image(val component: ImageComponent) : Child
         class Tutorial(val component: TutorialSampleComponent) : Child
     }
 }

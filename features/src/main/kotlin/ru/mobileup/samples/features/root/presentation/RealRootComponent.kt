@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.root.presentation
 
+import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -15,6 +16,7 @@ import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarComponent
 import ru.mobileup.samples.features.form.createFormComponent
+import ru.mobileup.samples.features.image.createImageComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
@@ -106,6 +108,12 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.Image -> {
+            RootComponent.Child.Image(
+                componentFactory.createImageComponent(componentContext)
+            )
+        }
+
         ChildConfig.Tutorial -> {
             RootComponent.Child.Tutorial(
                 componentFactory.createTutorialSampleComponent(componentContext)
@@ -125,6 +133,7 @@ class RealRootComponent(
                     Sample.Chart -> ChildConfig.Chart
                     Sample.Navigation -> ChildConfig.Navigation
                     Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
+                    Sample.Image -> ChildConfig.Image
                     Sample.Tutorial -> ChildConfig.Tutorial
                 }
             )
@@ -166,6 +175,9 @@ class RealRootComponent(
 
         @Serializable
         data object CollapsingToolbar : ChildConfig
+
+        @Serializable
+        data object Image : ChildConfig
 
         @Serializable
         data object Tutorial : ChildConfig

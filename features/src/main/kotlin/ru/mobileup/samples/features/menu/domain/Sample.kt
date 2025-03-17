@@ -17,5 +17,6 @@ enum class Sample(
     Chart(R.string.menu_item_chart.strResDesc()),
     Navigation(R.string.menu_item_navigation.strResDesc()),
     CollapsingToolbar(R.string.menu_item_collapsing_toolbar.strResDesc()),
+    Image(R.string.menu_item_image.strResDesc()),
     Tutorial(R.string.menu_item_tutorial.strResDesc())
 }

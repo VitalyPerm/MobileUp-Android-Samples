@@ -3,6 +3,7 @@ calendar
 charts
 collapsing_toolbar
 form
+image
 menu
 navigation
 otp
@@ -14,6 +15,7 @@ root -> calendar
 root -> charts
 root -> collapsing_toolbar
 root -> form
+root -> image
 root -> menu
 root -> navigation
 root -> otp
