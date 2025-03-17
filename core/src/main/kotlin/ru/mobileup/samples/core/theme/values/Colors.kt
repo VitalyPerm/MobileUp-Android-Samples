@@ -26,7 +26,8 @@ val LightAppColors = CustomColors(
         invert = Color(0xFFFFFFFF),
         invertDisabled = Color(0xFFFFFFFF).copy(alpha = 0.4f),
         warning = Color(0xFFFAA105),
-        error = Color(0xFFB00020)
+        error = Color(0xFFB00020),
+        positive = Color(0xFF4CAF50)
     ),
     icon = IconColors(
         primary = Color(0xFF000000),

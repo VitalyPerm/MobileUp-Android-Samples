@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.form.presentation
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -26,8 +28,10 @@ import ru.mobileup.kmm_form_validation.options.VisualTransformation
 import ru.mobileup.samples.core.message.presentation.noOverlapByMessage
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.utils.systemBarsWithImePadding
+import ru.mobileup.samples.core.widget.TextWithLinks
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
+import ru.mobileup.samples.core.widget.checkbox.AppCheckbox
 import ru.mobileup.samples.core.widget.text_field.AppTextField
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.core.R as CoreR
@@ -82,6 +86,23 @@ fun FormUi(
                 },
                 visualTransformation = VisualTransformation.None.takeIf { isPasswordVisible }
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+
+                TextWithLinks(
+                    text = stringResource(R.string.form_policy),
+                    annotationsTags = FormComponent.agreementTags,
+                    onLinkClick = component::onAgreementClick,
+                    modifier = Modifier.weight(1f)
+                )
+
+                AppCheckbox(
+                    checkControl = component.agreementWithTermsCheckControl,
+                )
+            }
         }
 
         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {

@@ -1,18 +1,22 @@
 digraph {
 calendar
 charts
+collapsing_toolbar
 form
 menu
 navigation
+otp
 qr_code
 root
 tutorial
 video
 root -> calendar
 root -> charts
+root -> collapsing_toolbar
 root -> form
 root -> menu
 root -> navigation
+root -> otp
 root -> qr_code
 root -> tutorial
 root -> video

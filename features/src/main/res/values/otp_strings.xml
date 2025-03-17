@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="otp_caption_email">We have sent an email with a confirmation code to hello@mobileup.ru</string>
+    <string name="otp_send_again_caption">Send the code again</string>
+    <string name="otp_send_again_after_time_caption">Send the code again (after %s)</string>
+    <string name="otp_error_code">Invalid code, try again</string>
+    <string name="otp_reset_state">Reset state</string>
+</resources>

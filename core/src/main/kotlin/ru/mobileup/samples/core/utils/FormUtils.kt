@@ -6,7 +6,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.kmm_form_validation.control.CheckControl
 import ru.mobileup.kmm_form_validation.control.InputControl
+import ru.mobileup.kmm_form_validation.options.ImeAction
 import ru.mobileup.kmm_form_validation.options.KeyboardOptions
+import ru.mobileup.kmm_form_validation.options.KeyboardType
 import ru.mobileup.kmm_form_validation.options.TextTransformation
 import ru.mobileup.kmm_form_validation.options.VisualTransformation
 import ru.mobileup.kmm_form_validation.validation.form.FormValidationResult
@@ -14,6 +16,7 @@ import ru.mobileup.kmm_form_validation.validation.form.FormValidator
 import ru.mobileup.kmm_form_validation.validation.form.FormValidatorBuilder
 import ru.mobileup.kmm_form_validation.validation.form.dynamicValidationResult
 import ru.mobileup.kmm_form_validation.validation.form.formValidator
+import ru.mobileup.samples.core.utils.form.NumberTextTransformation
 
 fun ComponentContext.InputControl(
     initialText: String = "",
@@ -32,6 +35,19 @@ fun ComponentContext.InputControl(
     visualTransformation
 )
 
+fun ComponentContext.numberInputControl(
+    maxLength: Int = Int.MAX_VALUE,
+    imeAction: ImeAction = ImeAction.Next,
+): InputControl = InputControl(
+    coroutineScope = componentScope,
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number,
+        imeAction = imeAction
+    ),
+    maxLength = maxLength,
+    textTransformation = NumberTextTransformation
+)
+
 fun ComponentContext.CheckControl(
     initialChecked: Boolean = false
 ): CheckControl = CheckControl(componentScope, initialChecked)
@@ -46,3 +62,6 @@ fun ComponentContext.dynamicValidationResult(
 
 @OptIn(DelicateCoroutinesApi::class)
 fun fakeInputControl() = InputControl(GlobalScope)
+
+@OptIn(DelicateCoroutinesApi::class)
+fun fakeCheckControl() = CheckControl(GlobalScope)

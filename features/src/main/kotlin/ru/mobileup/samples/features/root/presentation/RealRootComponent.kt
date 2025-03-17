@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
@@ -12,18 +13,21 @@ import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
+import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
+import ru.mobileup.samples.features.otp.createOtpComponent
+import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
-    private val componentFactory: ComponentFactory
+    private val componentFactory: ComponentFactory,
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<ChildConfig>()
@@ -46,21 +50,27 @@ class RealRootComponent(
 
     private fun createChild(
         config: ChildConfig,
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): RootComponent.Child = when (config) {
-        is ChildConfig.Menu -> {
+        ChildConfig.Menu -> {
             RootComponent.Child.Menu(
                 componentFactory.createMenuComponent(componentContext, ::onMenuOutput)
             )
         }
 
-        is ChildConfig.Form -> {
+        ChildConfig.Form -> {
             RootComponent.Child.Form(
                 componentFactory.createFormComponent(componentContext)
             )
         }
 
-        is ChildConfig.Video -> {
+        ChildConfig.Otp -> {
+            RootComponent.Child.Otp(
+                componentFactory.createOtpComponent(componentContext, ::onOtpOutput)
+            )
+        }
+
+        ChildConfig.Video -> {
             RootComponent.Child.Video(
                 componentFactory.createVideoComponent(componentContext)
             )
@@ -90,6 +100,12 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.CollapsingToolbar -> {
+            RootComponent.Child.CollapsingToolbar(
+                componentFactory.createCollapsingToolbarComponent(componentContext)
+            )
+        }
+
         ChildConfig.Tutorial -> {
             RootComponent.Child.Tutorial(
                 componentFactory.createTutorialSampleComponent(componentContext)
@@ -102,14 +118,22 @@ class RealRootComponent(
             is MenuComponent.Output.SampleChosen -> navigation.safePush(
                 when (output.sample) {
                     Sample.Form -> ChildConfig.Form
+                    Sample.Otp -> ChildConfig.Otp
                     Sample.Video -> ChildConfig.Video
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
                     Sample.Navigation -> ChildConfig.Navigation
+                    Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
                     Sample.Tutorial -> ChildConfig.Tutorial
                 }
             )
+        }
+    }
+
+    private fun onOtpOutput(output: OtpComponent.Output) {
+        when (output) {
+            OtpComponent.Output.OtpSuccessfullyVerified -> navigation.pop()
         }
     }
 
@@ -121,6 +145,9 @@ class RealRootComponent(
 
         @Serializable
         data object Form : ChildConfig
+
+        @Serializable
+        data object Otp : ChildConfig
 
         @Serializable
         data object Video : ChildConfig
@@ -136,6 +163,9 @@ class RealRootComponent(
 
         @Serializable
         data object Navigation : ChildConfig
+
+        @Serializable
+        data object CollapsingToolbar : ChildConfig
 
         @Serializable
         data object Tutorial : ChildConfig
