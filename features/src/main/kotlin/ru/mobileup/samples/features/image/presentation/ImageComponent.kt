@@ -1,16 +1,13 @@
 package ru.mobileup.samples.features.image.presentation
 
-import com.arkivanov.decompose.router.stack.ChildStack
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.features.image.presentation.carousel.ImageCarouselComponent
-import ru.mobileup.samples.features.image.presentation.viewer.ImageViewerComponent
 
 interface ImageComponent {
 
-    val childStack: StateFlow<ChildStack<*, Child>>
+    val imageCarouselComponent: ImageCarouselComponent
 
-    sealed interface Child {
-        data class Carousel(val component: ImageCarouselComponent) : Child
-        data class Viewer(val component: ImageViewerComponent) : Child
-    }
+    val title: StateFlow<StringDesc>
+    val description: StateFlow<StringDesc>
 }
