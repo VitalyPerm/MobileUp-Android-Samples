@@ -9,6 +9,7 @@ navigation
 otp
 qr_code
 root
+tutorial
 video
 root -> calendar
 root -> charts
@@ -19,5 +20,6 @@ root -> menu
 root -> navigation
 root -> otp
 root -> qr_code
+root -> tutorial
 root -> video
 }

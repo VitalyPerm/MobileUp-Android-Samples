@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
 import ru.mobileup.samples.core.message.presentation.MessageUi
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
@@ -24,6 +25,7 @@ import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
+import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
@@ -48,8 +50,11 @@ fun RootUi(
             is RootComponent.Child.Navigation -> NavigationUi(instance.component)
             is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
             is RootComponent.Child.Image -> ImageUi(instance.component)
+            is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
         }
     }
+
+    TutorialOverlayUi(component.tutorialOverlayComponent)
 
     MessageUi(
         component = component.messageComponent,

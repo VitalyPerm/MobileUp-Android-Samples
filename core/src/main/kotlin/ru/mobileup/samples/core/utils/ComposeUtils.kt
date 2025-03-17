@@ -20,6 +20,21 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.abs
 
+@Composable
+fun Dp.toPx(): Int {
+    return with(LocalDensity.current) { roundToPx() }
+}
+
+@Composable
+fun Float.toDp(): Dp {
+    return with(LocalDensity.current) { toDp() }
+}
+
+@Composable
+fun Int.toDp(): Dp {
+    return with(LocalDensity.current) { toDp() }
+}
+
 fun Modifier.clickableNoRipple(enabled: Boolean = true, listener: () -> Unit) = composed {
     clickable(
         interactionSource = remember { MutableInteractionSource() },
@@ -28,9 +43,6 @@ fun Modifier.clickableNoRipple(enabled: Boolean = true, listener: () -> Unit) = 
         enabled = enabled
     )
 }
-
-@Composable
-fun Dp.toPx() = with(LocalDensity.current) { this@toPx.toPx() }
 
 fun Modifier.zoomable(
     minScale: Float,

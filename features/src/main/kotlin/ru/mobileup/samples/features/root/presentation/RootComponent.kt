@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.root.presentation
 import com.arkivanov.decompose.router.stack.ChildStack
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.message.presentation.MessageComponent
+import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayComponent
 import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarComponent
@@ -12,6 +13,7 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
+import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 
 /**
@@ -22,6 +24,8 @@ import ru.mobileup.samples.features.video.presentation.VideoComponent
 interface RootComponent {
 
     val childStack: StateFlow<ChildStack<*, Child>>
+
+    val tutorialOverlayComponent: TutorialOverlayComponent
 
     val messageComponent: MessageComponent
 
@@ -36,5 +40,6 @@ interface RootComponent {
         class Navigation(val component: NavigationComponent) : Child
         class CollapsingToolbar(val component: CollapsingToolbarComponent) : Child
         class Image(val component: ImageComponent) : Child
+        class Tutorial(val component: TutorialSampleComponent) : Child
     }
 }

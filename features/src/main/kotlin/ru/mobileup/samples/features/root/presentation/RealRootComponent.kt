@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.pop
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.createMessageComponent
+import ru.mobileup.samples.core.createTutorialOverlayComponent
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
@@ -23,6 +24,7 @@ import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
+import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
@@ -42,6 +44,10 @@ class RealRootComponent(
 
     override val messageComponent = componentFactory.createMessageComponent(
         childContext(key = "message")
+    )
+
+    override val tutorialOverlayComponent = componentFactory.createTutorialOverlayComponent(
+        childContext("tutorialOverlay")
     )
 
     private fun createChild(
@@ -107,6 +113,12 @@ class RealRootComponent(
                 componentFactory.createImageComponent(componentContext)
             )
         }
+
+        ChildConfig.Tutorial -> {
+            RootComponent.Child.Tutorial(
+                componentFactory.createTutorialSampleComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -122,6 +134,7 @@ class RealRootComponent(
                     Sample.Navigation -> ChildConfig.Navigation
                     Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
                     Sample.Image -> ChildConfig.Image
+                    Sample.Tutorial -> ChildConfig.Tutorial
                 }
             )
         }
@@ -165,5 +178,8 @@ class RealRootComponent(
 
         @Serializable
         data object Image : ChildConfig
+
+        @Serializable
+        data object Tutorial : ChildConfig
     }
 }
