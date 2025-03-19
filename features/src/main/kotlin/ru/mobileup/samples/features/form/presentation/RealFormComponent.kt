@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.form.presentation
 import android.content.Intent
 import androidx.core.net.toUri
 import com.arkivanov.decompose.ComponentContext
+import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +13,7 @@ import ru.mobileup.kmm_form_validation.control.CheckControl
 import ru.mobileup.kmm_form_validation.options.ImeAction
 import ru.mobileup.kmm_form_validation.options.KeyboardOptions
 import ru.mobileup.kmm_form_validation.options.KeyboardType
-import ru.mobileup.kmm_form_validation.options.PasswordVisualTransformation
 import ru.mobileup.kmm_form_validation.validation.control.isNotBlank
-import ru.mobileup.kmm_form_validation.validation.control.regex
 import ru.mobileup.kmm_form_validation.validation.control.validation
 import ru.mobileup.kmm_form_validation.validation.form.FormValidator
 import ru.mobileup.kmm_form_validation.validation.form.RevalidateOnValueChanged
@@ -28,6 +27,7 @@ import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.CheckControl
 import ru.mobileup.samples.core.utils.InputControl
 import ru.mobileup.samples.core.utils.PhoneNumberVisualTransformation
+import ru.mobileup.samples.core.utils.ResourceFormatted
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.core.utils.formValidator
@@ -37,11 +37,8 @@ import ru.mobileup.samples.core.R as CoreR
 
 private const val PHONE_PREFIX_DIGIT = "7"
 private const val PHONE_DIGIT_COUNT_WITHOUT_PREFIX = 10 // 7 XXX XXX XX XX
-private const val PASSWORD_REGEX_LENGTH = "^.{8,20}$"
-private const val PASSWORD_REGEX_LOWERCASE = ".*[a-z].*"
-private const val PASSWORD_REGEX_UPPERCASE = ".*[A-Z].*"
-private const val PASSWORD_REGEX_DIGIT = ".*\\d.*"
-private const val PASSWORD_REGEX_SPEC = ".*[!\"#\$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~].*"
+private const val PASSWORD_SPEC_CHARS = "!@#$%^&*_-+"
+private val PASSWORD_RANGE = 8..20
 
 class RealFormComponent(
     componentContext: ComponentContext,
@@ -66,7 +63,6 @@ class RealFormComponent(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        visualTransformation = PasswordVisualTransformation(),
     )
 
     override val agreementWithTermsCheckControl: CheckControl = CheckControl()
@@ -88,28 +84,29 @@ class RealFormComponent(
         }
 
         input(passwordInputControl) {
-            regex(
-                PASSWORD_REGEX_LOWERCASE.toRegex(),
-                R.string.form_password_error_lowercase.strResDesc()
-            )
-            regex(
-                PASSWORD_REGEX_UPPERCASE.toRegex(),
-                R.string.form_password_error_uppercase.strResDesc()
-            )
-            regex(
-                PASSWORD_REGEX_DIGIT.toRegex(),
-                R.string.form_password_error_digit.strResDesc()
-            )
-            regex(
-                PASSWORD_REGEX_SPEC.toRegex(),
-                R.string.form_password_error_spec.strResDesc()
-            )
-            regex(
-                PASSWORD_REGEX_LENGTH.toRegex(),
-                R.string.form_password_error_length.strResDesc()
-            )
             isNotBlank(CoreR.string.field_error_is_blank.strResDesc())
+
+            validation(
+                isValid = ::isPasswordValid,
+                errorMessage = StringDesc.ResourceFormatted(
+                    R.string.form_password_error,
+                    PASSWORD_RANGE.first,
+                    PASSWORD_RANGE.last,
+                    PASSWORD_SPEC_CHARS
+                )
+            )
         }
+    }
+
+    private fun isPasswordValid(password: String): Boolean = password.run {
+        val containsDigit = any(Char::isDigit)
+        val containsLowercase = any(Char::isLowerCase)
+        val containsUppercase = any(Char::isUpperCase)
+        val containsSpecChar = any { it in PASSWORD_SPEC_CHARS }
+        val notContainsInvalidChar = !any { !it.isLetterOrDigit() && it !in PASSWORD_SPEC_CHARS }
+        val validLength = length in PASSWORD_RANGE
+
+        containsDigit && containsLowercase && containsUppercase && containsSpecChar && notContainsInvalidChar && validLength
     }
 
     override val isLoginEnabled = computed(

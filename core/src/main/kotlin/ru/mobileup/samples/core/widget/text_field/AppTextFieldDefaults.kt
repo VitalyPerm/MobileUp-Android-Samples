@@ -22,6 +22,12 @@ import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 
 @Immutable
+enum class TextFieldType {
+    Common,
+    Secure
+}
+
+@Immutable
 object AppTextFieldDefaults {
 
     const val CURSOR_ANIMATION_DURATION = 800

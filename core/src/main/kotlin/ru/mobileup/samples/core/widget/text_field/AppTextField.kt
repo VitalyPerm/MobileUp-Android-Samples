@@ -22,28 +22,19 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +50,6 @@ import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.isKeyboardVisibleAsState
 import ru.mobileup.kmm_form_validation.options.KeyboardOptions as KmmKeyboardOptions
-import ru.mobileup.kmm_form_validation.options.PasswordVisualTransformation as KmmPasswordVisualTransformation
 import ru.mobileup.kmm_form_validation.options.VisualTransformation as KmmVisualTransformation
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -68,6 +58,7 @@ fun AppTextField(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    type: TextFieldType = TextFieldType.Common,
     onFocusChange: (Boolean) -> Unit = {},
     isEnabled: Boolean = true,
     supportingText: String? = null,
@@ -76,6 +67,7 @@ fun AppTextField(
     prefix: String? = null,
     suffix: String? = null,
     isError: Boolean = false,
+    isPasswordVisible: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = Int.MAX_VALUE,
     singleLine: Boolean = minLines == 1,
@@ -108,28 +100,12 @@ fun AppTextField(
     }
 
     LaunchedEffect(hasFocus, isKeyboardVisible) {
-        if (hasFocus && isKeyboardVisible) {
+        if (hasFocus) {
             focusRequester.requestFocus()
-            delay(30) // Wait for the keyboard to fully open before bringing the text field into view
-            bringIntoViewRequester.bringIntoView()
-        }
-    }
-
-    val currentValue by rememberUpdatedState(text)
-    var currentSelection by rememberSaveable(stateSaver = TextRangeSaver) {
-        mutableStateOf(TextRange(0))
-    }
-    var currentComposition by rememberSaveable(stateSaver = NullableTextRangeSaver) {
-        mutableStateOf(null)
-    }
-    val currentTextFieldValue by remember {
-        derivedStateOf {
-            TextFieldValue(currentValue, currentSelection, currentComposition)
-        }
-    }
-    LaunchedEffect(moveCursorEvent) {
-        moveCursorEvent.collectLatest {
-            currentSelection = TextRange(it)
+            if (isKeyboardVisible) {
+                delay(30) // Wait for the keyboard to fully open before bringing the text field into view
+                bringIntoViewRequester.bringIntoView()
+            }
         }
     }
 
@@ -147,70 +123,70 @@ fun AppTextField(
             )
         }
 
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(border = border, shape = shape)
-                .focusRequester(focusRequester)
-                .onFocusChanged { onFocusChange(it.isFocused) },
-            value = currentTextFieldValue,
-            onValueChange = {
-                onTextChange(it.text)
-                currentSelection = it.selection
-                currentComposition = it.composition
-            },
-            enabled = isEnabled,
-            readOnly = !isEnabled,
-            textStyle = textStyle,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            singleLine = singleLine,
-            maxLines = maxLines,
-            minLines = minLines,
-            visualTransformation = visualTransformation,
-            interactionSource = interactionSource,
-            label = label?.let {
-                {
-                    Text(text = it, style = labelStyle)
-                }
-            },
-            placeholder = placeholder?.let {
-                {
-                    Text(text = it, style = textStyle)
-                }
-            },
-            prefix = prefix?.let {
-                {
-                    Text(text = it, style = textStyle)
-                }
-            },
-            suffix = suffix?.let {
-                {
-                    Text(text = it, style = textStyle)
-                }
-            },
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            shape = shape,
-            isError = isError,
-            colors = colors,
-        )
+        val textFieldModifier = Modifier
+            .border(border, shape)
+            .focusRequester(focusRequester)
+            .onFocusChanged { onFocusChange(it.isFocused) }
+
+        when (type) {
+            TextFieldType.Common -> CommonAppTextField(
+                modifier = textFieldModifier,
+                text = text,
+                onTextChange = onTextChange,
+                isEnabled = isEnabled,
+                prefix = prefix,
+                suffix = suffix,
+                isError = isError,
+                minLines = minLines,
+                maxLines = maxLines,
+                singleLine = singleLine,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                visualTransformation = visualTransformation,
+                interactionSource = interactionSource,
+                shape = shape,
+                colors = colors,
+                textStyle = textStyle,
+                labelStyle = labelStyle,
+                moveCursorEvent = moveCursorEvent,
+                label = label,
+                placeholder = placeholder,
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+            )
+
+            TextFieldType.Secure -> SecureAppTextField(
+                modifier = textFieldModifier,
+                text = text,
+                onTextChange = onTextChange,
+                isPasswordVisible = isPasswordVisible,
+                shape = shape,
+                textStyle = textStyle,
+                labelStyle = labelStyle,
+                colors = colors,
+                leadingIcon = leadingIcon,
+                moveCursorEvent = moveCursorEvent,
+                label = label,
+                placeholder = placeholder,
+                interactionSource = interactionSource,
+                isError = isError,
+                isEnabled = isEnabled,
+                keyboardOptions = keyboardOptions,
+                trailingIcon = trailingIcon
+            )
+        }
 
         AnimatedContent(
-            targetState = errorText ?: supportingText,
+            targetState = errorText?.let { it to true } ?: (supportingText to false),
             transitionSpec = {
-                slideInVertically { -it } togetherWith slideOutVertically { it }
+                slideInVertically { it } togetherWith slideOutVertically { -2 * it }
             }
-        ) { textToDisplay ->
+        ) { (textToDisplay, isError) ->
             if (!textToDisplay.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     text = textToDisplay,
-                    color = if (textToDisplay == errorText) {
-                        CustomTheme.colors.text.error
-                    } else {
-                        CustomTheme.colors.text.primary
-                    },
+                    color = if (isError) CustomTheme.colors.text.error else CustomTheme.colors.text.primary,
                     style = CustomTheme.typography.caption.regular
                 )
             }
@@ -222,8 +198,10 @@ fun AppTextField(
 fun AppTextField(
     inputControl: InputControl,
     modifier: Modifier = Modifier,
+    type: TextFieldType = TextFieldType.Common,
     minLines: Int = 1,
     maxLines: Int = Int.MAX_VALUE,
+    isPasswordVisible: Boolean = false,
     keyboardActions: KeyboardActions = AppTextFieldDefaults.defaultKeyboardActions,
     colors: TextFieldColors = AppTextFieldDefaults.colors,
     textStyle: TextStyle = AppTextFieldDefaults.textStyle,
@@ -240,70 +218,49 @@ fun AppTextField(
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    if (inputControl.visualTransformation is KmmPasswordVisualTransformation) {
-        SecureAppTextField(
-            modifier = modifier,
-            inputControl = inputControl,
-            headerText = headerText,
-            supportingText = supportingText,
-            placeholder = placeholder,
-            leadingIcon = leadingIcon,
-            label = label,
-            interactionSource = interactionSource
-        )
-    } else {
-        val hasFocus by inputControl.hasFocus.collectAsState()
-        val error by inputControl.error.collectAsState()
-        val enabled by inputControl.enabled.collectAsState()
-        val text by inputControl.text.collectAsState()
+    val hasFocus by inputControl.hasFocus.collectAsState()
+    val error by inputControl.error.collectAsState()
+    val enabled by inputControl.enabled.collectAsState()
+    val text by inputControl.text.collectAsState()
 
-        AppTextField(
-            modifier = modifier,
-            text = text,
-            label = label,
-            placeholder = placeholder,
+    AppTextField(
+        modifier = modifier,
+        type = type,
+        text = text,
+        label = label,
+        placeholder = placeholder,
+        isError = error != null,
+        isPasswordVisible = isPasswordVisible,
+        supportingText = supportingText,
+        headerText = headerText,
+        errorText = error?.localized(),
+        prefix = prefix,
+        suffix = suffix,
+        isEnabled = enabled,
+        onTextChange = inputControl::onTextChanged,
+        onFocusChange = inputControl::onFocusChanged,
+        singleLine = minLines == 1,
+        keyboardOptions = inputControl.keyboardOptions.toCompose(),
+        keyboardActions = keyboardActions,
+        visualTransformation = (visualTransformation
+            ?: inputControl.visualTransformation).toCompose(),
+        hasFocus = hasFocus,
+        scrollToItEvent = inputControl.scrollToItEvent,
+        moveCursorEvent = inputControl.moveCursorEvent,
+        minLines = minLines,
+        maxLines = maxLines,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        colors = colors,
+        textStyle = textStyle,
+        labelStyle = labelStyle,
+        border = border ?: AppTextFieldDefaults.border(
             isError = error != null,
-            supportingText = supportingText,
-            headerText = headerText,
-            errorText = error?.localized(),
-            prefix = prefix,
-            suffix = suffix,
-            isEnabled = enabled,
-            onTextChange = inputControl::onTextChanged,
-            onFocusChange = inputControl::onFocusChanged,
-            singleLine = minLines == 1,
-            keyboardOptions = inputControl.keyboardOptions.toCompose(),
-            keyboardActions = keyboardActions,
-            visualTransformation = (visualTransformation
-                ?: inputControl.visualTransformation).toCompose(),
-            hasFocus = hasFocus,
-            scrollToItEvent = inputControl.scrollToItEvent,
-            moveCursorEvent = inputControl.moveCursorEvent,
-            minLines = minLines,
-            maxLines = maxLines,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            colors = colors,
-            textStyle = textStyle,
-            labelStyle = labelStyle,
-            border = border ?: AppTextFieldDefaults.border(
-                isError = error != null,
-                hasFocus = hasFocus
-            ),
-            interactionSource = interactionSource,
-        )
-    }
+            hasFocus = hasFocus
+        ),
+        interactionSource = interactionSource,
+    )
 }
-
-private val TextRangeSaver = listSaver(
-    save = { listOf(it.start, it.end) },
-    restore = { TextRange(it[0], it[1]) }
-)
-
-private val NullableTextRangeSaver = listSaver<TextRange?, Int>(
-    save = { if (it != null) listOf(it.start, it.end) else emptyList() },
-    restore = { TextRange(it[0], it[1]) }
-)
 
 @Preview(showBackground = true)
 @Composable
@@ -335,6 +292,11 @@ private fun AppTextFieldPreview() {
     ).apply {
         error.value = "Error".desc()
     }
+    val inputControl7 = InputControl(
+        coroutineScope = scope,
+        initialText = "1234567890",
+        keyboardOptions = KmmKeyboardOptions()
+    )
 
     AppTheme {
         Column(
@@ -392,6 +354,19 @@ private fun AppTextFieldPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 inputControl = inputControl5,
                 placeholder = "000 000 00 00",
+            )
+            AppTextField(
+                modifier = Modifier.fillMaxWidth(),
+                type = TextFieldType.Secure,
+                inputControl = inputControl7,
+                label = "Password",
+            )
+            AppTextField(
+                modifier = Modifier.fillMaxWidth(),
+                type = TextFieldType.Secure,
+                inputControl = inputControl7,
+                label = "Password",
+                isPasswordVisible = true
             )
         }
     }

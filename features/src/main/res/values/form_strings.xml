@@ -3,9 +3,5 @@
     <string name="form_password_placeholder">Password</string>
     <string name="form_policy">I agree to [the terms of use] and [privacy policy]</string>
     <string name="form_login">Log-in</string>
-    <string name="form_password_error_length">Password must be 8–20 characters</string>
-    <string name="form_password_error_lowercase">At least 1 lowercase letter</string>
-    <string name="form_password_error_uppercase">At least 1 uppercase letter</string>
-    <string name="form_password_error_digit">At least 1 digit</string>
-    <string name="form_password_error_spec">At least 1 special symbols</string>
+    <string name="form_password_error">Your password must be %1$s–%2$s characters long, include at least one digit, one lowercase letter, one uppercase letter, and one special character (%3$s), and must not contain spaces.</string>
 </resources>
