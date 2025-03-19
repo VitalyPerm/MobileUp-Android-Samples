@@ -1,7 +1,10 @@
 package ru.mobileup.samples.core.widget.text_field
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -23,7 +26,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.desc
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
@@ -54,7 +57,9 @@ import ru.mobileup.kmm_form_validation.control.InputControl
 import ru.mobileup.kmm_form_validation.toCompose
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.isKeyboardVisibleAsState
 import ru.mobileup.kmm_form_validation.options.KeyboardOptions as KmmKeyboardOptions
+import ru.mobileup.kmm_form_validation.options.PasswordVisualTransformation as KmmPasswordVisualTransformation
 import ru.mobileup.kmm_form_validation.options.VisualTransformation as KmmVisualTransformation
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -92,16 +97,20 @@ fun AppTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val focusRequester = remember { FocusRequester() }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
-    if (hasFocus) {
-        SideEffect {
-            focusRequester.requestFocus()
+    val isKeyboardVisible by isKeyboardVisibleAsState()
+
+    LaunchedEffect(scrollToItEvent) {
+        scrollToItEvent.collectLatest {
+            bringIntoViewRequester.bringIntoView()
         }
     }
 
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    LaunchedEffect(key1 = scrollToItEvent) {
-        scrollToItEvent.collectLatest {
+    LaunchedEffect(hasFocus, isKeyboardVisible) {
+        if (hasFocus && isKeyboardVisible) {
+            focusRequester.requestFocus()
+            delay(30) // Wait for the keyboard to fully open before bringing the text field into view
             bringIntoViewRequester.bringIntoView()
         }
     }
@@ -187,9 +196,11 @@ fun AppTextField(
             colors = colors,
         )
 
-        Crossfade(
+        AnimatedContent(
             targetState = errorText ?: supportingText,
-            label = "supporting text animation"
+            transitionSpec = {
+                slideInVertically { -it } togetherWith slideOutVertically { it }
+            }
         ) { textToDisplay ->
             if (!textToDisplay.isNullOrEmpty()) {
                 Text(
@@ -229,46 +240,59 @@ fun AppTextField(
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    val hasFocus by inputControl.hasFocus.collectAsState()
-    val error by inputControl.error.collectAsState()
-    val enabled by inputControl.enabled.collectAsState()
-    val text by inputControl.text.collectAsState()
+    if (inputControl.visualTransformation is KmmPasswordVisualTransformation) {
+        SecureAppTextField(
+            modifier = modifier,
+            inputControl = inputControl,
+            headerText = headerText,
+            supportingText = supportingText,
+            placeholder = placeholder,
+            leadingIcon = leadingIcon,
+            label = label,
+            interactionSource = interactionSource
+        )
+    } else {
+        val hasFocus by inputControl.hasFocus.collectAsState()
+        val error by inputControl.error.collectAsState()
+        val enabled by inputControl.enabled.collectAsState()
+        val text by inputControl.text.collectAsState()
 
-    AppTextField(
-        modifier = modifier,
-        text = text,
-        label = label,
-        placeholder = placeholder,
-        isError = error != null,
-        supportingText = supportingText,
-        headerText = headerText,
-        errorText = error?.localized(),
-        prefix = prefix,
-        suffix = suffix,
-        isEnabled = enabled,
-        onTextChange = inputControl::onTextChanged,
-        onFocusChange = inputControl::onFocusChanged,
-        singleLine = minLines == 1,
-        keyboardOptions = inputControl.keyboardOptions.toCompose(),
-        keyboardActions = keyboardActions,
-        visualTransformation = (visualTransformation
-            ?: inputControl.visualTransformation).toCompose(),
-        hasFocus = hasFocus,
-        scrollToItEvent = inputControl.scrollToItEvent,
-        moveCursorEvent = inputControl.moveCursorEvent,
-        minLines = minLines,
-        maxLines = maxLines,
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        colors = colors,
-        textStyle = textStyle,
-        labelStyle = labelStyle,
-        border = border ?: AppTextFieldDefaults.border(
+        AppTextField(
+            modifier = modifier,
+            text = text,
+            label = label,
+            placeholder = placeholder,
             isError = error != null,
-            hasFocus = hasFocus
-        ),
-        interactionSource = interactionSource,
-    )
+            supportingText = supportingText,
+            headerText = headerText,
+            errorText = error?.localized(),
+            prefix = prefix,
+            suffix = suffix,
+            isEnabled = enabled,
+            onTextChange = inputControl::onTextChanged,
+            onFocusChange = inputControl::onFocusChanged,
+            singleLine = minLines == 1,
+            keyboardOptions = inputControl.keyboardOptions.toCompose(),
+            keyboardActions = keyboardActions,
+            visualTransformation = (visualTransformation
+                ?: inputControl.visualTransformation).toCompose(),
+            hasFocus = hasFocus,
+            scrollToItEvent = inputControl.scrollToItEvent,
+            moveCursorEvent = inputControl.moveCursorEvent,
+            minLines = minLines,
+            maxLines = maxLines,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            colors = colors,
+            textStyle = textStyle,
+            labelStyle = labelStyle,
+            border = border ?: AppTextFieldDefaults.border(
+                isError = error != null,
+                hasFocus = hasFocus
+            ),
+            interactionSource = interactionSource,
+        )
+    }
 }
 
 private val TextRangeSaver = listSaver(

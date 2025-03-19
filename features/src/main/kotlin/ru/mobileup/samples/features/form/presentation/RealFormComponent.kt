@@ -14,6 +14,7 @@ import ru.mobileup.kmm_form_validation.options.KeyboardOptions
 import ru.mobileup.kmm_form_validation.options.KeyboardType
 import ru.mobileup.kmm_form_validation.options.PasswordVisualTransformation
 import ru.mobileup.kmm_form_validation.validation.control.isNotBlank
+import ru.mobileup.kmm_form_validation.validation.control.regex
 import ru.mobileup.kmm_form_validation.validation.control.validation
 import ru.mobileup.kmm_form_validation.validation.form.FormValidator
 import ru.mobileup.kmm_form_validation.validation.form.RevalidateOnValueChanged
@@ -31,16 +32,22 @@ import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.core.utils.formValidator
 import ru.mobileup.samples.core.utils.withProgress
+import ru.mobileup.samples.features.R
 import ru.mobileup.samples.core.R as CoreR
 
 private const val PHONE_PREFIX_DIGIT = "7"
 private const val PHONE_DIGIT_COUNT_WITHOUT_PREFIX = 10 // 7 XXX XXX XX XX
+private const val PASSWORD_REGEX_LENGTH = "^.{8,20}$"
+private const val PASSWORD_REGEX_LOWERCASE = ".*[a-z].*"
+private const val PASSWORD_REGEX_UPPERCASE = ".*[A-Z].*"
+private const val PASSWORD_REGEX_DIGIT = ".*\\d.*"
+private const val PASSWORD_REGEX_SPEC = ".*[!\"#\$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~].*"
 
 class RealFormComponent(
     componentContext: ComponentContext,
     private val activityProvider: ActivityProvider,
     private val errorHandler: ErrorHandler,
-    private val messageService: MessageService
+    private val messageService: MessageService,
 ) : ComponentContext by componentContext, FormComponent {
 
     override val phoneInputControl = InputControl(
@@ -59,7 +66,7 @@ class RealFormComponent(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
     )
 
     override val agreementWithTermsCheckControl: CheckControl = CheckControl()
@@ -81,6 +88,26 @@ class RealFormComponent(
         }
 
         input(passwordInputControl) {
+            regex(
+                PASSWORD_REGEX_LOWERCASE.toRegex(),
+                R.string.form_password_error_lowercase.strResDesc()
+            )
+            regex(
+                PASSWORD_REGEX_UPPERCASE.toRegex(),
+                R.string.form_password_error_uppercase.strResDesc()
+            )
+            regex(
+                PASSWORD_REGEX_DIGIT.toRegex(),
+                R.string.form_password_error_digit.strResDesc()
+            )
+            regex(
+                PASSWORD_REGEX_SPEC.toRegex(),
+                R.string.form_password_error_spec.strResDesc()
+            )
+            regex(
+                PASSWORD_REGEX_LENGTH.toRegex(),
+                R.string.form_password_error_length.strResDesc()
+            )
             isNotBlank(CoreR.string.field_error_is_blank.strResDesc())
         }
     }
@@ -129,9 +156,13 @@ class RealFormComponent(
             when (tag) {
                 FormComponent.PRIVACY_POLICY -> {
                     activityProvider.awaitActivity().startActivity(
-                        Intent(Intent.ACTION_VIEW, "https://career.habr.com/companies/mobileup".toUri())
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            "https://career.habr.com/companies/mobileup".toUri()
+                        )
                     )
                 }
+
                 FormComponent.TERMS_OF_USE_TAG -> {
                     activityProvider.awaitActivity().startActivity(
                         Intent(Intent.ACTION_VIEW, "https://mobileup.ru/".toUri())
