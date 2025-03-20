@@ -24,6 +24,9 @@ dependencies {
 
     // UI
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material.icons)
+    // TODO( Remove when a stable release is available)
+    implementation("androidx.compose.material3:material3:1.4.0-alpha10")
     implementation(libs.bundles.accompanist)
 
     // DI

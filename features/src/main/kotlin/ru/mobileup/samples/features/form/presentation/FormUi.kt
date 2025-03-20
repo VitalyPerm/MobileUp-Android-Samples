@@ -1,6 +1,8 @@
 package ru.mobileup.samples.features.form.presentation
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,13 +35,14 @@ import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.core.widget.checkbox.AppCheckbox
 import ru.mobileup.samples.core.widget.text_field.AppTextField
+import ru.mobileup.samples.core.widget.text_field.TextFieldType
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.core.R as CoreR
 
 @Composable
 fun FormUi(
     component: FormComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -49,8 +52,9 @@ fun FormUi(
         Column(
             modifier = Modifier
                 .weight(1.0f)
-                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val phone by component.phoneInputControl.text.collectAsState()
             val phoneHasFocus by component.phoneInputControl.hasFocus.collectAsState()
@@ -65,42 +69,40 @@ fun FormUi(
             var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
             AppTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
+                isPasswordVisible = isPasswordVisible,
+                type = TextFieldType.Secure,
                 inputControl = component.passwordInputControl,
                 placeholder = stringResource(R.string.form_password_placeholder),
                 trailingIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable { isPasswordVisible = !isPasswordVisible }
-                            .padding(8.dp),
-                        painter = if (isPasswordVisible) {
-                            painterResource(CoreR.drawable.ic_24_eye_on)
-                        } else {
-                            painterResource(CoreR.drawable.ic_24_eye_off)
-                        },
-                        contentDescription = null
-                    )
-                },
-                visualTransformation = VisualTransformation.None.takeIf { isPasswordVisible }
+                    Crossfade(isPasswordVisible) { visible ->
+                        Icon(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable { isPasswordVisible = !isPasswordVisible }
+                                .padding(8.dp),
+                            painter = painterResource(
+                                if (visible) CoreR.drawable.ic_24_eye_on else CoreR.drawable.ic_24_eye_off
+                            ),
+                            contentDescription = null
+                        )
+                    }
+                }
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalAlignment = Alignment.Top
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
+                AppCheckbox(
+                    modifier = Modifier.align(Alignment.Top),
+                    checkControl = component.agreementWithTermsCheckControl,
+                )
                 TextWithLinks(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     text = stringResource(R.string.form_policy),
                     annotationsTags = FormComponent.agreementTags,
-                    onLinkClick = component::onAgreementClick,
-                    modifier = Modifier.weight(1f)
-                )
-
-                AppCheckbox(
-                    checkControl = component.agreementWithTermsCheckControl,
+                    onLinkClick = component::onAgreementClick
                 )
             }
         }
