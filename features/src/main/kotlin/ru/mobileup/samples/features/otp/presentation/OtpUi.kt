@@ -39,6 +39,7 @@ import ru.mobileup.samples.core.utils.ResourceFormatted
 import ru.mobileup.samples.core.utils.clickableNoRipple
 import ru.mobileup.samples.core.widget.text_field.OtpTextField
 import ru.mobileup.samples.features.R
+import ru.mobileup.samples.features.otp.sms_retriever.SmsRetriever
 
 @Composable
 fun OtpUi(
@@ -51,6 +52,8 @@ fun OtpUi(
     val sendCodeEnable by component.sendCodeEnable.collectAsState()
     val isConfirmationInProgress by component.isConfirmationInProgress.collectAsState()
     val isCodeResendInProgress by component.isCodeResendInProgress.collectAsState()
+
+    SmsRetriever(component::onSmsCodeRetrieved)
 
     Column(
         modifier = modifier

@@ -19,6 +19,7 @@ import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.core.utils.numberInputControl
 import ru.mobileup.samples.core.utils.withProgress
 import ru.mobileup.samples.features.R
+import ru.mobileup.samples.features.otp.sms_retriever.SmsRetrievingResult
 
 class RealOtpComponent(
     componentContext: ComponentContext,
@@ -121,6 +122,12 @@ class RealOtpComponent(
                 timer.start(RESEND_CODE_AGAIN_TIMER_LOCK)
                 confirmationCodeInputControl.onFocusChanged(true)
             }
+        }
+    }
+
+    override fun onSmsCodeRetrieved(result: SmsRetrievingResult) {
+        if (result is SmsRetrievingResult.Success) {
+            confirmationCodeInputControl.setText(result.otpCode)
         }
     }
 }

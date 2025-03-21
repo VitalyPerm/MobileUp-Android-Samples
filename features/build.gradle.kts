@@ -72,6 +72,10 @@ dependencies {
 
     // Charts
     implementation(libs.vico.compose)
+
+    // Google service
+    implementation(libs.google.playservice.auth)
+    implementation(libs.google.playservice.auth.phone)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles

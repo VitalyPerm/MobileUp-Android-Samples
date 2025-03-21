@@ -37,6 +37,8 @@ qrose = "1.0.1"
 vico = "2.0.1"
 calendar = "2.6.2"
 barcodeScanning = "17.2.0"
+googlePlayServiceAuth = "17.0.0"
+googlePlayServiceAuthPhone = "17.4.0"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -121,6 +123,9 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+
+google-playservice-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googlePlayServiceAuth"}
+google-playservice-auth-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "googlePlayServiceAuthPhone"}
 
 [bundles]
 decompose = ["decompose-core", "decompose-compose"]
