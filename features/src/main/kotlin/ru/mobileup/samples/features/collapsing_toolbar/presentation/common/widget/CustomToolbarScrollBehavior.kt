@@ -18,20 +18,25 @@ class CustomToolbarScrollBehavior(
     val state: CustomToolbarState,
     val snapAnimationSpec: AnimationSpec<Float>,
     val flingAnimationSpec: DecayAnimationSpec<Float>,
+    val canCollapse: () -> Boolean,
+    val convergenceCoefficient: () -> Float
 ) {
 
     val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
             // Don't intercept if scrolling down.
-            if (available.y > 0f) return Offset.Zero
+            if (!canCollapse() || available.y > 0f) return Offset.Zero
 
             val prevHeightOffset = state.heightOffset
             state.heightOffset += available.y
             return if (prevHeightOffset != state.heightOffset) {
                 // We're in the middle of top app bar collapse or expand.
                 // Consume only the scroll on the Y axis.
-                available.copy(x = 0f)
+                available.copy(
+                    x = 0f,
+                    y = available.y * (1f - convergenceCoefficient.invoke())
+                )
             } else {
                 Offset.Zero
             }
@@ -42,6 +47,7 @@ class CustomToolbarScrollBehavior(
             available: Offset,
             source: NestedScrollSource,
         ): Offset {
+            if (!canCollapse()) return Offset.Zero
             state.contentOffset += consumed.y
 
             if (available.y < 0f || consumed.y < 0f) {

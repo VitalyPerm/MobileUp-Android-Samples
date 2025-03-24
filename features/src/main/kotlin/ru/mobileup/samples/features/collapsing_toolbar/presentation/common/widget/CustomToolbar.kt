@@ -64,7 +64,12 @@ object CustomToolbarDefaults {
         state: CustomToolbarState = rememberCustomToolbarState(),
         snapAnimationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMediumLow),
         flingAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
-    ) = CustomToolbarScrollBehavior(state, snapAnimationSpec, flingAnimationSpec)
+        convergenceCoefficient: () -> Float = { 1f },
+        canCollapse: () -> Boolean = { true }
+    ): CustomToolbarScrollBehavior =
+        remember(state, snapAnimationSpec, flingAnimationSpec, canCollapse, convergenceCoefficient) {
+            CustomToolbarScrollBehavior(state, snapAnimationSpec, flingAnimationSpec, canCollapse, convergenceCoefficient)
+        }
 }
 
 @Immutable
