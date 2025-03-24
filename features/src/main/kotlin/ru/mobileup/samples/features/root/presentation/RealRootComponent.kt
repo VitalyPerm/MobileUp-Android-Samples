@@ -24,8 +24,10 @@ import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
+import ru.mobileup.samples.features.root.presentation.RootComponent.Child.*
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.video.createVideoComponent
+import ru.mobileup.samples.features.yandex_map.createYandexMapComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -55,68 +57,74 @@ class RealRootComponent(
         componentContext: ComponentContext,
     ): RootComponent.Child = when (config) {
         ChildConfig.Menu -> {
-            RootComponent.Child.Menu(
+            Menu(
                 componentFactory.createMenuComponent(componentContext, ::onMenuOutput)
             )
         }
 
         ChildConfig.Form -> {
-            RootComponent.Child.Form(
+            Form(
                 componentFactory.createFormComponent(componentContext)
             )
         }
 
         ChildConfig.Otp -> {
-            RootComponent.Child.Otp(
+            Otp(
                 componentFactory.createOtpComponent(componentContext, ::onOtpOutput)
             )
         }
 
         ChildConfig.Video -> {
-            RootComponent.Child.Video(
+            Video(
                 componentFactory.createVideoComponent(componentContext)
             )
         }
 
         ChildConfig.Calendar -> {
-            RootComponent.Child.Calendar(
+            Calendar(
                 componentFactory.createCalendarComponent(componentContext)
             )
         }
 
         ChildConfig.QrCode -> {
-            RootComponent.Child.QrCode(
+            QrCode(
                 componentFactory.createQrCodeComponent(componentContext)
             )
         }
 
         ChildConfig.Chart -> {
-            RootComponent.Child.Chart(
+            Chart(
                 componentFactory.createChartComponent(componentContext)
             )
         }
 
         ChildConfig.Navigation -> {
-            RootComponent.Child.Navigation(
+            Navigation(
                 componentFactory.createNavigationComponent(componentContext)
             )
         }
 
         ChildConfig.CollapsingToolbar -> {
-            RootComponent.Child.CollapsingToolbar(
+            CollapsingToolbar(
                 componentFactory.createCollapsingToolbarComponent(componentContext)
             )
         }
 
         ChildConfig.Image -> {
-            RootComponent.Child.Image(
+            Image(
                 componentFactory.createImageComponent(componentContext)
             )
         }
 
         ChildConfig.Tutorial -> {
-            RootComponent.Child.Tutorial(
+            Tutorial(
                 componentFactory.createTutorialSampleComponent(componentContext)
+            )
+        }
+
+        ChildConfig.YandexMap -> {
+            YandexMap(
+                componentFactory.createYandexMapComponent(componentContext)
             )
         }
     }
@@ -135,6 +143,7 @@ class RealRootComponent(
                     Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
                     Sample.Image -> ChildConfig.Image
                     Sample.Tutorial -> ChildConfig.Tutorial
+                    Sample.YandexMap -> ChildConfig.YandexMap
                 }
             )
         }
@@ -181,5 +190,8 @@ class RealRootComponent(
 
         @Serializable
         data object Tutorial : ChildConfig
+
+        @Serializable
+        data object YandexMap : ChildConfig
     }
 }
