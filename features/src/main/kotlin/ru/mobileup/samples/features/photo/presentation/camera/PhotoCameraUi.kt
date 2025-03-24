@@ -1,0 +1,256 @@
+package ru.mobileup.samples.features.photo.presentation.camera
+
+import android.graphics.Bitmap
+import androidx.camera.view.PreviewView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
+import androidx.compose.ui.viewinterop.AndroidView
+import kotlinx.coroutines.launch
+import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBars
+import ru.mobileup.samples.core.utils.clickableNoRipple
+import ru.mobileup.samples.features.R
+import ru.mobileup.samples.features.photo.domain.events.PhotoCameraEvent
+import ru.mobileup.samples.features.photo.domain.states.CameraState
+import ru.mobileup.samples.features.photo.presentation.camera.controller.PhotoCameraController
+import ru.mobileup.samples.features.photo.presentation.camera.widget.CameraButton
+import ru.mobileup.samples.features.photo.presentation.camera.widget.TorchSwitchIcon
+import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraFlipIcon
+
+@Composable
+fun PhotoCameraUi(
+    component: PhotoCameraComponent,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    val cameraState by component.cameraState.collectAsState()
+
+    val previewView by remember(context, lifecycleOwner) {
+        mutableStateOf(
+            PreviewView(context).apply {
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            }
+        )
+    }
+
+    var cameraPlaceHolder: Pair<Bitmap?, Boolean> by remember {
+        mutableStateOf(null to false)
+    }
+
+    val photoCameraController by remember(context, lifecycleOwner, previewView) {
+        mutableStateOf(
+            PhotoCameraController(
+                context = context,
+                lifecycleOwner = lifecycleOwner,
+                previewView = previewView,
+                onPhotoCameraEvent = {
+                    when (it) {
+                        is PhotoCameraEvent.PhotoCaptured -> component.onPhotoTaken(it.uri)
+                        is PhotoCameraEvent.Error -> component.onPhotoFailed()
+                    }
+                },
+                onCameraInitializationFailed = {
+                    component.onCameraInitializationFailed()
+                },
+                onPlaceHolderUpdated = {
+                    cameraPlaceHolder = Pair(
+                        first = it ?: cameraPlaceHolder.first,
+                        second = it != null
+                    )
+                }
+            )
+        )
+    }
+
+    SystemBars(transparentNavigationBar = true)
+
+    LaunchedEffect(cameraState) {
+        photoCameraController.cameraState = cameraState
+    }
+
+    PhotoCameraContent(
+        modifier = modifier,
+        component = component,
+        cameraState = cameraState,
+        previewView = previewView,
+        cameraPlaceHolder = cameraPlaceHolder,
+        photoCameraController = photoCameraController
+    )
+}
+
+@Composable
+private fun PhotoCameraContent(
+    component: PhotoCameraComponent,
+    cameraState: CameraState,
+    previewView: PreviewView,
+    cameraPlaceHolder: Pair<Bitmap?, Boolean>,
+    photoCameraController: PhotoCameraController,
+    modifier: Modifier = Modifier
+) {
+    val scope = rememberCoroutineScope()
+
+    val blurStrength = remember { Animatable(0f) }
+
+    fun animateBlur() {
+        scope.launch {
+            blurStrength.snapTo(0f)
+            blurStrength.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize().background(CustomTheme.colors.palette.black)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(CustomTheme.colors.palette.black)
+                    .padding(horizontal = 8.dp, vertical = 24.dp)
+                    .padding(top = 16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_app_logo),
+                    contentDescription = "logo",
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = stringResource(R.string.menu_item_camera),
+                    color = CustomTheme.colors.text.invert,
+                    modifier = Modifier
+                        .weight(2f)
+                        .align(Alignment.CenterVertically)
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    factory = remember { { previewView } },
+                )
+
+                this@Column.AnimatedVisibility(
+                    visible = cameraPlaceHolder.second,
+                    enter = EnterTransition.None,
+                    exit = fadeOut()
+                ) {
+                    cameraPlaceHolder.first?.let {
+                        Image(
+                            modifier = Modifier.fillMaxSize().blur((blurStrength.value * 32.dp)),
+                            bitmap = it.asImageBitmap(),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .clickableNoRipple {
+                    // Do nothing
+                }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(CustomTheme.colors.palette.black.copy(alpha = 0.3f))
+                    .padding(top = 16.dp, bottom = 24.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(intrinsicSize = IntrinsicSize.Max)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        TorchSwitchIcon(
+                            torchState = cameraState.torchState,
+                            onClick = component::onUpdateTorchState,
+                        )
+                    }
+
+                    CameraButton(
+                        onClick = photoCameraController::takePhoto
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        CameraFlipIcon(
+                            onClick = {
+                                component.onFlipCameraSelector()
+                                animateBlur()
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MenuUiPreview() {
+    AppTheme {
+        PhotoCameraUi(FakePhotoCameraComponent())
+    }
+}

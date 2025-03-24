@@ -31,7 +31,7 @@ private const val ANIMATION_DURATION_MS = 500
 private const val BUTTON_SIZE_DP = 64
 
 @Composable
-fun RecordingButton(
+fun RecorderButton(
     isRecording: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -126,12 +126,12 @@ private fun RecordingButtonPreview() {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            RecordingButton(
+            RecorderButton(
                 isRecording = false,
                 onClick = { }
             )
 
-            RecordingButton(
+            RecorderButton(
                 isRecording = true,
                 onClick = { }
             )

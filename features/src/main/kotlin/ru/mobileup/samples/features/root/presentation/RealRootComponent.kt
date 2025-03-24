@@ -1,6 +1,5 @@
 package ru.mobileup.samples.features.root.presentation
 
-import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -23,6 +22,7 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
+import ru.mobileup.samples.features.photo.createPhotoComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.video.createVideoComponent
@@ -78,6 +78,12 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.Photo -> {
+            RootComponent.Child.Photo(
+                componentFactory.createPhotoComponent(componentContext)
+            )
+        }
+
         ChildConfig.Calendar -> {
             RootComponent.Child.Calendar(
                 componentFactory.createCalendarComponent(componentContext)
@@ -128,6 +134,7 @@ class RealRootComponent(
                     Sample.Form -> ChildConfig.Form
                     Sample.Otp -> ChildConfig.Otp
                     Sample.Video -> ChildConfig.Video
+                    Sample.Photo -> ChildConfig.Photo
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
@@ -160,6 +167,9 @@ class RealRootComponent(
 
         @Serializable
         data object Video : ChildConfig
+
+        @Serializable
+        data object Photo : ChildConfig
 
         @Serializable
         data object Calendar : ChildConfig

@@ -16,7 +16,7 @@ import ru.mobileup.samples.core.utils.Resource
 import ru.mobileup.samples.core.utils.ResourceFormatted
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.video.data.FileManager
+import ru.mobileup.samples.features.video.data.VideoFileManager
 import ru.mobileup.samples.features.video.data.RELATIVE_STORAGE_PATH
 import ru.mobileup.samples.features.video.data.VideoRepository
 import ru.mobileup.samples.features.video.data.render.GlFilter
@@ -31,7 +31,7 @@ class RealVideoPlayerComponent(
     componentContext: ComponentContext,
     private val videoRepository: VideoRepository,
     private val videoRender: VideoRender,
-    private val fileManager: FileManager,
+    private val videoFileManager: VideoFileManager,
     private val messageService: MessageService
 ) : ComponentContext by componentContext, VideoPlayerComponent {
 
@@ -57,14 +57,14 @@ class RealVideoPlayerComponent(
 
     override fun onSaveClick() = saveDialog.show(
         StandardDialogData(
-            title = R.string.save_dialog_title.strResDesc(),
-            message = R.string.save_dialog_message.strResDesc(),
+            title = R.string.save_video_dialog_title.strResDesc(),
+            message = R.string.save_video_dialog_message.strResDesc(),
             confirmButton = DialogButton(
-                text = R.string.confirm_btn.strResDesc(),
+                text = R.string.video_confirm_btn.strResDesc(),
                 action = ::startRender
             ),
             dismissButton = DialogButton(
-                text = R.string.dismiss_btn.strResDesc(),
+                text = R.string.video_dismiss_btn.strResDesc(),
                 action = saveDialog::dismiss
             )
         )
@@ -100,7 +100,7 @@ class RealVideoPlayerComponent(
                     }
                 ),
                 dismissButton = DialogButton(
-                    text = R.string.dismiss_btn.strResDesc(),
+                    text = R.string.video_dismiss_btn.strResDesc(),
                     action = resetTransformDialog::dismiss
                 )
             )
@@ -168,7 +168,7 @@ class RealVideoPlayerComponent(
                     }
 
                     is RenderState.Success -> {
-                        fileManager.moveVideoToMediaStore(
+                        videoFileManager.moveVideoToMediaStore(
                             renderState.uri
                         )
                         messageService.showMessage(

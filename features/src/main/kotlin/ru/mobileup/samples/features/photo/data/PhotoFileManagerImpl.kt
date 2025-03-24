@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.video.data
+package ru.mobileup.samples.features.photo.data
 
 import android.content.ContentValues
 import android.content.Context
@@ -12,21 +12,21 @@ import androidx.core.net.toFile
 import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.mobileup.samples.features.video.data.utils.VideoEditorDirectory
-import ru.mobileup.samples.features.video.data.utils.getFileName
+import ru.mobileup.samples.features.photo.data.utils.PhotoDirectory
+import ru.mobileup.samples.features.photo.data.utils.getPhotoFileName
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-private const val VIDEO_MEME_TYPE = "video/mp4"
+private const val PHOTO_MIME_TYPE = "image/jpeg"
 private const val APP_DIRECTORY = "MobileUp"
-internal const val RELATIVE_STORAGE_PATH = "Movies/$APP_DIRECTORY"
+internal const val RELATIVE_STORAGE_PATH = "Pictures/$APP_DIRECTORY"
 
-class FileManagerImpl(
+class PhotoFileManagerImpl(
     private val context: Context
-) : FileManager {
+) : PhotoFileManager {
 
-    override suspend fun moveVideoToMediaStore(fileUri: Uri): Uri? {
+    override suspend fun movePhotoToMediaStore(fileUri: Uri): Uri? {
         return withContext(Dispatchers.IO) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 moveFileToMediaStoreApi29(fileUri)
@@ -36,9 +36,7 @@ class FileManagerImpl(
         }
     }
 
-    override suspend fun deleteEditorDirectory(
-        directory: VideoEditorDirectory,
-    ) {
+    override suspend fun cleanPhotoDirectory(directory: PhotoDirectory) {
         withContext(Dispatchers.IO) {
             try {
                 directory
@@ -54,13 +52,13 @@ class FileManagerImpl(
     private fun moveFileToMediaStoreApi29(fileUri: Uri): Uri? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName())
-            put(MediaStore.MediaColumns.MIME_TYPE, VIDEO_MEME_TYPE)
-            put(MediaStore.Video.Media.RELATIVE_PATH, RELATIVE_STORAGE_PATH)
+            put(MediaStore.MediaColumns.DISPLAY_NAME, getPhotoFileName())
+            put(MediaStore.MediaColumns.MIME_TYPE, PHOTO_MIME_TYPE)
+            put(MediaStore.Images.Media.RELATIVE_PATH, RELATIVE_STORAGE_PATH)
         }
 
         val newUri = resolver.insert(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             contentValues
         )
 
@@ -81,7 +79,7 @@ class FileManagerImpl(
 
     private fun moveFileToMediaStore(fileUri: Uri): Uri? {
         val appDirectory = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
             APP_DIRECTORY
         )
 
@@ -89,7 +87,7 @@ class FileManagerImpl(
             appDirectory.mkdirs()
         }
 
-        val destinationFile = File(appDirectory, getFileName())
+        val destinationFile = File(appDirectory, getPhotoFileName())
 
         return try {
             FileInputStream(fileUri.toFile()).use { inputStream ->

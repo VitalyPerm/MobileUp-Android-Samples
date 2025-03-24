@@ -26,6 +26,7 @@ import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
+import ru.mobileup.samples.features.photo.presentation.PhotoUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
@@ -44,6 +45,7 @@ fun RootUi(
             is RootComponent.Child.Form -> FormUi(instance.component)
             is RootComponent.Child.Otp -> OtpUi(instance.component)
             is RootComponent.Child.Video -> VideoUi(instance.component)
+            is RootComponent.Child.Photo -> PhotoUi(instance.component)
             is RootComponent.Child.Calendar -> CalendarUi(instance.component)
             is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
             is RootComponent.Child.Chart -> ChartUi(instance.component)

@@ -2,10 +2,10 @@ package ru.mobileup.samples.features.video.domain.events
 
 import android.net.Uri
 
-sealed interface CameraEvent {
-    data object StartRecord : CameraEvent
-    data class ProgressRecord(val recordDuration: Long) : CameraEvent
-    data class StopRecord(val recordingResult: RecordingResult) : CameraEvent
+sealed interface VideoRecorderEvent {
+    data object StartRecord : VideoRecorderEvent
+    data class ProgressRecord(val recordDuration: Long) : VideoRecorderEvent
+    data class StopRecord(val recordingResult: RecordingResult) : VideoRecorderEvent
 }
 
 sealed interface RecordingResult {

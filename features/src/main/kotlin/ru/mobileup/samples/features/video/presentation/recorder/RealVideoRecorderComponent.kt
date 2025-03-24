@@ -53,7 +53,7 @@ class RealVideoRecorderComponent(
     }
 
     override fun onRecordCompleted(uri: Uri) {
-        onOutput(VideoRecorderComponent.Output.RecordCompleted(uri))
+        onOutput(VideoRecorderComponent.Output.PlayerRequested(uri))
     }
 
     override fun onRecordFailed() {

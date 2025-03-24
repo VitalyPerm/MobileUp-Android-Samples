@@ -9,7 +9,7 @@ import java.util.Locale
 private const val DATE_FORMAT_PATTERN_FOR_FILE = "yyyy-MM-dd-HH-mm-ss-SSS"
 private const val FILE_FORMAT_SUFFIX = ".mp4"
 
-enum class VideoEditorDirectory(
+enum class VideoDirectory(
     private val dirName: String
 ) {
     Recorder("recorder"),
@@ -18,10 +18,10 @@ enum class VideoEditorDirectory(
     fun toFile(context: Context): File =
         context
             .filesDir
-            .resolve("video_editor_cache/$dirName")
+            .resolve("video_cache/$dirName")
 }
 
-fun getFileName(formatSuffix: String = FILE_FORMAT_SUFFIX) = SimpleDateFormat(
+fun getVideoFileName(formatSuffix: String = FILE_FORMAT_SUFFIX) = SimpleDateFormat(
     DATE_FORMAT_PATTERN_FOR_FILE,
     Locale.US
 ).format(
@@ -30,8 +30,8 @@ fun getFileName(formatSuffix: String = FILE_FORMAT_SUFFIX) = SimpleDateFormat(
 
 fun Context.getOutputOptionForIntermediateVideo(limitTimeMillis: Long): FileOutputOptions {
     val videoFile = File(
-        VideoEditorDirectory.Recorder.toFile(this),
-        getFileName()
+        VideoDirectory.Recorder.toFile(this),
+        getVideoFileName()
     )
     return FileOutputOptions.Builder(videoFile)
         .setDurationLimitMillis(limitTimeMillis)

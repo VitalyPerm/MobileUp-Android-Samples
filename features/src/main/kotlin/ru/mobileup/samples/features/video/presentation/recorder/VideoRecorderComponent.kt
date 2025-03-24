@@ -35,6 +35,6 @@ interface VideoRecorderComponent {
     fun onUpdateTorchState(torchState: Boolean)
 
     sealed interface Output {
-        data class RecordCompleted(val uri: Uri) : Output
+        data class PlayerRequested(val uri: Uri) : Output
     }
 }
