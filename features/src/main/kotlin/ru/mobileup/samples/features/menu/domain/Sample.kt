@@ -21,4 +21,5 @@ enum class Sample(
     Image(R.string.menu_item_image.strResDesc()),
     Tutorial(R.string.menu_item_tutorial.strResDesc()),
     SharedTransitions(R.string.menu_item_shared_elements_transition.strResDesc())
+    YandexMap(R.string.menu_item_yandex_map.strResDesc())
 }
