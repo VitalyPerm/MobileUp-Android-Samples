@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -80,219 +81,223 @@ fun SpecificToolbar(
 
     val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
-    Layout(
-        modifier = Modifier
-            .heightIn(min = MinCollapsedHeight)
-            .then(modifier)
-            .pointerInput(Unit) {}, // Needed to prevent the view from being clicked through, otherwise touches pass through the view
-        content = {
-            Spacer(
-                modifier = Modifier
-                    .layoutId(CollapsedBgId)
-                    .drawWithCache {
-                        val gradient = Brush.linearGradient(
-                            colors = listOf(Color(0xFF021735), Color(0xFFEB0A33)),
-                            start = Offset(0f, Float.POSITIVE_INFINITY),
-                            end = Offset(Float.POSITIVE_INFINITY, 0f)
-                        )
-                        onDrawBehind { drawRect(gradient) }
-                    }
-            )
-            Image(
-                modifier = Modifier.layoutId(ExpandedBgId),
-                painter = painterResource(R.drawable.ic_football_bg),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-
-            Image(
-                modifier = Modifier
-                    .layoutId(PlayerImageId)
-                    .aspectRatio(1f)
-                    .drawBehind {
-                        drawRect(color = Color.White, alpha = colorAlpha)
-                    }
-                    .border(
-                        width = 10.dp,
-                        color = Color(0xFFF5F6F8).copy(alpha = colorAlpha),
-                        shape = RoundedCornerShape(shapePercentage)
-                    ),
-                painter = painterResource(R.drawable.ic_football_player),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds
-            )
-
-            IconButton(
-                modifier = Modifier
-                    .layoutId(NavigationIconId)
-                    .padding(start = 8.dp, top = 8.dp + statusBarPadding)
-                    .wrapContentHeight(Alignment.Top),
-                onClick = { dispatchOnBackPressed(context) }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    tint = Color.White,
-                    contentDescription = null
+    Surface(
+        modifier = modifier,
+        color = Color.White
+    ) {
+        Layout(
+            modifier = Modifier
+                .heightIn(min = MinCollapsedHeight)
+                .pointerInput(Unit) {}, // Needed to prevent the view from being clicked through, otherwise touches pass through the view
+            content = {
+                Spacer(
+                    modifier = Modifier
+                        .layoutId(CollapsedBgId)
+                        .drawWithCache {
+                            val gradient = Brush.linearGradient(
+                                colors = listOf(Color(0xFF021735), Color(0xFFEB0A33)),
+                                start = Offset(0f, Float.POSITIVE_INFINITY),
+                                end = Offset(Float.POSITIVE_INFINITY, 0f)
+                            )
+                            onDrawBehind { drawRect(gradient) }
+                        }
                 )
-            }
+                Image(
+                    modifier = Modifier.layoutId(ExpandedBgId),
+                    painter = painterResource(R.drawable.ic_football_bg),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
 
-            Column(
-                modifier = Modifier
-                    .layoutId(PlayerNameId)
-                    .graphicsLayer { alpha = colorAlpha }
-            ) {
+                Image(
+                    modifier = Modifier
+                        .layoutId(PlayerImageId)
+                        .aspectRatio(1f)
+                        .drawBehind {
+                            drawRect(color = Color.White, alpha = colorAlpha)
+                        }
+                        .border(
+                            width = 10.dp,
+                            color = Color(0xFFF5F6F8).copy(alpha = colorAlpha),
+                            shape = RoundedCornerShape(shapePercentage)
+                        ),
+                    painter = painterResource(R.drawable.ic_football_player),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds
+                )
+
+                IconButton(
+                    modifier = Modifier
+                        .layoutId(NavigationIconId)
+                        .padding(start = 8.dp, top = 8.dp + statusBarPadding)
+                        .wrapContentHeight(Alignment.Top),
+                    onClick = { dispatchOnBackPressed(context) }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        tint = Color.White,
+                        contentDescription = null
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .layoutId(PlayerNameId)
+                        .graphicsLayer { alpha = colorAlpha }
+                ) {
+                    Text(
+                        text = "Robert",
+                        fontWeight = FontWeight(500),
+                        fontSize = 17.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Lewandowski",
+                        fontWeight = FontWeight(700),
+                        fontSize = 23.sp,
+                        color = Color.White
+                    )
+                }
+
                 Text(
-                    text = "Robert",
-                    fontWeight = FontWeight(500),
-                    fontSize = 17.sp,
+                    modifier = Modifier.layoutId(PlayerNumberId),
+                    text = "11",
+                    fontWeight = FontWeight(800),
+                    fontSize = 49.sp,
                     color = Color.White
                 )
-                Text(
-                    text = "Lewandowski",
-                    fontWeight = FontWeight(700),
-                    fontSize = 23.sp,
-                    color = Color.White
+            }
+        ) { measurables, constraints ->
+            val minCollapsedHeightPx = MinCollapsedHeight.toPx()
+            val maxExpandedHeightPx = MaxExpandedHeight.toPx()
+            val expandedImageHorizontalPaddingPx = ExpandedImageHorizontalPadding.toPx()
+            val collapsedContentHorizontalPaddingPx = CollapsedContentHorizontalPadding.toPx()
+            val collapsedImageBottomPaddingPx = CollapsedImageBottomPadding.toPx()
+            val collapsedSpaceBetweenItemsPx = CollapsedSpaceBetweenItems.toPx()
+            val minCollapsedImageSizePx = MinCollapsedImageSize.toPx()
+
+            scrollBehavior?.state?.heightOffsetLimit = -(maxExpandedHeightPx - minCollapsedHeightPx)
+
+            val layoutHeightPx =
+                lerp(maxExpandedHeightPx, minCollapsedHeightPx, collapsedFraction).fastRoundToInt()
+
+            val collapsedBgPlaceable = measurables
+                .fastFirstOrNull { it.layoutId == CollapsedBgId }
+                ?.measure(
+                    constraints.copy(
+                        minWidth = constraints.maxWidth,
+                        minHeight = layoutHeightPx,
+                        maxHeight = layoutHeightPx,
+                    )
                 )
+
+            val expandedBgPlaceable = measurables
+                .fastFirstOrNull { it.layoutId == ExpandedBgId }
+                ?.measure(
+                    constraints.copy(
+                        minWidth = constraints.maxWidth,
+                        minHeight = layoutHeightPx,
+                        maxHeight = layoutHeightPx
+                    )
+                )
+
+            val navIcon = measurables
+                .fastFirstOrNull { it.layoutId == NavigationIconId }
+                ?.measure(constraints.copy(minWidth = 0))
+
+            val imagePlaceable = measurables
+                .fastFirstOrNull { it.layoutId == PlayerImageId }
+                ?.measure(
+                    constraints.copy(
+                        maxWidth = constraints.maxWidth - expandedImageHorizontalPaddingPx.fastRoundToInt() * 2,
+                        maxHeight = (maxExpandedHeightPx - statusBarPadding.toPx()).fastRoundToInt()
+                    )
+                )
+
+            val imageWidthPx = imagePlaceable?.width.orZero
+            val imageHeightPx = imagePlaceable?.height.orZero
+
+            val imageScaleStopX = minCollapsedImageSizePx / imageWidthPx
+            val imageScaleStopY = minCollapsedImageSizePx / imageHeightPx
+            val imageScaleX = lerp(1f, imageScaleStopX, collapsedFraction)
+            val imageScaleY = lerp(1f, imageScaleStopY, collapsedFraction)
+
+            val imageStartX = (constraints.maxWidth - imageWidthPx) / 2f
+            val imageStopX = collapsedContentHorizontalPaddingPx
+            val imageX = lerp(imageStartX, imageStopX, collapsedFraction).fastRoundToInt()
+
+            val imageStartY = layoutHeightPx - imageHeightPx
+            val imageStopY =
+                (minCollapsedHeightPx - imageHeightPx - collapsedImageBottomPaddingPx).fastRoundToInt()
+            val imageY = if (collapsedFraction < VisibilityThreshold) {
+                imageStartY
+            } else {
+                val adjustedFraction = (collapsedFraction - VisibilityThreshold) / 0.2f
+                lerp(imageStartY, imageStopY, adjustedFraction)
             }
 
-            Text(
-                modifier = Modifier.layoutId(PlayerNumberId),
-                text = "11",
-                fontWeight = FontWeight(800),
-                fontSize = 49.sp,
-                color = Color.White
-            )
-        }
-    ) { measurables, constraints ->
-        val minCollapsedHeightPx = MinCollapsedHeight.toPx()
-        val maxExpandedHeightPx = MaxExpandedHeight.toPx()
-        val expandedImageHorizontalPaddingPx = ExpandedImageHorizontalPadding.toPx()
-        val collapsedContentHorizontalPaddingPx = CollapsedContentHorizontalPadding.toPx()
-        val collapsedImageBottomPaddingPx = CollapsedImageBottomPadding.toPx()
-        val collapsedSpaceBetweenItemsPx = CollapsedSpaceBetweenItems.toPx()
-        val minCollapsedImageSizePx = MinCollapsedImageSize.toPx()
-
-        scrollBehavior?.state?.heightOffsetLimit = -(maxExpandedHeightPx - minCollapsedHeightPx)
-
-        val layoutHeightPx =
-            lerp(maxExpandedHeightPx, minCollapsedHeightPx, collapsedFraction).fastRoundToInt()
-
-        val collapsedBgPlaceable = measurables
-            .fastFirstOrNull { it.layoutId == CollapsedBgId }
-            ?.measure(
-                constraints.copy(
-                    minWidth = constraints.maxWidth,
-                    minHeight = layoutHeightPx,
-                    maxHeight = layoutHeightPx,
+            val numberPlaceable = measurables
+                .fastFirstOrNull { it.layoutId == PlayerNumberId }
+                ?.measure(
+                    constraints.copy(
+                        minWidth = 0,
+                        minHeight = 0
+                    )
                 )
-            )
 
-        val expandedBgPlaceable = measurables
-            .fastFirstOrNull { it.layoutId == ExpandedBgId }
-            ?.measure(
-                constraints.copy(
-                    minWidth = constraints.maxWidth,
-                    minHeight = layoutHeightPx,
-                    maxHeight = layoutHeightPx
+            val numberHeightPx = numberPlaceable?.height.orZero
+            val numberWidthPx = numberPlaceable?.width.orZero
+
+            val numberX =
+                (constraints.maxWidth - numberWidthPx - collapsedContentHorizontalPaddingPx).fastRoundToInt()
+
+            val numberStartY = 0f
+            val numberStopY =
+                imageY + imageHeightPx - imageHeightPx * imageScaleY - (numberHeightPx - imageHeightPx * imageScaleY) * 0.5f
+            val numberY = lerp(numberStartY, numberStopY, collapsedFraction).fastRoundToInt()
+
+            val namePlaceable = measurables
+                .fastFirstOrNull { it.layoutId == PlayerNameId }
+                ?.measure(
+                    constraints.copy(
+                        minWidth = 0,
+                        minHeight = 0,
+                        maxWidth = (constraints.maxWidth - collapsedContentHorizontalPaddingPx * 2 - imageWidthPx * imageScaleStopX - collapsedSpaceBetweenItemsPx * 2 - numberWidthPx).fastRoundToInt(),
+                    )
                 )
-            )
 
-        val navIcon = measurables
-            .fastFirstOrNull { it.layoutId == NavigationIconId }
-            ?.measure(constraints.copy(minWidth = 0))
+            val nameHeightPx = namePlaceable?.height.orZero
 
-        val imagePlaceable = measurables
-            .fastFirstOrNull { it.layoutId == PlayerImageId }
-            ?.measure(
-                constraints.copy(
-                    maxWidth = constraints.maxWidth - expandedImageHorizontalPaddingPx.fastRoundToInt() * 2,
-                    maxHeight = (maxExpandedHeightPx - statusBarPadding.toPx()).fastRoundToInt()
-                )
-            )
+            val nameStartX = constraints.maxWidth.toFloat()
+            val nameStopX = imageX + imageWidthPx * imageScaleX + collapsedSpaceBetweenItemsPx
+            val nameX = lerp(nameStartX, nameStopX, collapsedFraction).fastRoundToInt()
 
-        val imageWidthPx = imagePlaceable?.width.orZero
-        val imageHeightPx = imagePlaceable?.height.orZero
+            val nameStartY = layoutHeightPx - collapsedSpaceBetweenItemsPx
+            val nameStopY =
+                imageY + imageHeightPx - imageHeightPx * imageScaleY - (nameHeightPx - imageHeightPx * imageScaleY) * 0.5f
+            val nameY = lerp(nameStartY, nameStopY, collapsedFraction).fastRoundToInt()
 
-        val imageScaleStopX = minCollapsedImageSizePx / imageWidthPx
-        val imageScaleStopY = minCollapsedImageSizePx / imageHeightPx
-        val imageScaleX = lerp(1f, imageScaleStopX, collapsedFraction)
-        val imageScaleY = lerp(1f, imageScaleStopY, collapsedFraction)
-
-        val imageStartX = (constraints.maxWidth - imageWidthPx) / 2f
-        val imageStopX = collapsedContentHorizontalPaddingPx
-        val imageX = lerp(imageStartX, imageStopX, collapsedFraction).fastRoundToInt()
-
-        val imageStartY = layoutHeightPx - imageHeightPx
-        val imageStopY =
-            (minCollapsedHeightPx - imageHeightPx - collapsedImageBottomPaddingPx).fastRoundToInt()
-        val imageY = if (collapsedFraction < VisibilityThreshold) {
-            imageStartY
-        } else {
-            val adjustedFraction = (collapsedFraction - VisibilityThreshold) / 0.2f
-            lerp(imageStartY, imageStopY, adjustedFraction)
-        }
-
-        val numberPlaceable = measurables
-            .fastFirstOrNull { it.layoutId == PlayerNumberId }
-            ?.measure(
-                constraints.copy(
-                    minWidth = 0,
-                    minHeight = 0
-                )
-            )
-
-        val numberHeightPx = numberPlaceable?.height.orZero
-        val numberWidthPx = numberPlaceable?.width.orZero
-
-        val numberX =
-            (constraints.maxWidth - numberWidthPx - collapsedContentHorizontalPaddingPx).fastRoundToInt()
-
-        val numberStartY = 0f
-        val numberStopY =
-            imageY + imageHeightPx - imageHeightPx * imageScaleY - (numberHeightPx - imageHeightPx * imageScaleY) * 0.5f
-        val numberY = lerp(numberStartY, numberStopY, collapsedFraction).fastRoundToInt()
-
-        val namePlaceable = measurables
-            .fastFirstOrNull { it.layoutId == PlayerNameId }
-            ?.measure(
-                constraints.copy(
-                    minWidth = 0,
-                    minHeight = 0,
-                    maxWidth = (constraints.maxWidth - collapsedContentHorizontalPaddingPx * 2 - imageWidthPx * imageScaleStopX - collapsedSpaceBetweenItemsPx * 2 - numberWidthPx).fastRoundToInt(),
-                )
-            )
-
-        val nameHeightPx = namePlaceable?.height.orZero
-
-        val nameStartX = constraints.maxWidth.toFloat()
-        val nameStopX = imageX + imageWidthPx * imageScaleX + collapsedSpaceBetweenItemsPx
-        val nameX = lerp(nameStartX, nameStopX, collapsedFraction).fastRoundToInt()
-
-        val nameStartY = layoutHeightPx - collapsedSpaceBetweenItemsPx
-        val nameStopY =
-            imageY + imageHeightPx - imageHeightPx * imageScaleY - (nameHeightPx - imageHeightPx * imageScaleY) * 0.5f
-        val nameY = lerp(nameStartY, nameStopY, collapsedFraction).fastRoundToInt()
-
-        layout(constraints.maxWidth, layoutHeightPx) {
-            collapsedBgPlaceable?.placeRelativeWithLayer(x = 0, y = 0) {
-                alpha = collapsedFraction
-            }
-            expandedBgPlaceable?.placeRelativeWithLayer(x = 0, y = 0) {
-                alpha = 1 - collapsedFraction
-            }
-            navIcon?.placeRelative(x = 0, y = 0)
-            imagePlaceable?.placeRelativeWithLayer(x = imageX, y = imageY) {
-                clip = true
-                shape = RoundedCornerShape(shapePercentage)
-                scaleX = imageScaleX
-                scaleY = imageScaleY
-                transformOrigin = TransformOrigin(0f, 1f)
-            }
-            namePlaceable?.placeRelativeWithLayer(x = nameX, y = nameY) {
-                alpha = colorAlpha
-            }
-            numberPlaceable?.placeRelativeWithLayer(x = numberX, y = numberY) {
-                alpha = colorAlpha
+            layout(constraints.maxWidth, layoutHeightPx) {
+                collapsedBgPlaceable?.placeRelativeWithLayer(x = 0, y = 0) {
+                    alpha = collapsedFraction
+                }
+                expandedBgPlaceable?.placeRelativeWithLayer(x = 0, y = 0) {
+                    alpha = 1 - collapsedFraction
+                }
+                navIcon?.placeRelative(x = 0, y = 0)
+                imagePlaceable?.placeRelativeWithLayer(x = imageX, y = imageY) {
+                    clip = true
+                    shape = RoundedCornerShape(shapePercentage)
+                    scaleX = imageScaleX
+                    scaleY = imageScaleY
+                    transformOrigin = TransformOrigin(0f, 1f)
+                }
+                namePlaceable?.placeRelativeWithLayer(x = nameX, y = nameY) {
+                    alpha = colorAlpha
+                }
+                numberPlaceable?.placeRelativeWithLayer(x = numberX, y = numberY) {
+                    alpha = colorAlpha
+                }
             }
         }
     }
