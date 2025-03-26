@@ -13,6 +13,7 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
+import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 
@@ -41,5 +42,6 @@ interface RootComponent {
         class CollapsingToolbar(val component: CollapsingToolbarComponent) : Child
         class Image(val component: ImageComponent) : Child
         class Tutorial(val component: TutorialSampleComponent) : Child
+        class SharedElements(val component: SharedElementsComponent) : Child
     }
 }

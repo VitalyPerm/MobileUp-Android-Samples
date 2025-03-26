@@ -47,6 +47,7 @@ coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 
 decompose-core = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
+decompose-compose-experimental = { module = "com.arkivanov.decompose:extensions-compose-experimental", version.ref = "decompose" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
@@ -128,7 +129,7 @@ google-playservice-auth = { module = "com.google.android.gms:play-services-auth"
 google-playservice-auth-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "googlePlayServiceAuthPhone"}
 
 [bundles]
-decompose = ["decompose-core", "decompose-compose"]
+decompose = ["decompose-core", "decompose-compose", "decompose-compose-experimental"]
 replica = ["replica-core", "replica-algebra", "replica-android-network", "replica-decompose"]
 compose = ["compose-ui", "compose-material", "compose-tooling", "activity-compose"]
 accompanist = ["accompanist-systemuicontroller", "accompanist-swiperefresh"]
