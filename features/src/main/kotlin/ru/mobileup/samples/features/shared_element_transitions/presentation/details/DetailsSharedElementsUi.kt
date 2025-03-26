@@ -1,7 +1,6 @@
 package ru.mobileup.samples.features.shared_element_transitions.presentation.details
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,8 +9,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -43,14 +43,14 @@ fun DetailsSharedElementsUi(
         modifier = modifier
             .then(
                 localSharedScope.sharedScopeModifier { animScope ->
-                    Modifier.sharedBounds(
+                    Modifier.sharedElement(
                         rememberSharedContentState(key = SharedKeys.surface(component.item.id)),
                         animatedVisibilityScope = animScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                        renderInOverlayDuringTransition = false,
                     )
                 }
             ),
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.statusBars
     ) {
         Column(
             modifier = Modifier
@@ -66,7 +66,7 @@ fun DetailsSharedElementsUi(
                     .background(Color.White)
                     .then(
                         localSharedScope.sharedScopeModifier { animScope ->
-                            Modifier.sharedElement(
+                            Modifier.sharedBounds(
                                 rememberSharedContentState(key = SharedKeys.image(component.item.id)),
                                 animatedVisibilityScope = animScope,
                                 boundsTransform = { _, _ ->
@@ -90,6 +90,7 @@ fun DetailsSharedElementsUi(
                             Modifier.sharedBounds(
                                 rememberSharedContentState(key = SharedKeys.title(component.item.id)),
                                 animatedVisibilityScope = animScope,
+                                zIndexInOverlay = 1f
                             )
                         }
                     ),
@@ -101,6 +102,7 @@ fun DetailsSharedElementsUi(
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
+                    .navigationBarsPadding()
             ) {
                 Text(
                     modifier = Modifier

@@ -1,7 +1,8 @@
 package ru.mobileup.samples.features.shared_element_transitions.presentation.widgets
 
+import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import ru.mobileup.samples.core.theme.AppTheme
@@ -44,18 +49,37 @@ fun ItemSharedElementUi(
 
     val context = LocalContext.current
 
+    val cardRoundedCornerAnimation = localSharedScope?.animatedVisibilityScope?.transition
+        ?.animateDp(label = "card_rounded_corner") { enterExit ->
+            when (enterExit) {
+                EnterExitState.PreEnter -> 0.dp
+                EnterExitState.Visible -> 16.dp
+                EnterExitState.PostExit -> 16.dp
+            }
+        }
+
+    val cardShape by remember(cardRoundedCornerAnimation?.value) {
+        mutableStateOf(
+            cardRoundedCornerAnimation?.let {
+                RoundedCornerShape(it.value)
+            } ?: RoundedCornerShape(16.dp)
+        )
+    }
+
     Surface(
         modifier = modifier
+            .zIndex(Float.MAX_VALUE)
             .then(
                 localSharedScope.sharedScopeModifier { animScope ->
-                    Modifier.sharedBounds(
+                    Modifier.sharedElement(
                         rememberSharedContentState(key = SharedKeys.surface(item.id)),
                         animatedVisibilityScope = animScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                        clipInOverlayDuringTransition = OverlayClip(cardShape),
+                        renderInOverlayDuringTransition = false,
                     )
                 }
             ),
-        shape = RoundedCornerShape(16.dp),
+        shape = cardShape,
         color = CustomTheme.colors.background.screen,
         shadowElevation = 4.dp,
         onClick = { onClick(item) }
@@ -75,7 +99,7 @@ fun ItemSharedElementUi(
                     .align(Alignment.Top)
                     .then(
                         localSharedScope.sharedScopeModifier { animScope ->
-                            Modifier.sharedElement(
+                            Modifier.sharedBounds(
                                 rememberSharedContentState(key = SharedKeys.image(item.id)),
                                 animatedVisibilityScope = animScope,
                                 clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(16.dp)),
@@ -103,11 +127,12 @@ fun ItemSharedElementUi(
                                 Modifier.sharedBounds(
                                     rememberSharedContentState(key = SharedKeys.title(item.id)),
                                     animatedVisibilityScope = animScope,
+                                    zIndexInOverlay = 1f
                                 )
                             }
                         ),
                     text = item.title,
-                    style = CustomTheme.typography.title.regular,
+                    style = CustomTheme.typography.body.regular,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
