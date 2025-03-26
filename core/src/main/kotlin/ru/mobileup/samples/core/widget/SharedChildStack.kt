@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
@@ -18,24 +19,26 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.S
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.stack.ChildStack
 
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Immutable
-data class SharedScope(
-    val sharedTransitionScope: SharedTransitionScope,
-    val animatedVisibilityScope: AnimatedVisibilityScope,
-)
-
 val LocalSharedScope = staticCompositionLocalOf<SharedScope?> { null }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-inline fun SharedScope?.sharedScopeModifier(
-    block: SharedTransitionScope.(animScope: AnimatedVisibilityScope) -> Modifier
-): Modifier {
-    return this?.let { scope ->
-        with(scope.sharedTransitionScope) {
-            block(scope.animatedVisibilityScope)
+@Immutable
+data class SharedScope(
+    private val sharedTransitionScope: SharedTransitionScope,
+    val animatedVisibilityScope: AnimatedVisibilityScope,
+) {
+    companion object {
+        @OptIn(ExperimentalSharedTransitionApi::class)
+        fun Modifier.sharedScopeModifier(
+            block: @Composable SharedTransitionScope.(animScope: AnimatedVisibilityScope) -> Modifier
+        ): Modifier = composed {
+            return@composed then(
+                LocalSharedScope.current?.let { localSharedScope ->
+                    block(localSharedScope.sharedTransitionScope, localSharedScope.animatedVisibilityScope)
+                } ?: Modifier
+            )
         }
-    } ?: Modifier
+    }
 }
 
 @OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)

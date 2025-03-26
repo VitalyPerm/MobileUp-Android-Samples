@@ -9,4 +9,6 @@ object SharedKeys {
     fun title(id: Int): String = "title$id"
 
     fun text(id: Int): String = "text$id"
+
+    fun shareButton(id: Int): String = "share$id"
 }
