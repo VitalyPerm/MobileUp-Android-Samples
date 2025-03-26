@@ -6,10 +6,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import androidx.core.net.toUri
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.mobileup.samples.features.video.data.utils.VideoDirectory
@@ -18,6 +18,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
+private const val TAG = "PhotoFileManager"
 private const val VIDEO_MIME_TYPE = "video/mp4"
 private const val APP_DIRECTORY = "MobileUp"
 internal const val RELATIVE_STORAGE_PATH = "Movies/$APP_DIRECTORY"
@@ -72,7 +73,7 @@ class VideoFileManagerImpl(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("recording move file: ", e.toString())
+                Logger.withTag(TAG).e("Record failed $e")
             }
         }
 

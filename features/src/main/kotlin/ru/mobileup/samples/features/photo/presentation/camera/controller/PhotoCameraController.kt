@@ -2,8 +2,11 @@ package ru.mobileup.samples.features.photo.presentation.camera.controller
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Range
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.OnImageSavedCallback
@@ -19,6 +22,7 @@ import ru.mobileup.samples.features.photo.data.utils.getOutputFileForPhoto
 import ru.mobileup.samples.features.photo.domain.events.PhotoCameraEvent
 import ru.mobileup.samples.features.photo.domain.events.PhotoError
 import ru.mobileup.samples.features.photo.domain.states.CameraState
+import kotlin.math.abs
 
 private const val TAG = "PhotoCamera"
 
@@ -36,6 +40,7 @@ class PhotoCameraController(
 
     private var imageCapture: ImageCapture? = null
     private var isReleased = false
+    private var exposureRange: Range<Int> = Range(0, 0)
 
     var cameraState = CameraState.build()
         set(value) {
@@ -85,6 +90,26 @@ class PhotoCameraController(
         )
     }
 
+    fun focusChange(focusMeteringAction: FocusMeteringAction) {
+        cameraLink?.cameraControl?.startFocusAndMetering(focusMeteringAction)
+    }
+
+    fun exposureChange(exposure: Float) {
+        val newExposure = when {
+            exposure > 0 -> {
+                exposureRange.upper * exposure
+            }
+
+            exposure < 0 -> {
+                exposureRange.lower * abs(exposure)
+            }
+
+            else -> 0
+        }.toInt()
+
+        cameraLink?.cameraControl?.setExposureCompensationIndex(newExposure)
+    }
+
     private fun setupImageUseCase() {
         if (isReleased) return
         imageCapture = createImageCaptureUseCase()
@@ -94,6 +119,7 @@ class PhotoCameraController(
         cameraProvider.unbindAll()
 
         val preview = Preview.Builder()
+            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build()
             .apply {
                 surfaceProvider = previewView.surfaceProvider
@@ -107,6 +133,7 @@ class PhotoCameraController(
                     ImageCapture.FLASH_MODE_OFF
                 }
             )
+            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build()
 
         val imageAnalysis = ImageAnalysis.Builder()
@@ -131,6 +158,7 @@ class PhotoCameraController(
                 useCaseGroup = useCaseGroup
             ).also {
                 cameraLink = it
+                exposureRange = it.cameraInfo.exposureState.exposureCompensationRange
             }
         } catch (e: Exception) {
             Logger.withTag(TAG).d("Camera initialization failed: $e")

@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.photo.presentation.preview
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,10 +14,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +57,15 @@ private fun PhotoPreviewContent(
     component: PhotoPreviewComponent,
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+
+    var orientation by remember { mutableIntStateOf(Configuration.ORIENTATION_PORTRAIT) }
+
+    LaunchedEffect(configuration) {
+        snapshotFlow { configuration.orientation }
+            .collect { orientation = it }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +75,13 @@ private fun PhotoPreviewContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CustomTheme.colors.palette.black)
-                .padding(horizontal = 8.dp, vertical = 24.dp)
+                .run {
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        padding(horizontal = 8.dp, vertical = 24.dp)
+                    } else {
+                        padding(horizontal = 24.dp, vertical = 8.dp)
+                    }
+                }
                 .padding(top = 16.dp)
         ) {
             Icon(
@@ -93,7 +116,11 @@ private fun PhotoPreviewContent(
         Image(
             painter = rememberAsyncImagePainter(component.media),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                ContentScale.FillWidth
+            } else {
+                ContentScale.FillHeight
+            },
             modifier = Modifier.fillMaxSize()
         )
     }

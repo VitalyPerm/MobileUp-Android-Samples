@@ -2,14 +2,18 @@ package ru.mobileup.samples.features.photo.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import androidx.core.net.toUri
+import androidx.exifinterface.media.ExifInterface
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.mobileup.samples.features.photo.data.utils.PhotoDirectory
@@ -18,9 +22,11 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
+private const val TAG = "PhotoFileManager"
 private const val PHOTO_MIME_TYPE = "image/jpeg"
 private const val APP_DIRECTORY = "MobileUp"
-internal const val RELATIVE_STORAGE_PATH = "Pictures/$APP_DIRECTORY"
+private const val RELATIVE_STORAGE_PATH = "Pictures/$APP_DIRECTORY"
+private const val QUALITY_ORIGINAL = 100
 
 class PhotoFileManagerImpl(
     private val context: Context
@@ -64,13 +70,20 @@ class PhotoFileManagerImpl(
 
         if (newUri != null) {
             try {
+                val orientation: Int = ExifInterface(fileUri.path!!).getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL
+                )
+
                 resolver.openInputStream(fileUri)?.use { input ->
                     resolver.openOutputStream(newUri)?.use { output ->
-                        input.copyTo(output, DEFAULT_BUFFER_SIZE)
+                        rotateBitmap(BitmapFactory.decodeStream(input), orientation).apply {
+                            compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, output)
+                        }
                     }
                 }
             } catch (e: Exception) {
-                Log.e("recording move file: ", e.toString())
+                Logger.withTag(TAG).e("Record failed $e")
             }
         }
 
@@ -100,5 +113,33 @@ class PhotoFileManagerImpl(
             e.printStackTrace()
             null
         }
+    }
+
+    private fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap {
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.postRotate(270f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.postRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                matrix.postRotate(180f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> {
+                matrix.postScale(-1f, 1f)
+            }
+        }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 }

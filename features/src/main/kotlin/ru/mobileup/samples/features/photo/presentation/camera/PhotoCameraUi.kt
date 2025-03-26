@@ -1,6 +1,8 @@
 package ru.mobileup.samples.features.photo.presentation.camera
 
+import android.content.res.Configuration
 import android.graphics.Bitmap
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -10,32 +12,41 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +58,6 @@ import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
-import ru.mobileup.samples.core.utils.clickableNoRipple
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.photo.domain.events.PhotoCameraEvent
 import ru.mobileup.samples.features.photo.domain.states.CameraState
@@ -55,6 +65,10 @@ import ru.mobileup.samples.features.photo.presentation.camera.controller.PhotoCa
 import ru.mobileup.samples.features.photo.presentation.camera.widget.CameraButton
 import ru.mobileup.samples.features.photo.presentation.camera.widget.TorchSwitchIcon
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraFlipIcon
+import ru.mobileup.samples.features.video.presentation.recorder.widgets.FocusIndicator
+import java.util.concurrent.TimeUnit
+
+private const val ASPECT_RATIO_16_9 = 9 / 16f
 
 @Composable
 fun PhotoCameraUi(
@@ -69,6 +83,7 @@ fun PhotoCameraUi(
         mutableStateOf(
             PreviewView(context).apply {
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                scaleType = PreviewView.ScaleType.FIT_CENTER
             }
         )
     }
@@ -131,6 +146,15 @@ private fun PhotoCameraContent(
 
     val blurStrength = remember { Animatable(0f) }
 
+    val configuration = LocalConfiguration.current
+
+    var orientation by remember { mutableIntStateOf(Configuration.ORIENTATION_PORTRAIT) }
+
+    LaunchedEffect(configuration) {
+        snapshotFlow { configuration.orientation }
+            .collect { orientation = it }
+    }
+
     fun animateBlur() {
         scope.launch {
             blurStrength.snapTo(0f)
@@ -145,74 +169,65 @@ private fun PhotoCameraContent(
     }
 
     Box(modifier = modifier.fillMaxSize().background(CustomTheme.colors.palette.black)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CustomTheme.colors.palette.black)
-                    .padding(horizontal = 8.dp, vertical = 24.dp)
-                    .padding(top = 16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_app_logo),
-                    contentDescription = "logo",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(
-                    text = stringResource(R.string.menu_item_camera),
-                    color = CustomTheme.colors.text.invert,
-                    modifier = Modifier
-                        .weight(2f)
-                        .align(Alignment.CenterVertically)
-                )
-            }
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            CameraLandscapeContent(
+                component = component,
+                cameraState = cameraState,
+                previewView = previewView,
+                cameraPlaceHolder = cameraPlaceHolder,
+                photoCameraController = photoCameraController,
+                blur = blurStrength.value,
+                onBlurChange = ::animateBlur
+            )
+        } else {
+            CameraPortraitContent(
+                component = component,
+                cameraState = cameraState,
+                previewView = previewView,
+                cameraPlaceHolder = cameraPlaceHolder,
+                photoCameraController = photoCameraController,
+                blur = blurStrength.value,
+                onBlurChange = ::animateBlur
+            )
+        }
+    }
+}
 
+@Composable
+fun CameraPortraitContent(
+    component: PhotoCameraComponent,
+    cameraState: CameraState,
+    previewView: PreviewView,
+    cameraPlaceHolder: Pair<Bitmap?, Boolean>,
+    photoCameraController: PhotoCameraController,
+    blur: Float,
+    onBlurChange: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        CameraHeader(Configuration.ORIENTATION_PORTRAIT)
+
+        Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .aspectRatio(ASPECT_RATIO_16_9)
+                    .align(Alignment.CenterStart)
             ) {
-                AndroidView(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    factory = remember { { previewView } },
+                CameraPreview(
+                    previewView = previewView,
+                    cameraPlaceHolder = cameraPlaceHolder,
+                    photoCameraController = photoCameraController,
+                    blur = blur
                 )
 
-                this@Column.AnimatedVisibility(
-                    visible = cameraPlaceHolder.second,
-                    enter = EnterTransition.None,
-                    exit = fadeOut()
-                ) {
-                    cameraPlaceHolder.first?.let {
-                        Image(
-                            modifier = Modifier.fillMaxSize().blur((blurStrength.value * 32.dp)),
-                            bitmap = it.asImageBitmap(),
-                            contentScale = ContentScale.Crop,
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .clickableNoRipple {
-                    // Do nothing
-                }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CustomTheme.colors.palette.black.copy(alpha = 0.3f))
-                    .padding(top = 16.dp, bottom = 24.dp)
-            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(CustomTheme.colors.palette.black.copy(alpha = 0.3f))
+                        .padding(top = 16.dp, bottom = 24.dp)
                         .height(intrinsicSize = IntrinsicSize.Max)
+                        .align(Alignment.BottomStart)
                 ) {
                     Box(
                         modifier = Modifier
@@ -220,6 +235,9 @@ private fun PhotoCameraContent(
                             .fillMaxHeight()
                     ) {
                         TorchSwitchIcon(
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .align(Alignment.CenterEnd),
                             torchState = cameraState.torchState,
                             onClick = component::onUpdateTorchState,
                         )
@@ -235,15 +253,192 @@ private fun PhotoCameraContent(
                             .fillMaxHeight()
                     ) {
                         CameraFlipIcon(
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .align(Alignment.CenterStart),
                             onClick = {
                                 component.onFlipCameraSelector()
-                                animateBlur()
+                                onBlurChange()
                             }
                         )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CameraLandscapeContent(
+    component: PhotoCameraComponent,
+    cameraState: CameraState,
+    previewView: PreviewView,
+    cameraPlaceHolder: Pair<Bitmap?, Boolean>,
+    photoCameraController: PhotoCameraController,
+    blur: Float,
+    onBlurChange: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier.fillMaxSize()) {
+        CameraHeader(Configuration.ORIENTATION_LANDSCAPE)
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(1 / ASPECT_RATIO_16_9)
+                    .align(Alignment.TopCenter)
+            ) {
+                CameraPreview(
+                    previewView = previewView,
+                    cameraPlaceHolder = cameraPlaceHolder,
+                    photoCameraController = photoCameraController,
+                    blur = blur
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(CustomTheme.colors.palette.black.copy(alpha = 0.3f))
+                        .padding(start = 16.dp, end = 24.dp)
+                        .width(intrinsicSize = IntrinsicSize.Max)
+                        .align(Alignment.TopEnd)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        CameraFlipIcon(
+                            modifier = Modifier
+                                .padding(bottom = 16.dp)
+                                .align(Alignment.BottomCenter),
+                            onClick = {
+                                component.onFlipCameraSelector()
+                                onBlurChange()
+                            }
+                        )
+                    }
+
+                    CameraButton(
+                        onClick = photoCameraController::takePhoto
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        TorchSwitchIcon(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .align(Alignment.TopCenter),
+                            torchState = cameraState.torchState,
+                            onClick = component::onUpdateTorchState,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CameraHeader(orientation: Int) {
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(CustomTheme.colors.palette.black)
+                .padding(vertical = 8.dp, horizontal = 24.dp)
+                .padding(end = 16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_app_logo),
+                contentDescription = "logo",
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.weight(1f))
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(CustomTheme.colors.palette.black)
+                .padding(horizontal = 8.dp, vertical = 24.dp)
+                .padding(top = 16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_app_logo),
+                contentDescription = "logo",
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.menu_item_camera),
+                color = CustomTheme.colors.text.invert,
+                modifier = Modifier
+                    .weight(2f)
+                    .align(Alignment.CenterVertically)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CameraPreview(
+    previewView: PreviewView,
+    cameraPlaceHolder: Pair<Bitmap?, Boolean>,
+    photoCameraController: PhotoCameraController,
+    blur: Float
+) {
+    var focusPoint by remember {
+        mutableStateOf(Offset(-1f, -1f))
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    val factory = previewView.meteringPointFactory
+                    val point = factory.createPoint(it.x, it.y)
+                    val action = FocusMeteringAction.Builder(point).apply {
+                        setAutoCancelDuration(3, TimeUnit.SECONDS)
+                    }.build()
+                    photoCameraController.focusChange(action)
+                    focusPoint = it
+                }
+            }
+    ) {
+        AndroidView(
+            modifier = Modifier
+                .fillMaxSize(),
+            factory = remember { { previewView } },
+        )
+
+        AnimatedVisibility(
+            visible = cameraPlaceHolder.second,
+            enter = EnterTransition.None,
+            exit = fadeOut()
+        ) {
+            cameraPlaceHolder.first?.let {
+                Image(
+                    modifier = Modifier.fillMaxSize().blur((blur * 32.dp)),
+                    bitmap = it.asImageBitmap(),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
+            }
+        }
+
+        FocusIndicator(
+            offset = focusPoint,
+            onExposureChange = {
+                photoCameraController.exposureChange(it)
+            }
+        )
     }
 }
 

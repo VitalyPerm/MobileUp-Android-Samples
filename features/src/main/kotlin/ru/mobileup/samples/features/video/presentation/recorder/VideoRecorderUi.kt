@@ -68,18 +68,18 @@ import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
 import ru.mobileup.samples.features.video.data.utils.name
 import ru.mobileup.samples.features.video.domain.RecorderConfig
-import ru.mobileup.samples.features.video.domain.events.VideoRecorderEvent
 import ru.mobileup.samples.features.video.domain.events.RecordingResult
+import ru.mobileup.samples.features.video.domain.events.VideoRecorderEvent
 import ru.mobileup.samples.features.video.domain.states.RecorderState
 import ru.mobileup.samples.features.video.presentation.recorder.controller.VideoRecorderController
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraEffectIcon
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraFlipIcon
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.FocusIndicator
+import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderButton
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderFilterSelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderFpsSelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderQualitySelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderTorchSelector
-import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderButton
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -454,6 +454,9 @@ private fun VideoRecorderContent(
                             .fillMaxHeight()
                     ) {
                         CameraFlipIcon(
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .align(Alignment.CenterStart),
                             onClick = {
                                 component.onFlipCameraSelector()
                                 animateBlur()
