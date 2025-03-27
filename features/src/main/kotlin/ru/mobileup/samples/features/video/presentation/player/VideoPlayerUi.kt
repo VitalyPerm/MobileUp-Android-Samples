@@ -208,7 +208,11 @@ fun VideoPlayerUi(
         }
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        transparentNavigationBar = true,
+        lightStatusBarIcons = true
+    )
+
     StandardDialog(component.resetTransformDialog)
     StandardDialog(component.saveDialog)
 

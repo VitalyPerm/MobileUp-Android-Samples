@@ -45,6 +45,12 @@ class PhotoCameraController(
     var cameraState = CameraState.build()
         set(value) {
             // Rebuild only if we changed the camera configuration
+            imageCapture?.flashMode = if (value.torchState) {
+                ImageCapture.FLASH_MODE_ON
+            } else {
+                ImageCapture.FLASH_MODE_OFF
+            }
+
             if (field.cameraSelector != value.cameraSelector) {
                 field = value
                 onPlaceHolderUpdated(previewView.bitmap)
@@ -126,13 +132,6 @@ class PhotoCameraController(
             }
 
         val imageCapture = ImageCapture.Builder()
-            .setFlashMode(
-                if (cameraState.torchState) {
-                    ImageCapture.FLASH_MODE_ON
-                } else {
-                    ImageCapture.FLASH_MODE_OFF
-                }
-            )
             .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build()
 

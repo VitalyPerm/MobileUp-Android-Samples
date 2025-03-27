@@ -42,5 +42,5 @@ fun ComponentFactory.createPhotoPreviewComponent(
     media: Uri,
     componentContext: ComponentContext
 ): PhotoPreviewComponent {
-    return RealPhotoPreviewComponent(media, componentContext, get(), get())
+    return RealPhotoPreviewComponent(media, componentContext, get(), get(), get())
 }

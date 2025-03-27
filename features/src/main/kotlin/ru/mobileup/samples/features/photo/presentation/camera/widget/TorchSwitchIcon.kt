@@ -32,9 +32,9 @@ fun TorchSwitchIcon(
     Icon(
         painter = painterResource(
             id = if (torchState) {
-                R.drawable.ic_torch_disabled
-            } else {
                 R.drawable.ic_torch
+            } else {
+                R.drawable.ic_torch_disabled
             }
         ),
         contentDescription = "camera",

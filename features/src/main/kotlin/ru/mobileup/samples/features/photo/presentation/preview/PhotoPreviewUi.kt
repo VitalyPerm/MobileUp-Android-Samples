@@ -42,7 +42,10 @@ fun PhotoPreviewUi(
     component: PhotoPreviewComponent,
     modifier: Modifier = Modifier
 ) {
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        transparentNavigationBar = true,
+        lightStatusBarIcons = true
+    )
 
     StandardDialog(component.saveDialog)
 

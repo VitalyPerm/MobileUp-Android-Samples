@@ -103,9 +103,16 @@ class PhotoFileManagerImpl(
         val destinationFile = File(appDirectory, getPhotoFileName())
 
         return try {
+            val orientation: Int = ExifInterface(fileUri.path!!).getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+
             FileInputStream(fileUri.toFile()).use { inputStream ->
                 FileOutputStream(destinationFile).use { outputStream ->
-                    inputStream.copyTo(outputStream, DEFAULT_BUFFER_SIZE)
+                    rotateBitmap(BitmapFactory.decodeStream(inputStream), orientation).apply {
+                        compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, outputStream)
+                    }
                 }
             }
             destinationFile.toUri()

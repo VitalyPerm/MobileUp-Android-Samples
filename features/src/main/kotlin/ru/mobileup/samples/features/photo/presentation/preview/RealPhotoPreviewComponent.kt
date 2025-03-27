@@ -1,6 +1,7 @@
 package ru.mobileup.samples.features.photo.presentation.preview
 
 import android.net.Uri
+import android.os.Build
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
@@ -10,6 +11,8 @@ import ru.mobileup.samples.core.dialog.standard.StandardDialogData
 import ru.mobileup.samples.core.dialog.standard.standardDialogControl
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
+import ru.mobileup.samples.core.permissions.PermissionService
+import ru.mobileup.samples.core.permissions.SinglePermissionResult
 import ru.mobileup.samples.core.utils.Resource
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.features.R
@@ -19,6 +22,7 @@ class RealPhotoPreviewComponent(
     override val media: Uri,
     componentContext: ComponentContext,
     private val photoFileManager: PhotoFileManager,
+    private val permissionService: PermissionService,
     private val messageService: MessageService
 ) : ComponentContext by componentContext, PhotoPreviewComponent {
 
@@ -30,7 +34,20 @@ class RealPhotoPreviewComponent(
             message = R.string.save_photo_dialog_message.strResDesc(),
             confirmButton = DialogButton(
                 text = R.string.photo_confirm_btn.strResDesc(),
-                action = ::savePhoto
+                action = {
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                        componentScope.launch {
+                            val permissionsResult = permissionService.requestPermission(
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            )
+                            if (permissionsResult is SinglePermissionResult.Granted) {
+                                savePhoto()
+                            }
+                        }
+                    } else {
+                        savePhoto()
+                    }
+                }
             ),
             dismissButton = DialogButton(
                 text = R.string.photo_dismiss_btn.strResDesc(),
@@ -41,12 +58,16 @@ class RealPhotoPreviewComponent(
 
     private fun savePhoto() {
         componentScope.launch {
-            photoFileManager.movePhotoToMediaStore(media)
+            val result = photoFileManager.movePhotoToMediaStore(media)
 
             messageService.showMessage(
                 Message(
                     text = StringDesc.Resource(
-                        R.string.photo_saved
+                        if (result == null) {
+                            R.string.photo_save_failed
+                        } else {
+                            R.string.photo_saved
+                        }
                     )
                 )
             )

@@ -2,10 +2,8 @@ package ru.mobileup.samples.features.photo.data.utils
 
 import android.content.Context
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.UUID
 
-private const val DATE_FORMAT_PATTERN_FOR_FILE = "yyyy-MM-dd-HH-mm-ss-SSS"
 private const val FILE_FORMAT_SUFFIX = ".jpg"
 
 enum class PhotoDirectory(
@@ -19,12 +17,8 @@ enum class PhotoDirectory(
             .resolve("photo_cache/$dirName")
 }
 
-fun getPhotoFileName(formatSuffix: String = FILE_FORMAT_SUFFIX) = SimpleDateFormat(
-    DATE_FORMAT_PATTERN_FOR_FILE,
-    Locale.US
-).format(
-    System.currentTimeMillis()
-) + formatSuffix
+fun getPhotoFileName(formatSuffix: String = FILE_FORMAT_SUFFIX) =
+    UUID.randomUUID().toString() + formatSuffix
 
 fun Context.getOutputFileForPhoto(): File {
     return File(

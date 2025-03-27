@@ -117,7 +117,10 @@ fun PhotoCameraUi(
         )
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        transparentNavigationBar = true,
+        lightStatusBarIcons = true
+    )
 
     LaunchedEffect(cameraState) {
         photoCameraController.cameraState = cameraState

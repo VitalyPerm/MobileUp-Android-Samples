@@ -158,7 +158,10 @@ fun VideoRecorderUi(
         videoRecorderController.zoomChange(zoomChange = zoomChange)
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        transparentNavigationBar = true,
+        lightStatusBarIcons = true
+    )
 
     LaunchedEffect(filtersPagerState.settledPage, filtersPagerState.isScrollInProgress) {
         val newEffectIndex = filtersPagerState.settledPage % availableFilters.size
