@@ -64,7 +64,23 @@ object CustomToolbarDefaults {
         state: CustomToolbarState = rememberCustomToolbarState(),
         snapAnimationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMediumLow),
         flingAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
-    ) = CustomToolbarScrollBehavior(state, snapAnimationSpec, flingAnimationSpec)
+        convergenceCoefficient: () -> Float = { 0f },
+        canCollapse: () -> Boolean = { true },
+    ): CustomToolbarScrollBehavior = remember(
+        state,
+        snapAnimationSpec,
+        flingAnimationSpec,
+        canCollapse,
+        convergenceCoefficient
+    ) {
+        CustomToolbarScrollBehavior(
+            state,
+            snapAnimationSpec,
+            flingAnimationSpec,
+            canCollapse,
+            convergenceCoefficient
+        )
+    }
 }
 
 @Immutable
@@ -324,7 +340,8 @@ fun CustomToolbar(
                 (collapsedHeightPx - CollapsedTitleLineHeight.toPx().fastRoundToInt()) / 2
 
             // Current height of toolbar
-            layoutHeightPx = lerp(fullyExpandedHeightPx, collapsedHeightPx, collapsedFraction).fastRoundToInt()
+            layoutHeightPx =
+                lerp(fullyExpandedHeightPx, collapsedHeightPx, collapsedFraction).fastRoundToInt()
 
             // Current coordinates of collapsing title
             collapsingTitleX =
