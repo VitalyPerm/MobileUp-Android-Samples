@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.video.presentation.recorder.widgets
+package ru.mobileup.samples.features.photo.presentation.camera.widget
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -21,7 +21,8 @@ import ru.mobileup.samples.features.R
 private const val ANIMATION_DURATION_MS = 500
 
 @Composable
-fun CameraFlipIcon(
+fun TorchSwitchIcon(
+    torchState: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -29,7 +30,13 @@ fun CameraFlipIcon(
     val rotation = remember { Animatable(0f) }
 
     Icon(
-        painter = painterResource(id = R.drawable.ic_camera_filp),
+        painter = painterResource(
+            id = if (torchState) {
+                R.drawable.ic_torch
+            } else {
+                R.drawable.ic_torch_disabled
+            }
+        ),
         contentDescription = "camera",
         tint = Color.Unspecified,
         modifier = modifier
@@ -55,10 +62,11 @@ fun CameraFlipIcon(
 
 @Preview
 @Composable
-private fun CameraFlipIconPreview() {
+private fun TorchSwitchIconPreview() {
     AppTheme {
         Box {
-            CameraFlipIcon(
+            TorchSwitchIcon(
+                torchState = true,
                 onClick = { }
             )
         }

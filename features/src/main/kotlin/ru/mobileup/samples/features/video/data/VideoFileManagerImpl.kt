@@ -6,25 +6,26 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import androidx.core.net.toUri
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.mobileup.samples.features.video.data.utils.VideoEditorDirectory
-import ru.mobileup.samples.features.video.data.utils.getFileName
+import ru.mobileup.samples.features.video.data.utils.VideoDirectory
+import ru.mobileup.samples.features.video.data.utils.getVideoFileName
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-private const val VIDEO_MEME_TYPE = "video/mp4"
+private const val TAG = "PhotoFileManager"
+private const val VIDEO_MIME_TYPE = "video/mp4"
 private const val APP_DIRECTORY = "MobileUp"
 internal const val RELATIVE_STORAGE_PATH = "Movies/$APP_DIRECTORY"
 
-class FileManagerImpl(
+class VideoFileManagerImpl(
     private val context: Context
-) : FileManager {
+) : VideoFileManager {
 
     override suspend fun moveVideoToMediaStore(fileUri: Uri): Uri? {
         return withContext(Dispatchers.IO) {
@@ -36,8 +37,8 @@ class FileManagerImpl(
         }
     }
 
-    override suspend fun deleteEditorDirectory(
-        directory: VideoEditorDirectory,
+    override suspend fun cleanVideoDirectory(
+        directory: VideoDirectory,
     ) {
         withContext(Dispatchers.IO) {
             try {
@@ -54,8 +55,8 @@ class FileManagerImpl(
     private fun moveFileToMediaStoreApi29(fileUri: Uri): Uri? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName())
-            put(MediaStore.MediaColumns.MIME_TYPE, VIDEO_MEME_TYPE)
+            put(MediaStore.MediaColumns.DISPLAY_NAME, getVideoFileName())
+            put(MediaStore.MediaColumns.MIME_TYPE, VIDEO_MIME_TYPE)
             put(MediaStore.Video.Media.RELATIVE_PATH, RELATIVE_STORAGE_PATH)
         }
 
@@ -72,7 +73,7 @@ class FileManagerImpl(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("recording move file: ", e.toString())
+                Logger.withTag(TAG).e("Record failed $e")
             }
         }
 
@@ -89,7 +90,7 @@ class FileManagerImpl(
             appDirectory.mkdirs()
         }
 
-        val destinationFile = File(appDirectory, getFileName())
+        val destinationFile = File(appDirectory, getVideoFileName())
 
         return try {
             FileInputStream(fileUri.toFile()).use { inputStream ->

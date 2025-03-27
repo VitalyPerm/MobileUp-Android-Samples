@@ -1,7 +1,5 @@
-package ru.mobileup.samples.features.video.presentation.menu
+package ru.mobileup.samples.features.photo.presentation.menu
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,22 +15,12 @@ import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.video.domain.VideoOption
-
-private const val VIDEO_MIME = "video/*"
 
 @Composable
-fun VideoMenuUi(
-    component: VideoMenuComponent,
+fun PhotoMenuUi(
+    component: PhotoMenuComponent,
     modifier: Modifier = Modifier
 ) {
-    val pickerLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            uri?.let {
-                component.onVideoOptionChosen(VideoOption.Player(it))
-            }
-        }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,27 +31,16 @@ fun VideoMenuUi(
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_recorder),
-            onClick = {
-                component.onVideoOptionChosen(VideoOption.Recorder)
-            }
-        )
-
-        AppButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_player),
-            onClick = {
-                pickerLauncher.launch(arrayOf(VIDEO_MIME))
-            }
+            text = stringResource(R.string.menu_item_camera),
+            onClick = component::onCameraClick
         )
     }
 }
 
 @Preview
 @Composable
-private fun VideoMenuUiPreview() {
+private fun PhotoMenuUiPreview() {
     AppTheme {
-        VideoMenuUi(FakeVideoMenuComponent())
+        PhotoMenuUi(FakePhotoMenuComponent())
     }
 }
