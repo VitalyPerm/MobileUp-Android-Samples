@@ -35,7 +35,7 @@ class CustomToolbarScrollBehavior(
                 // Consume only the scroll on the Y axis.
                 available.copy(
                     x = 0f,
-                    y = available.y * (1f - convergenceCoefficient.invoke())
+                    y = available.y * (1f - convergenceCoefficient().coerceIn(0f, 1f))
                 )
             } else {
                 Offset.Zero

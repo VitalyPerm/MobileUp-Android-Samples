@@ -9,6 +9,7 @@ navigation
 otp
 qr_code
 root
+shared_element_transitions
 tutorial
 video
 root -> calendar
@@ -20,6 +21,8 @@ root -> menu
 root -> navigation
 root -> otp
 root -> qr_code
+root -> shared_element_transitions
 root -> tutorial
 root -> video
+shared_element_transitions -> image
 }
