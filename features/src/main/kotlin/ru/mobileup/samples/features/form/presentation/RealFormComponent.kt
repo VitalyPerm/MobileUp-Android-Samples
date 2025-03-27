@@ -1,7 +1,5 @@
 package ru.mobileup.samples.features.form.presentation
 
-import android.content.Intent
-import androidx.core.net.toUri
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
@@ -19,9 +17,11 @@ import ru.mobileup.kmm_form_validation.validation.form.FormValidator
 import ru.mobileup.kmm_form_validation.validation.form.RevalidateOnValueChanged
 import ru.mobileup.kmm_form_validation.validation.form.SetFocusOnFirstInvalidControlAfterValidation
 import ru.mobileup.kmm_form_validation.validation.form.ValidateOnFocusLost
-import ru.mobileup.samples.core.activity.ActivityProvider
+import ru.mobileup.kmm_form_validation.validation.form.checked
 import ru.mobileup.samples.core.error_handling.ErrorHandler
 import ru.mobileup.samples.core.error_handling.safeLaunch
+import ru.mobileup.samples.core.error_handling.safeRun
+import ru.mobileup.samples.core.external_apps.data.ExternalAppService
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.CheckControl
@@ -42,7 +42,7 @@ private val PASSWORD_RANGE = 8..20
 
 class RealFormComponent(
     componentContext: ComponentContext,
-    private val activityProvider: ActivityProvider,
+    private val externalAppService: ExternalAppService,
     private val errorHandler: ErrorHandler,
     private val messageService: MessageService,
 ) : ComponentContext by componentContext, FormComponent {
@@ -96,27 +96,36 @@ class RealFormComponent(
                 )
             )
         }
+
+        checked(agreementWithTermsCheckControl, CoreR.string.checkbox_error_terms.strResDesc())
     }
 
-    private fun isPasswordValid(password: String): Boolean = password.run {
-        val containsDigit = any(Char::isDigit)
-        val containsLowercase = any(Char::isLowerCase)
-        val containsUppercase = any(Char::isUpperCase)
-        val containsSpecChar = any { it in PASSWORD_SPEC_CHARS }
-        val notContainsInvalidChar = !any { !it.isLetterOrDigit() && it !in PASSWORD_SPEC_CHARS }
-        val validLength = length in PASSWORD_RANGE
+    private fun isPasswordValid(password: String): Boolean {
+        if (password.length !in PASSWORD_RANGE) return false
 
-        containsDigit && containsLowercase && containsUppercase && containsSpecChar && notContainsInvalidChar && validLength
+        var containsDigit = false
+        var containsLowercase = false
+        var containsUppercase = false
+        var containsSpecChar = false
+
+        for (char in password) {
+            when {
+                char.isDigit() -> containsDigit = true
+                char.isLowerCase() -> containsLowercase = true
+                char.isUpperCase() -> containsUppercase = true
+                char in PASSWORD_SPEC_CHARS -> containsSpecChar = true
+                !char.isLetterOrDigit() -> return false
+            }
+        }
+
+        return containsDigit && containsLowercase && containsUppercase && containsSpecChar
     }
 
     override val isLoginEnabled = computed(
-        phoneInputControl.text,
-        phoneInputControl.error,
-        passwordInputControl.text,
-        passwordInputControl.error,
-        agreementWithTermsCheckControl.checked
-    ) { phone, phoneError, password, passwordError, agreementChecked ->
-        phone.isNotBlank() && phoneError == null && password.isNotBlank() && passwordError == null && agreementChecked
+        formValidator.isFilledState,
+        formValidator.hasErrorState,
+    ) { isFilled, hasError ->
+        isFilled && !hasError
     }
 
     override val isLoginInProgress = MutableStateFlow(false)
@@ -133,8 +142,7 @@ class RealFormComponent(
 
     override fun onLoginClick() {
         if (isLoginInProgress.value) return
-        val isValid = formValidator.validate().isValid
-        if (!isValid) return
+        if (formValidator.validate().isInvalid) return
 
         componentScope.safeLaunch(errorHandler) {
             withProgress(isLoginInProgress) {
@@ -148,24 +156,11 @@ class RealFormComponent(
         }
     }
 
-    override fun onAgreementClick(tag: String) {
-        componentScope.safeLaunch(errorHandler) {
-            when (tag) {
-                FormComponent.PRIVACY_POLICY -> {
-                    activityProvider.awaitActivity().startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://career.habr.com/companies/mobileup".toUri()
-                        )
-                    )
-                }
-
-                FormComponent.TERMS_OF_USE_TAG -> {
-                    activityProvider.awaitActivity().startActivity(
-                        Intent(Intent.ACTION_VIEW, "https://mobileup.ru/".toUri())
-                    )
-                }
-            }
-        }
+    override fun onAgreementClick(tag: String) = safeRun(errorHandler) {
+        when (tag) {
+            FormComponent.PRIVACY_POLICY -> "https://career.habr.com/companies/mobileup"
+            FormComponent.TERMS_OF_USE_TAG -> "https://mobileup.ru/"
+            else -> return@safeRun
+        }.run(externalAppService::openUrl)
     }
 }
