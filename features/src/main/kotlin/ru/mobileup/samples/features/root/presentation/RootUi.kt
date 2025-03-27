@@ -26,6 +26,7 @@ import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
+import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
@@ -51,6 +52,7 @@ fun RootUi(
             is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
             is RootComponent.Child.Image -> ImageUi(instance.component)
             is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
+            is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
         }
     }
 
