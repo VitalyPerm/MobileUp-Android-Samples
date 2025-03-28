@@ -21,6 +21,8 @@ import ru.mobileup.samples.features.photo.data.utils.getPhotoFileName
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 private const val TAG = "PhotoFileManager"
 private const val PHOTO_MIME_TYPE = "image/jpeg"
@@ -55,7 +57,7 @@ class PhotoFileManagerImpl(
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private fun moveFileToMediaStoreApi29(fileUri: Uri): Uri? {
+    private fun moveFileToMediaStoreApi29(uri: Uri): Uri? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, getPhotoFileName())
@@ -70,16 +72,15 @@ class PhotoFileManagerImpl(
 
         if (newUri != null) {
             try {
-                val orientation: Int = ExifInterface(fileUri.path!!).getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL
-                )
-
-                resolver.openInputStream(fileUri)?.use { input ->
-                    resolver.openOutputStream(newUri)?.use { output ->
-                        rotateBitmap(BitmapFactory.decodeStream(input), orientation).apply {
-                            compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, output)
-                        }
+                resolver.openInputStream(uri)?.use { inputStream ->
+                    resolver.openOutputStream(newUri)?.use { outputStream ->
+                        writeFile(
+                            inputStream = inputStream,
+                            outputStream = outputStream,
+                            exifInterface = uri.path?.let {
+                                ExifInterface(it)
+                            }
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -90,7 +91,7 @@ class PhotoFileManagerImpl(
         return newUri
     }
 
-    private fun moveFileToMediaStore(fileUri: Uri): Uri? {
+    private fun moveFileToMediaStore(uri: Uri): Uri? {
         val appDirectory = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
             APP_DIRECTORY
@@ -100,53 +101,63 @@ class PhotoFileManagerImpl(
             appDirectory.mkdirs()
         }
 
-        val destinationFile = File(appDirectory, getPhotoFileName())
+        val newFile = File(appDirectory, getPhotoFileName())
 
         return try {
-            val orientation: Int = ExifInterface(fileUri.path!!).getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
-            )
-
-            FileInputStream(fileUri.toFile()).use { inputStream ->
-                FileOutputStream(destinationFile).use { outputStream ->
-                    rotateBitmap(BitmapFactory.decodeStream(inputStream), orientation).apply {
-                        compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, outputStream)
-                    }
+            FileInputStream(uri.toFile()).use { inputStream ->
+                FileOutputStream(newFile).use { outputStream ->
+                    writeFile(
+                        inputStream = inputStream,
+                        outputStream = outputStream,
+                        exifInterface = uri.path?.let {
+                            ExifInterface(it)
+                        }
+                    )
                 }
             }
-            destinationFile.toUri()
+            newFile.toUri()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Logger.withTag(TAG).e("Record failed $e")
             null
         }
     }
 
-    private fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap {
-        val matrix = Matrix()
+    private fun writeFile(
+        inputStream: InputStream,
+        outputStream: OutputStream,
+        exifInterface: ExifInterface?
+    ) {
+        val orientation = exifInterface?.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )
+
         when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
-            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
-            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
-            ExifInterface.ORIENTATION_TRANSVERSE -> {
-                matrix.postRotate(270f)
-                matrix.postScale(-1f, 1f)
-            }
+            // Некоторые девайсы могут не поддерживать эти два аттрибута
+            // Для корректного отображения в других приложениях лучше повернуть Bitmap самостоятельно
+            ExifInterface.ORIENTATION_TRANSVERSE -> BitmapFactory
+                .decodeStream(inputStream)
+                .flipHorizontal()
+                .compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, outputStream)
 
-            ExifInterface.ORIENTATION_TRANSPOSE -> {
-                matrix.postRotate(90f)
-                matrix.postScale(-1f, 1f)
-            }
+            ExifInterface.ORIENTATION_TRANSPOSE -> BitmapFactory
+                .decodeStream(inputStream)
+                .flipVertical()
+                .compress(Bitmap.CompressFormat.JPEG, QUALITY_ORIGINAL, outputStream)
 
-            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
-                matrix.postRotate(180f)
-                matrix.postScale(-1f, 1f)
-            }
-
-            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> {
-                matrix.postScale(-1f, 1f)
-            }
+            else -> inputStream.copyTo(outputStream)
         }
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
+
+    private fun Bitmap.flipHorizontal() =
+        Bitmap.createBitmap(this, 0, 0, this.width, this.height, Matrix().apply {
+            postRotate(270f)
+            postScale(-1f, 1f)
+        }, true)
+
+    private fun Bitmap.flipVertical() =
+        Bitmap.createBitmap(this, 0, 0, this.width, this.height, Matrix().apply {
+            postRotate(90f)
+            postScale(-1f, 1f)
+        }, true)
 }
