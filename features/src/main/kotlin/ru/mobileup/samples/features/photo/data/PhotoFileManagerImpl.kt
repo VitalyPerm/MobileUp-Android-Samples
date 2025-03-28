@@ -70,26 +70,23 @@ class PhotoFileManagerImpl(
             contentValues
         )
 
-        if (newUri != null) {
-            try {
-                resolver.openInputStream(uri)?.use { inputStream ->
-                    resolver.openOutputStream(newUri)?.use { outputStream ->
-                        writeFile(
-                            inputStream = inputStream,
-                            outputStream = outputStream,
-                            exifInterface = uri.path?.let {
-                                ExifInterface(it)
-                            }
-                        )
-                    }
+        return try {
+            resolver.openInputStream(uri)?.use { inputStream ->
+                newUri?.let { resolver.openOutputStream(it) }?.use { outputStream ->
+                    writeFile(
+                        inputStream = inputStream,
+                        outputStream = outputStream,
+                        exifInterface = uri.path?.let {
+                            ExifInterface(it)
+                        }
+                    )
+                    uri
                 }
-            } catch (e: Exception) {
-                Logger.withTag(TAG).e("Record failed $e")
-                return null
             }
+        } catch (e: Exception) {
+            Logger.withTag(TAG).e("Photo failed $e")
+            null
         }
-
-        return newUri
     }
 
     private fun moveFileToMediaStore(uri: Uri): Uri? {
@@ -118,7 +115,7 @@ class PhotoFileManagerImpl(
             }
             newFile.toUri()
         } catch (e: Exception) {
-            Logger.withTag(TAG).e("Record failed $e")
+            Logger.withTag(TAG).e("Photo failed $e")
             null
         }
     }
