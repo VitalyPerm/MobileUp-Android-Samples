@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
@@ -53,10 +55,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.util.UnstableApi
 import ru.mobileup.samples.core.dialog.standard.StandardDialog
+import ru.mobileup.samples.core.message.presentation.noOverlapByMessage
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
+import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
@@ -81,7 +85,7 @@ private const val HELPING_OFFSET_MULTIPLIER = 2.5f
 @Composable
 fun VideoPlayerUi(
     component: VideoPlayerComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
@@ -207,7 +211,13 @@ fun VideoPlayerUi(
         }
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
+    )
+
     StandardDialog(component.resetTransformDialog)
     StandardDialog(component.saveDialog)
 
@@ -249,7 +259,7 @@ private fun VideoPlayerContent(
     isPlaying: Boolean,
     playerController: PlayerController,
     onUpdateConfig: (PlayerConfig) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val videoProgress by playerController.progressState.collectAsState()
     val playingIndicationState by rememberPlayerIndicationState(isPlaying = isPlaying)
@@ -268,14 +278,14 @@ private fun VideoPlayerContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(CustomTheme.colors.palette.grayscale.l900)
+            .background(CustomTheme.colors.palette.black),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CustomTheme.colors.palette.black)
-                .padding(horizontal = 8.dp, vertical = 24.dp)
-                .padding(top = 16.dp)
+                .statusBarsPadding()
+                .padding(horizontal = 8.dp, vertical = 16.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_app_logo),
@@ -425,13 +435,17 @@ private fun VideoPlayerContent(
             }
 
             this@Column.AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart),
                 visible = playerState.renderProgress == null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .noOverlapByMessage()
                 ) {
                     Box {
                         PlayerVolumeSelector(
@@ -476,8 +490,8 @@ private fun VideoPlayerContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(CustomTheme.colors.palette.black50)
-                            .padding(vertical = 24.dp)
                             .padding(horizontal = 12.dp)
+                            .navigationBarsPadding()
                     ) {
                         Text(
                             text = formatMillisToMS((videoProgress * playerState.duration).toLong()),
@@ -486,7 +500,9 @@ private fun VideoPlayerContent(
                         )
 
                         Slider(
-                            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
                             track = { sliderState ->
                                 SliderDefaults.Track(
                                     modifier = Modifier.height(4.dp),

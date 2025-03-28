@@ -1,22 +1,14 @@
 package ru.mobileup.samples.features.image.presentation.carousel
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,13 +19,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.dispatchOnBackPressed
 import ru.mobileup.samples.core.utils.zoomable
 
 @Composable
@@ -43,7 +33,6 @@ fun FullScreenImageCarouselUi(
     minScale: Float = 1f,
     maxScale: Float = 3f,
 ) {
-    val context = LocalContext.current
     val imageCarousel by component.imageCarousel.collectAsState()
 
     val pagerState = rememberPagerState(
@@ -62,7 +51,6 @@ fun FullScreenImageCarouselUi(
     Box(
         modifier = modifier
             .background(CustomTheme.colors.background.screen)
-            .systemBarsPadding()
             .fillMaxSize()
     ) {
         HorizontalPager(
@@ -86,20 +74,6 @@ fun FullScreenImageCarouselUi(
             }
         }
 
-        Surface(
-            modifier = Modifier
-                .padding(16.dp)
-                .size(40.dp)
-                .clickable { dispatchOnBackPressed(context) },
-            shape = RoundedCornerShape(12.dp),
-            color = CustomTheme.colors.background.screen
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                contentDescription = null,
-                modifier = Modifier.requiredSize(24.dp)
-            )
-        }
         if (imageCarousel.imageUrls.size > 1) {
             PageIndicator(
                 imagesCount = imageCarousel.imageUrls.size,
@@ -107,6 +81,7 @@ fun FullScreenImageCarouselUi(
                 defaultColor = CustomTheme.colors.background.secondary,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
                     .padding(bottom = 8.dp)
             )
         }

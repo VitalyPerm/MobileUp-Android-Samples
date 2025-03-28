@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -24,8 +26,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
@@ -58,10 +62,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.launch
+import ru.mobileup.samples.core.message.presentation.noOverlapByMessage
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
+import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
@@ -84,7 +90,7 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun VideoRecorderUi(
     component: VideoRecorderComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
@@ -157,7 +163,12 @@ fun VideoRecorderUi(
         cameraController.zoomChange(zoomChange = zoomChange)
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
+    )
 
     LaunchedEffect(filtersPagerState.settledPage, filtersPagerState.isScrollInProgress) {
         val newEffectIndex = filtersPagerState.settledPage % availableFilters.size
@@ -212,7 +223,7 @@ private fun VideoRecorderContent(
     cameraPlaceHolder: Pair<Bitmap?, Boolean>,
     cameraController: CameraController,
     onUpdateConfig: (RecorderConfig) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -244,14 +255,18 @@ private fun VideoRecorderContent(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize().background(CustomTheme.colors.palette.black)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(CustomTheme.colors.palette.black)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(CustomTheme.colors.palette.black)
-                    .padding(horizontal = 8.dp, vertical = 24.dp)
-                    .padding(top = 16.dp)
+                    .padding(horizontal = 8.dp, vertical = 16.dp)
+                    .statusBarsPadding()
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_app_logo),
@@ -322,21 +337,22 @@ private fun VideoRecorderContent(
                 )
             }
 
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        val factory = previewView.meteringPointFactory
-                        val point = factory.createPoint(it.x, it.y)
-                        val action = FocusMeteringAction.Builder(point).apply {
-                            setAutoCancelDuration(3, TimeUnit.SECONDS)
-                        }.build()
-                        cameraController.focusChange(action)
-                        onUpdateConfig(RecorderConfig.Off)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            val factory = previewView.meteringPointFactory
+                            val point = factory.createPoint(it.x, it.y)
+                            val action = FocusMeteringAction.Builder(point).apply {
+                                setAutoCancelDuration(3, TimeUnit.SECONDS)
+                            }.build()
+                            cameraController.focusChange(action)
+                            onUpdateConfig(RecorderConfig.Off)
 
-                        focusPoint = it
+                            focusPoint = it
+                        }
                     }
-                }
             ) {
                 AndroidView(
                     modifier = Modifier
@@ -352,7 +368,9 @@ private fun VideoRecorderContent(
                 ) {
                     cameraPlaceHolder.first?.let {
                         Image(
-                            modifier = Modifier.fillMaxSize().blur((blurStrength.value * 32.dp)),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .blur((blurStrength.value * 32.dp)),
                             bitmap = it.asImageBitmap(),
                             contentScale = ContentScale.Crop,
                             contentDescription = null
@@ -373,9 +391,11 @@ private fun VideoRecorderContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
                 .clickableNoRipple {
                     // Do nothing
                 }
+                .noOverlapByMessage()
         ) {
             Box {
                 RecorderFpsSelector(
@@ -416,14 +436,19 @@ private fun VideoRecorderContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(CustomTheme.colors.palette.black.copy(alpha = 0.3f))
-                    .padding(top = 16.dp, bottom = 24.dp)
+                    .padding(16.dp)
+                    .animateContentSize(),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(intrinsicSize = IntrinsicSize.Max)
                 ) {
-                    Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
                         CameraEffectIcon(
                             recorderConfig = recorderConfig,
                             onClick = {
@@ -460,17 +485,17 @@ private fun VideoRecorderContent(
                         )
                     }
                 }
-                Text(
-                    text = if (recorderState.isRecording) {
-                        recorderDurationString
-                    } else {
-                        ""
-                    },
-                    color = CustomTheme.colors.text.invert,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 8.dp)
-                )
+                Crossfade(recorderState.isRecording) {
+                    if (it) {
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 8.dp),
+                            text = recorderDurationString,
+                            color = CustomTheme.colors.text.invert
+                        )
+                    }
+                }
             }
         }
     }

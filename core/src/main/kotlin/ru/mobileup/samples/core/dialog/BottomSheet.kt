@@ -77,7 +77,7 @@ fun <T : Any> BottomSheet(
 
     val component = delayedComponent
     if (component != null) {
-        val navigationBarWithImePadding = navigationBarsWithImePaddingDp()
+        val navigationBarWithImePadding = navigationBarsWithImePaddingDp
         ModalBottomSheet(
             modifier = modifier,
             onDismissRequest = {

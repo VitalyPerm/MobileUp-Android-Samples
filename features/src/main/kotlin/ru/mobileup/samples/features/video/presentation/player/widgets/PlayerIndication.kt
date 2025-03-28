@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,9 +53,8 @@ fun PlayerIndication(
             modifier = modifier
                 .size(60.dp)
                 .clip(CircleShape)
-                .alpha(state.alpha)
+                .graphicsLayer { alpha = state.alpha }
                 .background(CustomTheme.colors.palette.black50)
-
         ) {
             Icon(
                 modifier = Modifier
