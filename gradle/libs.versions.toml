@@ -37,6 +37,7 @@ qrose = "1.0.1"
 vico = "2.0.1"
 calendar = "2.6.2"
 barcodeScanning = "17.2.0"
+biometric = "1.2.0-alpha05"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -121,6 +122,8 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+
+biometrics = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 [bundles]
 decompose = ["decompose-core", "decompose-compose"]

@@ -7,6 +7,7 @@ image
 menu
 navigation
 otp
+pin_code
 qr_code
 root
 tutorial
@@ -19,6 +20,7 @@ root -> image
 root -> menu
 root -> navigation
 root -> otp
+root -> pin_code
 root -> qr_code
 root -> tutorial
 root -> video
