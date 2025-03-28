@@ -85,6 +85,7 @@ class PhotoFileManagerImpl(
                 }
             } catch (e: Exception) {
                 Logger.withTag(TAG).e("Record failed $e")
+                return null
             }
         }
 
