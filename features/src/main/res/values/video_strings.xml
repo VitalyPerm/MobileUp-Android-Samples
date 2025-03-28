@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="confirm_btn">Save</string>
-    <string name="dismiss_btn">Cancel</string>
+    <string name="video_confirm_btn">Save</string>
+    <string name="video_dismiss_btn">Cancel</string>
     <string name="reset_btn">Reset</string>
 
     <string name="menu_item_recorder">Recorder</string>
@@ -20,8 +20,8 @@
     <string name="player_reset_transform_title">Reset cropping</string>
     <string name="player_reset_transform_message">Are you sure you want to reset the cropping?</string>
 
-    <string name="save_dialog_title">Save video</string>
-    <string name="save_dialog_message">Are you sure you want to save the video?</string>
+    <string name="save_video_dialog_title">Save video</string>
+    <string name="save_video_dialog_message">Are you sure you want to save the video?</string>
 
     <string name="render_success">Video saved to the location "%s"</string>
     <string name="render_canceled">Video render canceled</string>

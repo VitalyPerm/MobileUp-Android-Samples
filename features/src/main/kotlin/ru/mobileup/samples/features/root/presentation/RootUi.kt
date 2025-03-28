@@ -28,6 +28,9 @@ import ru.mobileup.samples.features.pin_code.presentation.check_management.Check
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
+import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
+import ru.mobileup.samples.features.photo.presentation.PhotoUi
+import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
@@ -46,6 +49,7 @@ fun RootUi(
             is RootComponent.Child.Form -> FormUi(instance.component)
             is RootComponent.Child.Otp -> OtpUi(instance.component)
             is RootComponent.Child.Video -> VideoUi(instance.component)
+            is RootComponent.Child.Photo -> PhotoUi(instance.component)
             is RootComponent.Child.Calendar -> CalendarUi(instance.component)
             is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
             is RootComponent.Child.Chart -> ChartUi(instance.component)
@@ -53,6 +57,7 @@ fun RootUi(
             is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
             is RootComponent.Child.Image -> ImageUi(instance.component)
             is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
+            is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
             is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
         }
     }

@@ -20,6 +20,7 @@
     <!-- Validation -->
     <string name="field_error_is_blank">Input is required</string>
     <string name="field_error_invalid_format">Invalid input format</string>
+    <string name="checkbox_error_terms">Please accept the terms of use</string>
 
     <!-- Tutorial -->
     <string name="tutorial_button_skip">Skip</string>

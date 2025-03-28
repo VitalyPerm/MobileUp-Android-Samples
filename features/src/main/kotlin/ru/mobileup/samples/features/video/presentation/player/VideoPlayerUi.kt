@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -61,10 +62,10 @@ import ru.mobileup.samples.core.utils.formatMillisToMS
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
 import ru.mobileup.samples.features.video.domain.PlayerConfig
-import ru.mobileup.samples.features.video.domain.events.PlayerEvent
+import ru.mobileup.samples.features.video.domain.events.VideoPlayerEvent
 import ru.mobileup.samples.features.video.domain.rotate
 import ru.mobileup.samples.features.video.domain.states.PlayerState
-import ru.mobileup.samples.features.video.presentation.player.controller.PlayerController
+import ru.mobileup.samples.features.video.presentation.player.controller.VideoPlayerController
 import ru.mobileup.samples.features.video.presentation.player.preview.PlayerSurfaceView
 import ru.mobileup.samples.features.video.presentation.player.widgets.PlayerCropSelector
 import ru.mobileup.samples.features.video.presentation.player.widgets.PlayerCutSelector
@@ -102,13 +103,13 @@ fun VideoPlayerUi(
         initialPage = 0,
     ) { availableFilters.size }
 
-    val playerController by remember(context) {
+    val videoPlayerController by remember(context) {
         mutableStateOf(
-            PlayerController(
+            VideoPlayerController(
                 context = context,
-                onPlayerEvent = { playerEvent, _ ->
+                onVideoPlayerEvent = { playerEvent, _ ->
                     when (playerEvent) {
-                        is PlayerEvent.PlayingStateChanged -> {
+                        is VideoPlayerEvent.PlayingStateChanged -> {
                             isPlaying = playerEvent.isPlaying
                         }
                     }
@@ -173,28 +174,28 @@ fun VideoPlayerUi(
     }
 
     LaunchedEffect(playerState.volume) {
-        playerController.setVolume(playerState.volume)
+        videoPlayerController.setVolume(playerState.volume)
     }
 
     LaunchedEffect(playerState.speed) {
-        playerController.setSpeed(playerState.speed)
+        videoPlayerController.setSpeed(playerState.speed)
     }
 
     LaunchedEffect(playerState.startPositionMs, playerState.endPositionMs) {
-        playerController.setMedia(
+        videoPlayerController.setMedia(
             uri = component.media,
             startPositionMs = playerState.startPositionMs,
             endPositionMs = playerState.endPositionMs
         )
 
         if (isFirstLaunch) {
-            playerController.play()
+            videoPlayerController.play()
             isFirstLaunch = false
         }
     }
 
-    LaunchedEffect(playerController.player) {
-        playerView.setExoPlayer(playerController.player)
+    LaunchedEffect(videoPlayerController.player) {
+        playerView.setExoPlayer(videoPlayerController.player)
     }
 
     LaunchedEffect(playerState.videoTransform, playerView) {
@@ -203,11 +204,15 @@ fun VideoPlayerUi(
 
     DisposableEffect(Unit) {
         onDispose {
-            playerController.release()
+            videoPlayerController.release()
         }
     }
 
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        transparentNavigationBar = true,
+        lightStatusBarIcons = true
+    )
+
     StandardDialog(component.resetTransformDialog)
     StandardDialog(component.saveDialog)
 
@@ -220,7 +225,7 @@ fun VideoPlayerUi(
         filtersPagerState = filtersPagerState,
         playerView = playerView,
         isPlaying = isPlaying,
-        playerController = playerController,
+        videoPlayerController = videoPlayerController,
         onUpdateConfig = {
             if (playerState.renderProgress == null) {
                 component.onUpdateConfig(
@@ -247,11 +252,11 @@ private fun VideoPlayerContent(
     filtersPagerState: PagerState,
     playerView: PlayerSurfaceView,
     isPlaying: Boolean,
-    playerController: PlayerController,
+    videoPlayerController: VideoPlayerController,
     onUpdateConfig: (PlayerConfig) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val videoProgress by playerController.progressState.collectAsState()
+    val videoProgress by videoPlayerController.progressState.collectAsState()
     val playingIndicationState by rememberPlayerIndicationState(isPlaying = isPlaying)
 
     val fling = PagerDefaults.flingBehavior(
@@ -285,7 +290,7 @@ private fun VideoPlayerContent(
             )
 
             Text(
-                text = "Player",
+                text = stringResource(R.string.menu_item_player),
                 color = CustomTheme.colors.text.invert,
                 modifier = Modifier
                     .weight(2f)
@@ -395,9 +400,9 @@ private fun VideoPlayerContent(
                         .fillMaxSize()
                         .clickableNoRipple {
                             if (isPlaying) {
-                                playerController.pause()
+                                videoPlayerController.pause()
                             } else {
-                                playerController.play()
+                                videoPlayerController.play()
                             }
                         }
                         .transformable(transformationState),
@@ -503,7 +508,7 @@ private fun VideoPlayerContent(
                             },
                             value = videoProgress,
                             onValueChange = {
-                                playerController.setProgress(it)
+                                videoPlayerController.setProgress(it)
                             }
                         )
 

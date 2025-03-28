@@ -14,7 +14,9 @@ import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsComponent
+import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
+import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 
@@ -38,6 +40,7 @@ interface RootComponent {
         class Form(val component: FormComponent) : Child
         class Otp(val component: OtpComponent) : Child
         class Video(val component: VideoComponent) : Child
+        class Photo(val component: PhotoComponent) : Child
         class Calendar(val component: CalendarComponent) : Child
         class QrCode(val component: QrCodeComponent) : Child
         class Chart(val component: ChartComponent) : Child
@@ -45,6 +48,7 @@ interface RootComponent {
         class CollapsingToolbar(val component: CollapsingToolbarComponent) : Child
         class Image(val component: ImageComponent) : Child
         class Tutorial(val component: TutorialSampleComponent) : Child
+        class SharedElements(val component: SharedElementsComponent) : Child
         class PinCodeSettings(val component: PinCodeSettingsComponent) : Child
     }
 }

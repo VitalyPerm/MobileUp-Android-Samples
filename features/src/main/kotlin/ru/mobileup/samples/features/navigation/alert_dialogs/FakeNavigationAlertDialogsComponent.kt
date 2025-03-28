@@ -1,13 +1,12 @@
 package ru.mobileup.samples.features.navigation.alert_dialogs
 
-import kotlinx.coroutines.GlobalScope
-import ru.mobileup.kmm_form_validation.control.InputControl
 import ru.mobileup.samples.core.dialog.DialogControl
 import ru.mobileup.samples.core.dialog.fakeDialogControl
 import ru.mobileup.samples.core.dialog.simple.SimpleDialogControl
 import ru.mobileup.samples.core.dialog.simple.fakeSimpleDialogControl
 import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.core.dialog.standard.fakeStandardDialogControl
+import ru.mobileup.samples.core.utils.fakeInputControl
 import ru.mobileup.samples.features.navigation.custom_dialog.FakeNavigationCustomDialogComponent
 import ru.mobileup.samples.features.navigation.custom_dialog.NavigationCustomDialogComponent
 
@@ -22,7 +21,7 @@ class FakeNavigationAlertDialogsComponent : NavigationAlertDialogsComponent {
             FakeNavigationCustomDialogComponent()
         )
 
-    override val nameInputControl: InputControl = InputControl(GlobalScope)
+    override val nameInputControl = fakeInputControl()
 
     override fun onShowSimpleDialogControlClick(): Unit = Unit
 

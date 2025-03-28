@@ -13,22 +13,22 @@ import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.video.createVideoMenuComponent
 import ru.mobileup.samples.features.video.createVideoPlayerComponent
 import ru.mobileup.samples.features.video.createVideoRecorderComponent
-import ru.mobileup.samples.features.video.data.FileManager
-import ru.mobileup.samples.features.video.data.utils.VideoEditorDirectory
+import ru.mobileup.samples.features.video.data.VideoFileManager
+import ru.mobileup.samples.features.video.data.utils.VideoDirectory
 import ru.mobileup.samples.features.video.domain.VideoOption
 import ru.mobileup.samples.features.video.presentation.menu.VideoMenuComponent
 import ru.mobileup.samples.features.video.presentation.recorder.VideoRecorderComponent
 
 class RealVideoComponent(
     componentContext: ComponentContext,
-    fileManager: FileManager,
+    videoFileManager: VideoFileManager,
     private val componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, VideoComponent {
 
     init {
         componentScope.launch {
-            fileManager.deleteEditorDirectory(VideoEditorDirectory.Recorder)
-            fileManager.deleteEditorDirectory(VideoEditorDirectory.Render)
+            videoFileManager.cleanVideoDirectory(VideoDirectory.Recorder)
+            videoFileManager.cleanVideoDirectory(VideoDirectory.Render)
         }
     }
 
@@ -87,7 +87,7 @@ class RealVideoComponent(
 
     private fun onRecorderOutput(output: VideoRecorderComponent.Output) {
         when (output) {
-            is VideoRecorderComponent.Output.RecordCompleted -> navigation.safePush(
+            is VideoRecorderComponent.Output.PlayerRequested -> navigation.safePush(
                 ChildConfig.Player(uri = output.uri.toString())
             )
         }

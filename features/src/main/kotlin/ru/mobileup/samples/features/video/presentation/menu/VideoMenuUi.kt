@@ -62,7 +62,7 @@ fun VideoMenuUi(
 
 @Preview
 @Composable
-private fun MenuUiPreview() {
+private fun VideoMenuUiPreview() {
     AppTheme {
         VideoMenuUi(FakeVideoMenuComponent())
     }

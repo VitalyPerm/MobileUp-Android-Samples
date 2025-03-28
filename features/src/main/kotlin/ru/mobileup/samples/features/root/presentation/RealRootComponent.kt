@@ -29,15 +29,15 @@ import ru.mobileup.samples.features.pin_code.createPinCodeSettingsComponent
 import ru.mobileup.samples.features.pin_code.data.PinCodeStorage
 import ru.mobileup.samples.features.pin_code.presentation.check.CheckPinCodeComponent
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
+import ru.mobileup.samples.features.photo.createPhotoComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
+import ru.mobileup.samples.features.shared_element_transitions.createSharedElementsComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.video.createVideoComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
-    private val componentFactory: ComponentFactory,
-    private val errorHandler: ErrorHandler,
-    private val pinCodeStorage: PinCodeStorage
+    private val componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<ChildConfig>()
@@ -91,6 +91,12 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.Photo -> {
+            RootComponent.Child.Photo(
+                componentFactory.createPhotoComponent(componentContext)
+            )
+        }
+
         ChildConfig.Calendar -> {
             RootComponent.Child.Calendar(
                 componentFactory.createCalendarComponent(componentContext)
@@ -133,6 +139,12 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.SharedElements -> {
+            RootComponent.Child.SharedElements(
+                componentFactory.createSharedElementsComponent(componentContext)
+            )
+        }
+
         ChildConfig.PinCodeSettings -> {
             RootComponent.Child.PinCodeSettings(
                 componentFactory.createPinCodeSettingsComponent(componentContext)
@@ -163,6 +175,7 @@ class RealRootComponent(
                     Sample.Form -> ChildConfig.Form
                     Sample.Otp -> ChildConfig.Otp
                     Sample.Video -> ChildConfig.Video
+                    Sample.Photo -> ChildConfig.Photo
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
@@ -170,6 +183,7 @@ class RealRootComponent(
                     Sample.CollapsingToolbar -> ChildConfig.CollapsingToolbar
                     Sample.Image -> ChildConfig.Image
                     Sample.Tutorial -> ChildConfig.Tutorial
+                    Sample.SharedTransitions -> ChildConfig.SharedElements
                     Sample.PinCodeSettings -> ChildConfig.PinCodeSettings
                 }
             )
@@ -198,6 +212,9 @@ class RealRootComponent(
         data object Video : ChildConfig
 
         @Serializable
+        data object Photo : ChildConfig
+
+        @Serializable
         data object Calendar : ChildConfig
 
         @Serializable
@@ -217,6 +234,9 @@ class RealRootComponent(
 
         @Serializable
         data object Tutorial : ChildConfig
+
+        @Serializable
+        data object SharedElements : ChildConfig
 
         @Serializable
         data object PinCodeSettings : ChildConfig

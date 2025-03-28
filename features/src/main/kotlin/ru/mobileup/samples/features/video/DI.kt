@@ -5,8 +5,8 @@ import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
 import ru.mobileup.samples.core.ComponentFactory
-import ru.mobileup.samples.features.video.data.FileManager
-import ru.mobileup.samples.features.video.data.FileManagerImpl
+import ru.mobileup.samples.features.video.data.VideoFileManager
+import ru.mobileup.samples.features.video.data.VideoFileManagerImpl
 import ru.mobileup.samples.features.video.data.render.transformer.VideoRender
 import ru.mobileup.samples.features.video.data.render.transformer.VideoRenderImpl
 import ru.mobileup.samples.features.video.data.VideoRepository
@@ -22,7 +22,7 @@ import ru.mobileup.samples.features.video.presentation.recorder.VideoRecorderCom
 
 val videoModule = module {
     single<VideoRepository> { VideoRepositoryImpl(get()) }
-    single<FileManager> { FileManagerImpl(get()) }
+    single<VideoFileManager> { VideoFileManagerImpl(get()) }
     single<VideoRender> { VideoRenderImpl(get()) }
 }
 

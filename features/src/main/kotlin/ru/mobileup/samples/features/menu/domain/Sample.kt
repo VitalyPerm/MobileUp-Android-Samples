@@ -12,6 +12,7 @@ enum class Sample(
     Form(R.string.menu_item_form.strResDesc()),
     Otp(R.string.menu_item_otp.strResDesc()),
     Video(R.string.menu_item_video.strResDesc()),
+    Photo(R.string.menu_item_photo.strResDesc()),
     Calendar(R.string.menu_item_calendar.strResDesc()),
     QrCode(R.string.menu_item_qr_code.strResDesc()),
     Chart(R.string.menu_item_chart.strResDesc()),
@@ -19,5 +20,6 @@ enum class Sample(
     CollapsingToolbar(R.string.menu_item_collapsing_toolbar.strResDesc()),
     Image(R.string.menu_item_image.strResDesc()),
     Tutorial(R.string.menu_item_tutorial.strResDesc()),
-    PinCodeSettings(R.string.menu_item_pin_code_settings.strResDesc())
+    SharedTransitions(R.string.menu_item_shared_elements_transition.strResDesc()),
+    PinCodeSettings(R.string.menu_item_pin_code_settings.strResDesc()),
 }

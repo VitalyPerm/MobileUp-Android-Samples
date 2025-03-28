@@ -27,19 +27,19 @@ import ru.mobileup.samples.features.video.data.render.GlFilter
 import ru.mobileup.samples.features.video.data.render.camera.ReleasableCameraEffect
 import ru.mobileup.samples.features.video.data.render.camera.ShaderCameraEffect
 import ru.mobileup.samples.features.video.data.utils.startRecording
-import ru.mobileup.samples.features.video.domain.events.CameraEvent
+import ru.mobileup.samples.features.video.domain.events.VideoRecorderEvent
 import ru.mobileup.samples.features.video.domain.events.RecordingError
 import ru.mobileup.samples.features.video.domain.events.RecordingResult
 import ru.mobileup.samples.features.video.domain.states.RecorderState
 import kotlin.math.abs
 
-private const val TAG = "Camera"
+private const val TAG = "VideoRecorder"
 
-class CameraController(
+class VideoRecorderController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val previewView: PreviewView,
-    private val onCameraRecordingEvent: (CameraEvent) -> Unit,
+    private val onVideoRecorderEvent: (VideoRecorderEvent) -> Unit,
     private val onCameraInitializationFailed: () -> Unit,
     private val onPlaceHolderUpdated: (Bitmap?) -> Unit
 ) {
@@ -59,7 +59,7 @@ class CameraController(
         when (event) {
             is VideoRecordEvent.Start -> {
                 Logger.withTag(TAG).d("Record start")
-                onCameraRecordingEvent(CameraEvent.StartRecord)
+                onVideoRecorderEvent(VideoRecorderEvent.StartRecord)
             }
 
             is VideoRecordEvent.Finalize -> {
@@ -78,12 +78,12 @@ class CameraController(
                     Logger.withTag(TAG).d("Record failed, error code ${event.error} ${event.cause}")
                     recordingResult = RecordingResult.Error(error = RecordingError.Another)
                 }
-                onCameraRecordingEvent(CameraEvent.StopRecord(recordingResult))
+                onVideoRecorderEvent(VideoRecorderEvent.StopRecord(recordingResult))
             }
 
             is VideoRecordEvent.Status -> {
                 val durationInMillis = event.recordingStats.recordedDurationNanos / 1_000_000
-                onCameraRecordingEvent(CameraEvent.ProgressRecord(recordDuration = durationInMillis))
+                onVideoRecorderEvent(VideoRecorderEvent.ProgressRecord(recordDuration = durationInMillis))
             }
 
             else -> {
