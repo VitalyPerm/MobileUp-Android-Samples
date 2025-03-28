@@ -24,13 +24,12 @@ import ru.mobileup.samples.features.image.presentation.ImageUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
+import ru.mobileup.samples.features.photo.presentation.PhotoUi
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementUi
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
-import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
-import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
-import ru.mobileup.samples.features.photo.presentation.PhotoUi
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsUi
+import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 
 @Suppress("ModifierReused")
