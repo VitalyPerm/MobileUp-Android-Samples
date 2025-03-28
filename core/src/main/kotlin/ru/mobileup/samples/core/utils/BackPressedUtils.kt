@@ -19,7 +19,7 @@ fun dispatchOnBackPressed(context: Context) {
     activity.onBackPressedDispatcher.onBackPressed()
 }
 
-private fun Context.getActivity(): FragmentActivity? = when (this) {
+fun Context.getActivity(): FragmentActivity? = when (this) {
     is FragmentActivity -> this
     is ContextWrapper -> baseContext.getActivity()
     else -> null
