@@ -5,10 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,16 +37,16 @@ import ru.mobileup.samples.features.image.presentation.carousel.ImageCarouselMod
 @Composable
 fun ImageUi(
     component: ImageComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val mode by component.imageCarouselComponent.mode.collectAsState()
     val title by component.title.collectAsState()
     val description by component.description.collectAsState()
 
-    Box(modifier = modifier.systemBarsPadding()) {
+    Box(modifier = modifier) {
         when (mode) {
             ImageCarouselMode.Embedded -> {
-                Column {
+                Column(Modifier.statusBarsPadding()) {
                     EmbeddedImageCarouselUi(component.imageCarouselComponent)
                     CatsTextContent(
                         title = title.localized(),
@@ -60,6 +62,7 @@ fun ImageUi(
                 )
             }
         }
+
         ImageToolbar()
     }
 }
@@ -67,10 +70,15 @@ fun ImageUi(
 @Composable
 private fun ImageToolbar(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    Box(modifier = modifier.fillMaxHeight()) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight()
+            .statusBarsPadding()
+    ) {
         Surface(
             modifier = Modifier
                 .padding(16.dp)
+                .clip(RoundedCornerShape(12.dp))
                 .size(40.dp)
                 .clickable { dispatchOnBackPressed(context) },
             shape = RoundedCornerShape(12.dp),
@@ -86,12 +94,16 @@ private fun ImageToolbar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CatsTextContent(
+private fun CatsTextContent(
     title: String,
     description: String,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
+    ) {
         Text(
             text = title,
             style = CustomTheme.typography.title.regular,

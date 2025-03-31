@@ -63,6 +63,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.photo.domain.events.PhotoCameraEvent
@@ -124,8 +125,10 @@ fun PhotoCameraUi(
     }
 
     SystemBars(
-        transparentNavigationBar = true,
-        lightStatusBarIcons = true
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
     )
 
     LaunchedEffect(cameraState) {

@@ -3,9 +3,8 @@ package ru.mobileup.samples.features.shared_element_transitions.presentation.lis
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -22,9 +21,8 @@ fun ListSharedElementsUi(
 ) {
     Column(
         modifier = modifier
-            .statusBarsPadding()
             .verticalScroll(rememberScrollState())
-            .navigationBarsPadding()
+            .systemBarsPadding()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

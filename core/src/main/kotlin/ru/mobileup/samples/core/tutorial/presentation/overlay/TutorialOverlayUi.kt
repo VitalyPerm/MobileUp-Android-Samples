@@ -4,11 +4,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
@@ -29,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
@@ -39,6 +38,7 @@ import dev.icerock.moko.resources.compose.localized
 import ru.mobileup.samples.core.R
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.tutorial.domain.TutorialMessage
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
@@ -47,17 +47,25 @@ import kotlin.math.roundToInt
 @Composable
 fun TutorialOverlayUi(
     component: TutorialOverlayComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val currentVisibleMessage by component.visibleMessage.collectAsState()
 
     val message = currentVisibleMessage ?: return
     val item = TutorialHighlightedItems.current[message.key] ?: return
 
-    val navigationBarsPadding = WindowInsets.navigationBars.asPaddingValues()
+    SystemBars(
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
+    )
 
-    SystemBars(transparentNavigationBar = true)
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {} // Needed to prevent clicks through overlay
+    ) {
         Background(item)
 
         TutorialMessagePopup(
@@ -73,9 +81,8 @@ fun TutorialOverlayUi(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 12.dp)
-                .padding(navigationBarsPadding)
+                .navigationBarsPadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp)
         )
     }
 }
@@ -83,7 +90,7 @@ fun TutorialOverlayUi(
 @Composable
 private fun Background(
     item: HighlightableItem,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     Canvas(

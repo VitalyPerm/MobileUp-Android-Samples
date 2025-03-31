@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.IntOffset
@@ -41,8 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
+import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.common.widget.CustomToolbarDefaults
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.specific.widget.SpecificToolbar
 
@@ -63,14 +65,17 @@ fun CollapsingToolbarSpecificUi(
         convergenceCoefficient = { convergenceCoefficient }
     )
 
+    SystemBars(
+        statusBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+    )
+
     // Don't copy ⚠️ For demonstration purposes, the ScrollState and ScrollBehavior positions are reset.
     LaunchedEffect(canCollapse, convergenceCoefficient, itemsCount) {
         scrollState.scrollTo(0)
         scrollBehavior.state.heightOffset = 0f
         scrollBehavior.state.contentOffset = 0f
     }
-
-    SystemBars(lightStatusBarIcons = true)
 
     var settingsPopupShow by remember {
        mutableStateOf(false)
