@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -39,14 +39,14 @@ private const val ANIMATION_DURATION_MS = 500
 @Immutable
 data class PlayerIndicationState(
     val alpha: Float,
-    val isPlaying: Boolean
+    val isPlaying: Boolean,
 )
 
 @Composable
 fun PlayerIndication(
     state: PlayerIndicationState,
     modifier: Modifier = Modifier,
-    isVisible: Boolean = true
+    isVisible: Boolean = true,
 ) {
     if (isVisible) {
         Box(
@@ -55,6 +55,7 @@ fun PlayerIndication(
                 .clip(CircleShape)
                 .graphicsLayer { alpha = state.alpha }
                 .background(CustomTheme.colors.palette.black50)
+                .border(1.dp, CustomTheme.colors.palette.white.copy(alpha = 0.5f), CircleShape)
         ) {
             Icon(
                 modifier = Modifier

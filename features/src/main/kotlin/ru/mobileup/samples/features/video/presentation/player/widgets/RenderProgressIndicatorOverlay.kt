@@ -1,17 +1,22 @@
 package ru.mobileup.samples.features.video.presentation.player.widgets
 
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,28 +25,34 @@ import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.features.R
 
 @Composable
-fun RenderProgressIndicator(
-    progress: Float,
+fun RenderProgressIndicatorOverlay(
+    progress: () -> Float,
     onCancel: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(CustomTheme.colors.palette.black50)
+            .pointerInput(Unit) {}
     ) {
         Column(
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             CircularProgressIndicator(
-                progress = { progress },
+                progress = progress,
                 color = CustomTheme.colors.palette.white,
                 trackColor = Color.White.copy(0.7f)
             )
 
+            val animatedProgress by animateIntAsState(
+                targetValue = (progress() * 100).toInt()
+            )
+
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "${(progress * 100).toInt()}%",
+                text = "${animatedProgress}%",
                 color = CustomTheme.colors.text.invert
             )
         }
@@ -49,7 +60,8 @@ fun RenderProgressIndicator(
         OutlinedButton(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 56.dp),
+                .navigationBarsPadding()
+                .padding(bottom = 16.dp),
             onClick = onCancel
         ) {
             Text(
@@ -64,8 +76,8 @@ fun RenderProgressIndicator(
 @Composable
 private fun RenderProgressIndicatorPreview() {
     AppTheme {
-        RenderProgressIndicator(
-            progress = 0.5f,
+        RenderProgressIndicatorOverlay(
+            progress = { 0.5f },
             onCancel = { }
         )
     }
