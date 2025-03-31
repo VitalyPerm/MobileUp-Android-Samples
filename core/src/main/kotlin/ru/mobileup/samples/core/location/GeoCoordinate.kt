@@ -1,7 +1,5 @@
 package ru.mobileup.samples.core.location
 
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
 import kotlinx.serialization.Serializable
 
 const val DEFAULT_MAP_ZOOM = 6f
@@ -57,34 +55,3 @@ data class GeoCameraPosition(
     val azimuth: Float,
     val tilt: Float
 )
-
-val GeoCameraPositionSaver: Saver<GeoCameraPosition, *> = listSaver(
-    save = { position ->
-        listOf(
-            position.geoCoordinate.lat,
-            position.geoCoordinate.lng,
-            position.zoom,
-            position.azimuth,
-            position.tilt
-        )
-    },
-    restore = { values ->
-        GeoCameraPosition(
-            geoCoordinate = GeoCoordinate(
-                lat = values.getSafe(0, GeoCoordinate.KREMLIN.lat),
-                lng = values.getSafe(1, GeoCoordinate.KREMLIN.lng)
-            ),
-            zoom = values.getSafe(2, DEFAULT_MAP_ZOOM),
-            azimuth = 0f,
-            tilt = 0f
-        )
-    }
-)
-
-inline fun <reified T> List<*>.getSafe(index: Int, default: T): T {
-    return try {
-        this.getOrNull(index) as? T ?: default
-    } catch (_: ClassCastException) {
-        default
-    }
-}

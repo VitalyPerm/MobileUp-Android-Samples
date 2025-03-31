@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.core.map.presentation
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -12,7 +12,7 @@ import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
-import ru.mobileup.samples.features.R
+import ru.mobileup.samples.core.R
 
 private val ACCURACY_CIRCLE_COLOR = Color.Transparent.toArgb()
 
@@ -29,7 +29,7 @@ class MyLocationMarkerOverlay() : MapOverlay, UserLocationObjectListener {
         userLocationLayer?.setObjectListener(this)
     }
 
-    fun updateIsLocationEnable(isCurrentLocationAvailable: Boolean) {
+    fun updateIsCurrentLocationAvailable(isCurrentLocationAvailable: Boolean) {
         mapKit?.let {
             if (isCurrentLocationAvailable) {
                 it.resetLocationManagerToDefault()

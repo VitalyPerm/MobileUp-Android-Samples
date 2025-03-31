@@ -1,8 +1,7 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.core.map.presentation
 
 import android.view.LayoutInflater
 import android.widget.TextView
-import androidx.compose.foundation.layout.size
 import com.yandex.mapkit.map.ClusterListener
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection
 import com.yandex.mapkit.map.IconStyle
@@ -10,9 +9,10 @@ import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.ui_view.ViewProvider
+import ru.mobileup.samples.core.R
 import ru.mobileup.samples.core.location.GeoCoordinate
-import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.yandex_map.utils.toPoint
+import ru.mobileup.samples.core.map.utils.toPoint
+import kotlin.collections.forEach
 
 class PlacePinsOverlay(
     onPlacePinClick: (GeoCoordinate) -> Unit
@@ -42,7 +42,6 @@ class PlacePinsOverlay(
 
                 )
             )
-            cluster.appearance.zIndex = 100f
         }
     }
 

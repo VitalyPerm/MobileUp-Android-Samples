@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.domain
+package ru.mobileup.samples.core.map.domain
 
 import ru.mobileup.samples.core.location.GeoCoordinate
 

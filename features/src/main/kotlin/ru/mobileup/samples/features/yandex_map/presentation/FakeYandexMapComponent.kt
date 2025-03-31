@@ -9,14 +9,14 @@ import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.core.dialog.standard.fakeStandardDialogControl
 import ru.mobileup.samples.core.location.GeoCoordinate
 import ru.mobileup.samples.core.utils.LoadableState
-import ru.mobileup.samples.features.yandex_map.domain.MapCommand
-import ru.mobileup.samples.features.yandex_map.domain.YandexMapTheme
+import ru.mobileup.samples.core.map.domain.MapCommand
+import ru.mobileup.samples.core.map.domain.MapTheme
 
 class FakeYandexMapComponent : YandexMapComponent {
     override val mapCommands: Flow<MapCommand> = emptyFlow()
     override val isCurrentLocationAvailable = MutableStateFlow(true)
     override val isLocationSearchInProgress = MutableStateFlow(true)
-    override val theme = MutableStateFlow(YandexMapTheme.Default)
+    override val theme = MutableStateFlow(MapTheme.Default)
     override val placesState = MutableStateFlow(LoadableState<List<GeoCoordinate>>(data = emptyList()))
     override val placeDialogControl: SimpleDialogControl<GeoCoordinate> =
         fakeSimpleDialogControl(data = GeoCoordinate.KREMLIN)
@@ -26,6 +26,6 @@ class FakeYandexMapComponent : YandexMapComponent {
     override fun onZoomInClick() = Unit
     override fun onZoomOutClick() = Unit
     override fun onPlaceClick(place: GeoCoordinate) = Unit
-    override fun onThemeSwitch(newTheme: YandexMapTheme) = Unit
+    override fun onThemeSwitch(newTheme: MapTheme) = Unit
     override fun onRetryClick() = Unit
 }
