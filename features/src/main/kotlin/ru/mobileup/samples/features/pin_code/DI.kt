@@ -77,6 +77,7 @@ fun ComponentFactory.createPinCodeSettingsMainComponent(
         onOutput,
         get(),
         get(),
+        get(),
         get()
     )
 }

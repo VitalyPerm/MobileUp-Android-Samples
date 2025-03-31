@@ -1,7 +1,5 @@
 package ru.mobileup.samples.features.pin_code.data
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ru.mobileup.samples.core.settings.SettingsFactory
 import ru.mobileup.samples.features.pin_code.domain.PinCode
 
@@ -16,19 +14,19 @@ class PinCodeStorageImpl(settingsFactory: SettingsFactory) : PinCodeStorage {
 
     private val settings = settingsFactory.createEncryptedSettings("pin_code")
 
-    override suspend fun getBadAuthTimestamp(): Long = withContext(Dispatchers.IO) {
-        settings.getString(KEY_BAD_AUTH_TIMESTAMP)?.toLong() ?: 0
+    override suspend fun getBadAuthTimestamp(): Long {
+        return settings.getString(KEY_BAD_AUTH_TIMESTAMP)?.toLong() ?: 0
     }
 
-    override suspend fun setBadAuthTimestamp(timestamp: Long) = withContext(Dispatchers.IO) {
+    override suspend fun setBadAuthTimestamp(timestamp: Long) {
         settings.putString(KEY_BAD_AUTH_TIMESTAMP, timestamp.toString())
     }
 
-    override suspend fun getAttemptsCounter(): Int = withContext(Dispatchers.IO) {
-        settings.getString(KEY_ATTEMPTS_COUNTER)?.toInt() ?: 0
+    override suspend fun getAttemptsCounter(): Int {
+        return settings.getString(KEY_ATTEMPTS_COUNTER)?.toInt() ?: 0
     }
 
-    override suspend fun setAttemptsCounter(counter: Int) = withContext(Dispatchers.IO) {
+    override suspend fun setAttemptsCounter(counter: Int) {
         settings.putString(KEY_ATTEMPTS_COUNTER, counter.toString())
     }
 
@@ -36,16 +34,16 @@ class PinCodeStorageImpl(settingsFactory: SettingsFactory) : PinCodeStorage {
         setAttemptsCounter(getAttemptsCounter() + 1)
     }
 
-    override suspend fun savePinCode(pinCode: PinCode) = withContext(Dispatchers.IO) {
+    override suspend fun savePinCode(pinCode: PinCode) {
         settings.putString(KEY_PIN_CODE, pinCode.value)
     }
 
-    override suspend fun getPinCode(): PinCode? = withContext(Dispatchers.IO) {
-        val pinCodeString = settings.getString(KEY_PIN_CODE) ?: return@withContext null
-        PinCode(pinCodeString)
+    override suspend fun getPinCode(): PinCode? {
+        val pinCodeString = settings.getString(KEY_PIN_CODE) ?: return null
+        return PinCode(pinCodeString)
     }
 
-    override suspend fun deletePinCode() = withContext(Dispatchers.IO) {
+    override suspend fun deletePinCode() {
         settings.remove(KEY_PIN_CODE)
     }
 }

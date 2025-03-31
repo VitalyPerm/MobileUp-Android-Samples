@@ -42,11 +42,16 @@ class RealCreatePinCodeComponent(
         PinCodeProgressState.Progress(0)
     )
 
-    override val pinInputStep = MutableStateFlow<CreatePinCodeComponent.PinInputStep>(
+    override val pinInputStep = MutableStateFlow(
         CreatePinCodeComponent.PinInputStep.None
     )
 
-    override val dialogControl: StandardDialogControl = standardDialogControl("biometricDialogControl")
+    override val biometricDialogControl: StandardDialogControl =
+        standardDialogControl("biometricDialogControl")
+
+    override val isEraseButtonAvailable: StateFlow<Boolean> = computed(pinProgressState) {
+        it is PinCodeProgressState.Progress && it.count > 0
+    }
 
     private val biometricNotEnrolledDialogData = StandardDialogData(
         title = R.string.pin_code_alert_biometric_header.strResDesc(),
@@ -85,8 +90,9 @@ class RealCreatePinCodeComponent(
                 isUserInBiometricSettings = false
                 when (biometricService.getBiometricSupportStatus()) {
                     BiometricSupportStatus.Supported -> {
-                        dialogControl.show(biometricDisabledDialogData)
+                        biometricDialogControl.show(biometricDisabledDialogData)
                     }
+
                     BiometricSupportStatus.NotEnrolled,
                     BiometricSupportStatus.NotSupported -> {
                         goToNextScreen()
@@ -96,43 +102,23 @@ class RealCreatePinCodeComponent(
         }
     }
 
-    override fun onDialogBiometricEnableClick() {
-        dialogControl.dismiss()
-        showBiometricsModalWindow()
-    }
-
-    override fun onDialogSettingsClick() {
-        dialogControl.dismiss()
-        externalAppService.openBiometricSettings()
-        isUserInBiometricSettings = true
-    }
-
-    override fun onDialogCancelClick() {
-        componentScope.safeLaunch(errorHandler) {
-            dialogControl.dismiss()
-            biometricEnablingStorage.putBiometricEnableStatus(BiometricEnableStatus.Disabled)
-            goToNextScreen()
-        }
-    }
-
     override fun onDigitClick(digit: Int) {
+        if (currentRepeatPinCode.length >= PinCode.LENGTH) return
+
         when (pinInputStep.value) {
             CreatePinCodeComponent.PinInputStep.Repeat -> {
-                if (currentRepeatPinCode.length != PinCode.LENGTH) {
-                    currentRepeatPinCode += digit
-                    if (currentRepeatPinCode.length == PinCode.LENGTH) {
-                        validatePinCode()
-                    } else {
-                        updateProgressState()
-                    }
-                }
-            }
-            CreatePinCodeComponent.PinInputStep.PreviouslyErred,
-            CreatePinCodeComponent.PinInputStep.None -> {
-                if (currentPinCode.length != PinCode.LENGTH) {
-                    currentPinCode += digit
+                currentRepeatPinCode += digit
+                if (currentRepeatPinCode.length == PinCode.LENGTH) {
+                    validatePinCode()
+                } else {
                     updateProgressState()
                 }
+            }
+
+            CreatePinCodeComponent.PinInputStep.PreviouslyErred,
+            CreatePinCodeComponent.PinInputStep.None -> {
+                currentPinCode += digit
+                updateProgressState()
             }
         }
     }
@@ -141,31 +127,11 @@ class RealCreatePinCodeComponent(
         when (pinInputStep.value) {
             CreatePinCodeComponent.PinInputStep.Repeat -> currentRepeatPinCode =
                 currentRepeatPinCode.dropLast(1)
+
             CreatePinCodeComponent.PinInputStep.PreviouslyErred,
             CreatePinCodeComponent.PinInputStep.None -> currentPinCode = currentPinCode.dropLast(1)
         }
         updateProgressState()
-    }
-
-    private fun updateProgressState() {
-        val currentInput = if (pinInputStep.value == CreatePinCodeComponent.PinInputStep.Repeat) {
-            currentRepeatPinCode
-        } else {
-            currentPinCode
-        }
-        pinProgressState.value = PinCodeProgressState.Progress(currentInput.length)
-    }
-
-    override val isEraseButtonAvailable: StateFlow<Boolean> = computed(pinProgressState) {
-        it is PinCodeProgressState.Progress && it.count > 0
-    }
-
-    private fun validatePinCode() {
-        pinProgressState.value = if (currentPinCode != currentRepeatPinCode) {
-            PinCodeProgressState.Error
-        } else {
-            PinCodeProgressState.Success
-        }
     }
 
     override fun onPinCodeInputAnimationEnd() {
@@ -179,7 +145,7 @@ class RealCreatePinCodeComponent(
                 pinInputStep.value = CreatePinCodeComponent.PinInputStep.PreviouslyErred
                 currentRepeatPinCode = ""
                 currentPinCode = ""
-                pinProgressState.value = PinCodeProgressState.Progress(0)
+                updateProgressState()
             }
 
             is PinCodeProgressState.Success -> {
@@ -190,11 +156,11 @@ class RealCreatePinCodeComponent(
                     } else {
                         when (biometricService.getBiometricSupportStatus()) {
                             BiometricSupportStatus.Supported -> {
-                                dialogControl.show(biometricDisabledDialogData)
+                                biometricDialogControl.show(biometricDisabledDialogData)
                             }
 
                             BiometricSupportStatus.NotEnrolled -> {
-                                dialogControl.show(biometricNotEnrolledDialogData)
+                                biometricDialogControl.show(biometricNotEnrolledDialogData)
                             }
 
                             BiometricSupportStatus.NotSupported -> {
@@ -207,13 +173,53 @@ class RealCreatePinCodeComponent(
         }
     }
 
+    private fun updateProgressState() {
+        val currentInput = if (pinInputStep.value == CreatePinCodeComponent.PinInputStep.Repeat) {
+            currentRepeatPinCode
+        } else {
+            currentPinCode
+        }
+        pinProgressState.value = PinCodeProgressState.Progress(currentInput.length)
+    }
+
+    private fun validatePinCode() {
+        pinProgressState.value = if (currentPinCode != currentRepeatPinCode) {
+            PinCodeProgressState.Error
+        } else {
+            PinCodeProgressState.Success
+        }
+    }
+
+    private fun onDialogBiometricEnableClick() {
+        biometricDialogControl.dismiss()
+        showBiometricsModalWindow()
+    }
+
+    private fun onDialogSettingsClick() {
+        biometricDialogControl.dismiss()
+        externalAppService.openBiometricSettings()
+        isUserInBiometricSettings = true
+    }
+
+    private fun onDialogCancelClick() {
+        componentScope.safeLaunch(errorHandler) {
+            biometricDialogControl.dismiss()
+            biometricEnablingStorage.putBiometricEnableStatus(BiometricEnableStatus.Disabled)
+            goToNextScreen()
+        }
+    }
+
     private fun showBiometricsModalWindow() {
-        biometricService.startBiometricAuth {
+        biometricService.startBiometricAuth(
+            title = ru.mobileup.samples.core.R.string.biometric_prompt_title.strResDesc(),
+            description = ru.mobileup.samples.core.R.string.biometric_prompt_description.strResDesc(),
+        ) {
             componentScope.safeLaunch(errorHandler) {
                 when (it) {
                     BiometricAuthResult.Success -> {
                         biometricEnablingStorage.putBiometricEnableStatus(BiometricEnableStatus.Enabled)
                     }
+
                     BiometricAuthResult.TooManyAttempts -> {
                         biometricEnablingStorage.putBiometricEnableStatus(BiometricEnableStatus.Disabled)
                         messageService.showMessage(
@@ -226,7 +232,7 @@ class RealCreatePinCodeComponent(
                         biometricEnablingStorage.putBiometricEnableStatus(BiometricEnableStatus.Unknown)
                     }
                 }
-                goToNextScreen()
+                if (it != BiometricAuthResult.Failed) goToNextScreen()
             }
         }
     }

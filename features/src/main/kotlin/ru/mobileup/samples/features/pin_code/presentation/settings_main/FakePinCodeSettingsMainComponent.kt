@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 class FakePinCodeSettingsMainComponent : PinCodeSettingsMainComponent {
     override val isPinCodeEnabled: StateFlow<Boolean> = MutableStateFlow(false)
     override val isBiometricEnabled: StateFlow<Boolean> = MutableStateFlow(false)
+    override val isBiometricSwitchVisible = MutableStateFlow(false)
 
     override fun onPinCodeEnabledChanged(isEnabled: Boolean) = Unit
 

@@ -8,6 +8,8 @@ interface PinCodeSettingsMainComponent {
 
     val isBiometricEnabled: StateFlow<Boolean>
 
+    val isBiometricSwitchVisible: StateFlow<Boolean>
+
     fun onPinCodeEnabledChanged(isEnabled: Boolean)
 
     fun onBiometricEnabledChanged(isEnabled: Boolean)

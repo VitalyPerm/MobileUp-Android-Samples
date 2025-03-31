@@ -14,28 +14,28 @@ class BiometricEnablingStorageImpl(settingsFactory: SettingsFactory) : Biometric
     override suspend fun putBiometricEnableStatus(
         biometricEnableStatus: BiometricEnableStatus
     ) {
-        settings.putInt(
+        settings.putString(
             KEY_BIOMETRIC_ENABLED,
-            biometricEnableStatus.mapToInt()
+            biometricEnableStatus.mapToString()
         )
     }
 
     override suspend fun getBiometricEnableStatus(): BiometricEnableStatus {
         return settings
-            .getInt(KEY_BIOMETRIC_ENABLED)
+            .getString(KEY_BIOMETRIC_ENABLED)
             ?.mapToBiometricEnableStatus()
             ?: return BiometricEnableStatus.Unknown
     }
 }
 
-private fun BiometricEnableStatus.mapToInt() = when (this) {
-    BiometricEnableStatus.Enabled -> 0
-    BiometricEnableStatus.Disabled -> 1
-    BiometricEnableStatus.Unknown -> 2
+private fun BiometricEnableStatus.mapToString() = when (this) {
+    BiometricEnableStatus.Enabled -> "enabled"
+    BiometricEnableStatus.Disabled -> "disabled"
+    BiometricEnableStatus.Unknown -> "unknown"
 }
 
-private fun Int.mapToBiometricEnableStatus() = when (this) {
-    0 -> BiometricEnableStatus.Enabled
-    1 -> BiometricEnableStatus.Disabled
+private fun String.mapToBiometricEnableStatus() = when (this) {
+    "enabled" -> BiometricEnableStatus.Enabled
+    "disabled" -> BiometricEnableStatus.Disabled
     else -> BiometricEnableStatus.Unknown
 }

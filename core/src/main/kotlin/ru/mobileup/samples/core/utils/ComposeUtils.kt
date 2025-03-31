@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -116,4 +117,24 @@ fun InteractionSource.collectIsLongPressedAsState(): State<Boolean> {
         }
     }
     return onPress
+}
+
+@Composable
+fun InteractionSource.onLongPressed(action: () -> Unit) {
+    val rememberedAction by rememberUpdatedState(action)
+    LaunchedEffect(this) {
+        var job: Job? = null
+        interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    job = launch {
+                        delay(250)
+                        rememberedAction()
+                    }
+                }
+                is PressInteraction.Release,
+                is PressInteraction.Cancel -> job?.cancel()
+            }
+        }
+    }
 }

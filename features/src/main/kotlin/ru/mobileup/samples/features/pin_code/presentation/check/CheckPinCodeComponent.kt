@@ -1,16 +1,17 @@
 package ru.mobileup.samples.features.pin_code.presentation.check
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.mobileup.samples.core.biometric.domain.BiometricType
+import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 
 interface CheckPinCodeComponent {
     val pinProgressState: StateFlow<PinCodeProgressState>
-    val isError: StateFlow<Boolean>
     val isBiometricsSupported: StateFlow<Boolean>
-    val isLogoutDialogVisible: StateFlow<Boolean>
-    val isTimerDialogVisible: StateFlow<Boolean>
-    val biometricType: BiometricType
+    val isError: StateFlow<Boolean>
+
+    val dialogControl: StandardDialogControl
+
+    val endButtonState: StateFlow<EndButtonState>
 
     fun onDigitClick(digit: Int)
 
@@ -20,14 +21,14 @@ interface CheckPinCodeComponent {
 
     fun onBiometricClick()
 
-    fun onLogoutDialogVisibilityChange()
-
-    fun onLogoutConfirmed()
-
-    fun onDialogDismiss()
+    fun onLogoutClick()
 
     sealed interface Output {
         data object CheckSucceeded : Output
         data object LoggedOut : Output
+    }
+
+    enum class EndButtonState {
+        Erase, Biometrics, None
     }
 }

@@ -5,6 +5,7 @@ import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.lifecycle.doOnResume
 import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -12,12 +13,16 @@ import ru.mobileup.samples.core.biometric.data.BiometricEnablingStorage
 import ru.mobileup.samples.core.biometric.data.BiometricService
 import ru.mobileup.samples.core.biometric.domain.BiometricAuthResult
 import ru.mobileup.samples.core.biometric.domain.BiometricEnableStatus
-import ru.mobileup.samples.core.biometric.domain.BiometricType
+import ru.mobileup.samples.core.dialog.standard.DialogButton
+import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
+import ru.mobileup.samples.core.dialog.standard.StandardDialogData
+import ru.mobileup.samples.core.dialog.standard.standardDialogControl
 import ru.mobileup.samples.core.error_handling.ErrorHandler
 import ru.mobileup.samples.core.error_handling.safeLaunch
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.componentScope
+import ru.mobileup.samples.core.utils.computed
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.pin_code.data.PinCodeStorage
 import ru.mobileup.samples.features.pin_code.domain.PinCode
@@ -25,6 +30,7 @@ import ru.mobileup.samples.features.pin_code.domain.PinCode.Companion.COUNT_TOO_
 import ru.mobileup.samples.features.pin_code.domain.PinCode.Companion.PIN_CODE_LOCK_TIME
 import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 import kotlin.math.max
+import ru.mobileup.samples.core.R as CoreR
 
 class RealCheckPinCodeComponent(
     componentContext: ComponentContext,
@@ -38,34 +44,55 @@ class RealCheckPinCodeComponent(
 
     private var pinCode = MutableStateFlow("")
 
-    override var isLogoutDialogVisible = MutableStateFlow(false)
-    override val biometricType: BiometricType = biometricService.biometricType
-
     override val pinProgressState = MutableStateFlow<PinCodeProgressState>(
         PinCodeProgressState.Progress(0)
     )
 
     override val isBiometricsSupported = MutableStateFlow(false)
 
-    override var isTimerDialogVisible = MutableStateFlow(false)
+    override val isError = MutableStateFlow(false)
 
-    override var isError = MutableStateFlow(false)
+    private val timerDialogData = StandardDialogData(
+        title = R.string.pin_code_alert_error_header.strResDesc(),
+        message = R.string.pin_code_alert_error_text.strResDesc(),
+        confirmButton = DialogButton(
+            text = CoreR.string.common_ok.strResDesc(),
+            action = ::onDialogDismiss
+        )
+    )
 
-    override fun onLogoutDialogVisibilityChange() {
-        isLogoutDialogVisible.update { !it }
-    }
+    private val logoutDialogData = StandardDialogData(
+        title = R.string.pin_code_alert_logout_header.strResDesc(),
+        message = R.string.pin_code_alert_logout_text.strResDesc(),
+        confirmButton = DialogButton(
+            text = CoreR.string.common_yes.strResDesc(),
+            action = ::onLogoutConfirmed
+        ),
+        dismissButton = DialogButton(
+            text = CoreR.string.common_no.strResDesc(),
+            action = ::onDialogDismiss
+        )
+    )
 
-    override fun onLogoutConfirmed() {
-        componentScope.safeLaunch(errorHandler) {
-            onOutput(CheckPinCodeComponent.Output.LoggedOut)
+    override val endButtonState: StateFlow<CheckPinCodeComponent.EndButtonState> =
+        computed(pinProgressState, isBiometricsSupported) { pinProgressState, isBiometricsSupported ->
+            if (
+                (pinProgressState is PinCodeProgressState.Progress &&
+                pinProgressState.count > 0) ||
+                !isBiometricsSupported
+                ) {
+                CheckPinCodeComponent.EndButtonState.Erase
+            } else {
+                CheckPinCodeComponent.EndButtonState.Biometrics
+            }
         }
-    }
 
-    override fun onDialogDismiss() {
-        isTimerDialogVisible.update { false }
-    }
+    override val dialogControl: StandardDialogControl = standardDialogControl("dialogControl")
 
-    private fun startFingerprintAuth() = biometricService.startBiometricAuth {
+    private fun startFingerprintAuth() = biometricService.startBiometricAuth(
+        title = CoreR.string.biometric_prompt_title.strResDesc(),
+        description = CoreR.string.biometric_prompt_description.strResDesc(),
+    ) {
         when (it) {
             BiometricAuthResult.Success -> {
                 componentScope.launch {
@@ -91,18 +118,21 @@ class RealCheckPinCodeComponent(
     override fun onDigitClick(digit: Int) {
         componentScope.launch {
             if (pinCodeStorage.getBadAuthTimestamp() >= Clock.System.now().toEpochMilliseconds() - PIN_CODE_LOCK_TIME) {
-                isTimerDialogVisible.value = true
+                dialogControl.show(timerDialogData)
             } else {
                 when {
                     pinProgressState.value is PinCodeProgressState.Error -> {
                         pinCode.value = digit.toString()
-                        updateProgress()
+                        updateProgressState()
                     }
 
                     pinCode.value.length != PinCode.LENGTH -> {
                         pinCode.value += digit
-                        updateProgress()
-                        validatePinCode()
+                        if (pinCode.value.length == PinCode.LENGTH) {
+                            validatePinCode()
+                        } else {
+                            updateProgressState()
+                        }
                     }
                 }
             }
@@ -111,13 +141,14 @@ class RealCheckPinCodeComponent(
 
     override fun onEraseClick() {
         pinCode.update { it.take(max(it.length - 1, 0)) }
-        updateProgress()
+        updateProgressState()
     }
 
     override fun onPinCodeInputAnimationEnd() {
         when (pinProgressState.value) {
             PinCodeProgressState.Error -> {
-                updateProgress()
+                isError.value = true
+                updateProgressState()
             }
 
             PinCodeProgressState.Success -> {
@@ -132,18 +163,20 @@ class RealCheckPinCodeComponent(
         }
     }
 
+    override fun onLogoutClick() {
+        dialogControl.show(logoutDialogData)
+    }
+
     override fun onBiometricClick() {
         startFingerprintAuth()
     }
 
-    private fun updateProgress() {
+    private fun updateProgressState() {
         pinProgressState.update { PinCodeProgressState.Progress(pinCode.value.length) }
     }
 
     private fun validatePinCode() {
         componentScope.launch {
-            if (pinCode.value.length != PinCode.LENGTH) return@launch
-
             val pinCodeFromStorage = pinCodeStorage.getPinCode()?.value
                 ?: onOutput(CheckPinCodeComponent.Output.CheckSucceeded)
 
@@ -154,12 +187,20 @@ class RealCheckPinCodeComponent(
                 if (pinCodeStorage.getAttemptsCounter() == COUNT_TOO_MANY_ATTEMPTS) {
                     pinCodeStorage.setAttemptsCounter(0)
                     pinCodeStorage.setBadAuthTimestamp(Clock.System.now().toEpochMilliseconds())
-                    isTimerDialogVisible.value = true
+                    dialogControl.show(timerDialogData)
                 }
                 pinCode.value = ""
                 pinProgressState.update { PinCodeProgressState.Error }
             }
         }
+    }
+
+    private fun onLogoutConfirmed() {
+        // do nothing
+    }
+
+    private fun onDialogDismiss() {
+        dialogControl.dismiss()
     }
 
     init {
@@ -174,9 +215,11 @@ class RealCheckPinCodeComponent(
 
         lifecycle.doOnResume {
             componentScope.launch {
-                isTimerDialogVisible.update {
-                    pinCodeStorage.getBadAuthTimestamp() >
+                val shouldShowTimerDialog = pinCodeStorage.getBadAuthTimestamp() >
                         Clock.System.now().toEpochMilliseconds() - PIN_CODE_LOCK_TIME
+
+                if (shouldShowTimerDialog) {
+                    dialogControl.show(timerDialogData)
                 }
             }
         }

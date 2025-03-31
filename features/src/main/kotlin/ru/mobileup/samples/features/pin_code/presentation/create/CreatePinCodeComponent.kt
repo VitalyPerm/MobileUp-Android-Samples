@@ -9,22 +9,17 @@ interface CreatePinCodeComponent {
     val pinProgressState: StateFlow<PinCodeProgressState>
     val pinInputStep: StateFlow<PinInputStep>
     val isEraseButtonAvailable: StateFlow<Boolean>
-    val dialogControl: StandardDialogControl
+    val biometricDialogControl: StandardDialogControl
 
     fun onDigitClick(digit: Int)
     fun onEraseClick()
     fun onPinCodeInputAnimationEnd()
-    fun onDialogBiometricEnableClick()
-    fun onDialogSettingsClick()
-    fun onDialogCancelClick()
 
     sealed interface Output {
         data object PinCodeSet : Output
     }
 
-    sealed interface PinInputStep {
-        data object None : PinInputStep
-        data object Repeat : PinInputStep
-        data object PreviouslyErred : PinInputStep
+    enum class PinInputStep {
+        None, Repeat, PreviouslyErred
     }
 }

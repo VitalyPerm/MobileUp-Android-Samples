@@ -17,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,14 +33,14 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import ru.mobileup.samples.core.dialog.standard.StandardDialog
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.utils.collectIsLongPressedAsState
+import ru.mobileup.samples.core.utils.onLongPressed
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 import ru.mobileup.samples.features.pin_code.presentation.widget.KeyboardUi
 import ru.mobileup.samples.features.pin_code.presentation.widget.PinCodeProgress
-import ru.mobileup.samples.core.R as CoreR
 
 @Composable
 fun CheckPinCodeUi(
@@ -51,25 +49,23 @@ fun CheckPinCodeUi(
 ) {
     val pinProgressState by component.pinProgressState.collectAsState()
     val isBiometricsSupported by component.isBiometricsSupported.collectAsState()
-    val isTimerDialogVisible by component.isTimerDialogVisible.collectAsState()
-    val isLogoutDialogVisible by component.isLogoutDialogVisible.collectAsState()
     val isError by component.isError.collectAsState()
+    val endButtonState by component.endButtonState.collectAsState()
 
     CheckPinCodeContent(
         modifier = modifier,
         pinProgressState = pinProgressState,
         isBiometricsSupported = isBiometricsSupported,
-        isTimerDialogVisible = isTimerDialogVisible,
-        isLogoutDialogVisible = isLogoutDialogVisible,
-        isError = isError,
-        onLogoutDialogVisibilityChange = component::onLogoutDialogVisibilityChange,
-        onLogoutConfirm = component::onLogoutConfirmed,
-        onDialogDismiss = component::onDialogDismiss,
         onDigitClick = component::onDigitClick,
         onEraseClick = component::onEraseClick,
         onBiometricClick = component::onBiometricClick,
-        onDotsAnimationEnd = component::onPinCodeInputAnimationEnd
+        onDotsAnimationEnd = component::onPinCodeInputAnimationEnd,
+        onLogoutClick = component::onLogoutClick,
+        endButtonState = endButtonState,
+        isError = isError
     )
+
+    StandardDialog(component.dialogControl)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -77,22 +73,19 @@ fun CheckPinCodeUi(
 fun CheckPinCodeContent(
     pinProgressState: PinCodeProgressState,
     isBiometricsSupported: Boolean,
-    isTimerDialogVisible: Boolean,
-    isLogoutDialogVisible: Boolean,
     isError: Boolean,
+    endButtonState: CheckPinCodeComponent.EndButtonState,
     onDigitClick: (digit: Int) -> Unit,
     onEraseClick: () -> Unit,
     onBiometricClick: () -> Unit,
-    onLogoutDialogVisibilityChange: () -> Unit,
-    onLogoutConfirm: () -> Unit,
-    onDialogDismiss: () -> Unit,
+    onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
     onDotsAnimationEnd: (() -> Unit)? = null,
 ) {
     val progressCounter = (pinProgressState as? PinCodeProgressState.Progress)?.count ?: 0
     val onRightBtnClickSource = remember { MutableInteractionSource() }
-    val isRightBtnLongPressed by onRightBtnClickSource.collectIsLongPressedAsState()
-    if (isRightBtnLongPressed && progressCounter > 0) {
+
+    onRightBtnClickSource.onLongPressed {
         onEraseClick()
     }
 
@@ -151,7 +144,7 @@ fun CheckPinCodeContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable { onLogoutDialogVisibilityChange() }
+                        .clickable { onLogoutClick() }
                         .padding(12.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -182,57 +175,26 @@ fun CheckPinCodeContent(
                         .padding(12.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (progressCounter > 0 || !isBiometricsSupported) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_24_cancel),
-                            contentDescription = null,
-                            modifier = Modifier.alpha(if (progressCounter == 0) 0f else 1f),
-                            tint = CustomTheme.colors.icon.secondary
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_24_touch),
-                            contentDescription = null,
-                            tint = CustomTheme.colors.icon.secondary
-                        )
+                    when (endButtonState) {
+                        CheckPinCodeComponent.EndButtonState.Erase -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_24_cancel),
+                                contentDescription = null,
+                                modifier = Modifier.alpha(if (progressCounter == 0) 0f else 1f),
+                                tint = CustomTheme.colors.icon.secondary
+                            )
+                        }
+                        CheckPinCodeComponent.EndButtonState.Biometrics -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_24_touch),
+                                contentDescription = null,
+                                tint = CustomTheme.colors.icon.secondary
+                            )
+                        }
+                        CheckPinCodeComponent.EndButtonState.None -> {}
                     }
                 }
             }
-        )
-    }
-
-    if (isTimerDialogVisible) {
-        AlertDialog(
-            onDismissRequest = onDialogDismiss,
-            confirmButton = {
-                TextButton(
-                    onClick = onDialogDismiss,
-                    content = { Text(stringResource(CoreR.string.common_ok)) }
-                )
-            },
-            title = { Text(stringResource(R.string.pin_code_alert_error_header)) },
-            text = { Text(stringResource(R.string.pin_code_alert_error_text)) },
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-    }
-
-    if (isLogoutDialogVisible) {
-        AlertDialog(
-            onDismissRequest = onLogoutDialogVisibilityChange,
-            confirmButton = {
-                TextButton(
-                    onClick = onLogoutConfirm,
-                    content = { Text(stringResource(CoreR.string.common_yes)) }
-                )
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = onLogoutDialogVisibilityChange,
-                    content = { Text(stringResource(CoreR.string.common_no)) }
-                )
-            },
-            title = { Text(stringResource(R.string.pin_code_alert_logout_header)) },
-            text = { Text(stringResource(R.string.pin_code_alert_logout_text)) }
         )
     }
 }

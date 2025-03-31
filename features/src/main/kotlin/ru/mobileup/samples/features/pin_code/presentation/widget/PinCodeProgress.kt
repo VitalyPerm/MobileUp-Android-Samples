@@ -85,7 +85,7 @@ fun PinCodeProgress(
                     ProgressDot(
                         color = color,
                         size = 12.dp,
-                        scale = animatable.value
+                        getScale = { animatable.value }
                     )
 
                     LaunchedEffect(pinProgressState) {
@@ -121,13 +121,13 @@ fun PinCodeProgress(
 fun ProgressDot(
     color: Color,
     size: Dp,
-    scale: Float,
+    getScale: () -> Float,
     modifier: Modifier = Modifier
 ) = Box(
     modifier = modifier
         .graphicsLayer {
-            scaleX = scale
-            scaleY = scale
+            scaleX = getScale()
+            scaleY = getScale()
         }
         .clip(CircleShape)
         .size(size)

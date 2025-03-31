@@ -53,7 +53,7 @@ fun CreatePinCodeContent(
     component: CreatePinCodeComponent,
     modifier: Modifier = Modifier,
 ) {
-    val passcodeState by component.pinInputStep.collectAsState()
+    val pinInputStep by component.pinInputStep.collectAsState()
     val pinProgressState by component.pinProgressState.collectAsState()
     val isEraseButtonAvailable by component.isEraseButtonAvailable.collectAsState()
 
@@ -61,7 +61,7 @@ fun CreatePinCodeContent(
         modifier = modifier
     ) {
         AnimatedContent(
-            targetState = passcodeState,
+            targetState = pinInputStep,
             transitionSpec = {
                 val animationSpec = tween<IntOffset>(
                     durationMillis = 500,
@@ -138,7 +138,7 @@ fun CreatePinCodeContent(
             }
         )
 
-        StandardDialog(dialogControl = component.dialogControl)
+        StandardDialog(dialogControl = component.biometricDialogControl)
     }
 }
 
