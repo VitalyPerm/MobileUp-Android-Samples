@@ -128,6 +128,7 @@ fun DetailsSharedElementsUi(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .navigationBarsPadding()
+                    .padding(vertical = 8.dp)
             ) {
                 Text(
                     modifier = Modifier

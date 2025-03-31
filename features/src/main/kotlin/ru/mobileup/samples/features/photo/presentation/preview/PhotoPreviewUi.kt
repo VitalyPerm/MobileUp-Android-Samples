@@ -34,6 +34,7 @@ import coil3.compose.rememberAsyncImagePainter
 import ru.mobileup.samples.core.dialog.standard.StandardDialog
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.features.R
 
@@ -43,8 +44,10 @@ fun PhotoPreviewUi(
     modifier: Modifier = Modifier
 ) {
     SystemBars(
-        transparentNavigationBar = true,
-        lightStatusBarIcons = true
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
     )
 
     StandardDialog(component.saveDialog)

@@ -26,8 +26,8 @@ fun MenuUi(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .systemBarsPadding()
             .verticalScroll(rememberScrollState())
+            .systemBarsPadding()
             .padding(32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
