@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.core.map.presentation
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -12,11 +12,12 @@ import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
-import ru.mobileup.samples.features.R
+import ru.mobileup.samples.core.R
 
 private val ACCURACY_CIRCLE_COLOR = Color.Transparent.toArgb()
+const val DEFAULT_SCALE = 0.4f
 
-class MyLocationMarkerOverlay() : MapOverlay, UserLocationObjectListener {
+class MyLocationMarkerOverlay : MapOverlay, UserLocationObjectListener {
 
     private var mapView: MapView? = null
     private var userLocationLayer: UserLocationLayer? = null
@@ -29,7 +30,7 @@ class MyLocationMarkerOverlay() : MapOverlay, UserLocationObjectListener {
         userLocationLayer?.setObjectListener(this)
     }
 
-    fun updateIsLocationEnable(isCurrentLocationAvailable: Boolean) {
+    fun updateIsCurrentLocationAvailable(isCurrentLocationAvailable: Boolean) {
         mapKit?.let {
             if (isCurrentLocationAvailable) {
                 it.resetLocationManagerToDefault()
@@ -50,14 +51,14 @@ class MyLocationMarkerOverlay() : MapOverlay, UserLocationObjectListener {
                 ImageProvider.fromResource(context, R.drawable.ic_pin_my_location),
                 IconStyle()
                     .setRotationType(RotationType.ROTATE)
-                    .setScale(0.4f)
+                    .setScale(DEFAULT_SCALE)
             )
 
             userLocationView.pin.setIcon(
                 ImageProvider.fromResource(context, R.drawable.ic_pin_my_location),
                 IconStyle()
                     .setRotationType(RotationType.ROTATE)
-                    .setScale(0.4f)
+                    .setScale(DEFAULT_SCALE)
             )
         }
     }

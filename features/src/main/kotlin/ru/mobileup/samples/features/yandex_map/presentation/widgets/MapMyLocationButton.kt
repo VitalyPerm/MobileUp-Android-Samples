@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.features.yandex_map.presentation.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,19 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ru.mobileup.samples.features.R
+import ru.mobileup.samples.core.R
 
 @Composable
-fun YandexMapMyLocationButton(
+fun MapMyLocationButton(
     onClick: () -> Unit,
-    isEnabled: Boolean,
+    isLocationSearchInProgress: Boolean,
     modifier: Modifier = Modifier
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier
     ) {
-        if (isEnabled) {
+        if (!isLocationSearchInProgress) {
             Icon(
                 modifier = Modifier
                     .size(48.dp)

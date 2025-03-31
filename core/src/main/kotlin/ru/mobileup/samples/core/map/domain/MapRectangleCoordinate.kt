@@ -1,8 +1,8 @@
-package ru.mobileup.samples.features.yandex_map.domain
+package ru.mobileup.samples.core.map.domain
 
 import ru.mobileup.samples.core.location.GeoCoordinate
 
-data class RectangleCoordinate(
+data class MapRectangleCoordinate(
     val topRight: GeoCoordinate,
     val topLeft: GeoCoordinate,
     val bottomRight: GeoCoordinate,

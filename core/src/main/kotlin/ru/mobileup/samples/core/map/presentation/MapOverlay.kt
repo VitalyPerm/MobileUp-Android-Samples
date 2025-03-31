@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.core.map.presentation
 
 import com.yandex.mapkit.mapview.MapView
 

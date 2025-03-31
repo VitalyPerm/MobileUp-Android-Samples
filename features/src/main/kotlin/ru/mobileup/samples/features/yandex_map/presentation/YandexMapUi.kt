@@ -22,21 +22,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.dialog.BottomSheet
 import ru.mobileup.samples.core.dialog.standard.StandardDialog
+import ru.mobileup.samples.core.map.presentation.MyLocationMarkerOverlay
+import ru.mobileup.samples.core.map.presentation.PlacePinsOverlay
+import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapMyLocationButton
+import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapThemeSwitch
+import ru.mobileup.samples.core.map.presentation.YandexMapViewUi
+import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapZoomButtons
+import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
-import ru.mobileup.samples.features.yandex_map.presentation.widget.MyLocationMarkerOverlay
-import ru.mobileup.samples.features.yandex_map.presentation.widget.PlacePinsOverlay
-import ru.mobileup.samples.features.yandex_map.presentation.widget.YandexMapMyLocationButton
-import ru.mobileup.samples.features.yandex_map.presentation.widget.YandexMapThemeSwitch
-import ru.mobileup.samples.features.yandex_map.presentation.widget.YandexMapViewUi
-import ru.mobileup.samples.features.yandex_map.presentation.widget.YandexMapZoomButtons
 
 @Composable
 fun YandexMapUi(
     component: YandexMapComponent,
     modifier: Modifier = Modifier
 ) {
-    SystemBars(transparentNavigationBar = true)
+    SystemBars(
+        navigationBarColor = Color.Transparent,
+        statusBarColor = Color.Transparent
+    )
 
     val isCurrentLocationAvailable by component.isCurrentLocationAvailable.collectAsState()
     val isLocationSearchInProgress by component.isLocationSearchInProgress.collectAsState()
@@ -47,11 +51,11 @@ fun YandexMapUi(
     val placesPinOverlay = remember { PlacePinsOverlay(component::onPlaceClick) }
 
     LaunchedEffect(isCurrentLocationAvailable) {
-        myLocationOverlay.updateIsLocationEnable(isCurrentLocationAvailable)
+        myLocationOverlay.updateIsCurrentLocationAvailable(isCurrentLocationAvailable)
     }
 
     LaunchedEffect(placesState) {
-        placesState.data?.let(placesPinOverlay::updatePlaces)
+        placesPinOverlay.updatePlaces(placesState.data.orEmpty())
     }
 
     Box(
@@ -63,20 +67,20 @@ fun YandexMapUi(
             overlays = listOf(myLocationOverlay, placesPinOverlay)
         )
 
-        YandexMapZoomButtons(
+        MapZoomButtons(
             modifier = Modifier
                 .align(BiasAlignment(0.9f, 0f)),
             onZoomInClick = component::onZoomInClick,
             onZoomOutClick = component::onZoomOutClick
         )
-        YandexMapMyLocationButton(
+        MapMyLocationButton(
             modifier = Modifier
                 .align(BiasAlignment(0.9f, 0.9f)),
             onClick = component::onMyLocationClick,
-            isEnabled = !isLocationSearchInProgress
+            isLocationSearchInProgress = !isLocationSearchInProgress
         )
 
-        YandexMapThemeSwitch(
+        MapThemeSwitch(
             theme = theme,
             onThemeSwitch = component::onThemeSwitch,
             modifier = Modifier
@@ -116,12 +120,12 @@ private fun LoaderOverlay(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.LightGray.copy(alpha = 0.7f))
+                .background(CustomTheme.colors.icon.secondary.copy(alpha = 0.7f))
                 .clickableNoRipple {},
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
-                color = Color.Black
+                color = CustomTheme.colors.icon.primary
             )
         }
     }

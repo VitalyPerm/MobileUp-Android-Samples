@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.features.yandex_map.presentation.widgets
 
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.rememberSplineBasedDecay
@@ -34,16 +34,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import ru.mobileup.samples.core.R
+import ru.mobileup.samples.core.map.domain.MapTheme
 import ru.mobileup.samples.core.utils.clickableNoRipple
-import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.yandex_map.domain.YandexMapTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun YandexMapThemeSwitch(
-    theme: YandexMapTheme,
-    onThemeSwitch: (YandexMapTheme) -> Unit,
+fun MapThemeSwitch(
+    theme: MapTheme,
+    onThemeSwitch: (MapTheme) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
@@ -56,9 +56,9 @@ fun YandexMapThemeSwitch(
         AnchoredDraggableState(
             initialValue = theme,
             anchors = DraggableAnchors {
-                YandexMapTheme.Bright at 0f
-                YandexMapTheme.Default at with(density) { iconsSize.toPx() }
-                YandexMapTheme.Dark at with(density) { iconsSize.toPx() * 2 }
+                MapTheme.Bright at 0f
+                MapTheme.Default at with(density) { iconsSize.toPx() }
+                MapTheme.Dark at with(density) { iconsSize.toPx() * 2 }
             },
             positionalThreshold = { it / 2 },
             velocityThreshold = { with(density) { iconsSize.toPx() } },
@@ -95,7 +95,7 @@ fun YandexMapThemeSwitch(
                     .size(iconsSize)
                     .padding(8.dp)
                     .clickableNoRipple {
-                        coroutineScope.launch { dragState.animateTo(YandexMapTheme.Bright) }
+                        coroutineScope.launch { dragState.animateTo(MapTheme.Bright) }
                     }
             )
             Icon(
@@ -105,7 +105,7 @@ fun YandexMapThemeSwitch(
                     .size(iconsSize)
                     .padding(8.dp)
                     .clickableNoRipple {
-                        coroutineScope.launch { dragState.animateTo(YandexMapTheme.Default) }
+                        coroutineScope.launch { dragState.animateTo(MapTheme.Default) }
                     }
             )
             Icon(
@@ -115,7 +115,7 @@ fun YandexMapThemeSwitch(
                     .size(iconsSize)
                     .padding(8.dp)
                     .clickableNoRipple {
-                        coroutineScope.launch { dragState.animateTo(YandexMapTheme.Dark) }
+                        coroutineScope.launch { dragState.animateTo(MapTheme.Dark) }
                     }
             )
         }

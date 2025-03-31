@@ -1,8 +1,7 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widget
+package ru.mobileup.samples.core.map.presentation
 
 import android.view.LayoutInflater
 import android.widget.TextView
-import androidx.compose.foundation.layout.size
 import com.yandex.mapkit.map.ClusterListener
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection
 import com.yandex.mapkit.map.IconStyle
@@ -10,9 +9,14 @@ import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.ui_view.ViewProvider
+import ru.mobileup.samples.core.R
 import ru.mobileup.samples.core.location.GeoCoordinate
-import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.yandex_map.utils.toPoint
+import ru.mobileup.samples.core.map.utils.toPoint
+import kotlin.collections.forEach
+
+private const val CLUSTER_RADIUS = 40.0
+private const val CLUSTER_MIN_ZOOM = 12
+private const val PLACE_PIN_SCALE = 0.2f
 
 class PlacePinsOverlay(
     onPlacePinClick: (GeoCoordinate) -> Unit
@@ -42,7 +46,6 @@ class PlacePinsOverlay(
 
                 )
             )
-            cluster.appearance.zIndex = 100f
         }
     }
 
@@ -53,7 +56,7 @@ class PlacePinsOverlay(
         places.forEach { place: GeoCoordinate ->
             addPlacePin(place)
         }
-        clusterCollection?.clusterPlacemarks(40.0, 12)
+        clusterCollection?.clusterPlacemarks(CLUSTER_RADIUS, CLUSTER_MIN_ZOOM)
         clusterCollection?.isVisible = true
     }
 
@@ -69,7 +72,7 @@ class PlacePinsOverlay(
                     R.drawable.ic_map_pin,
                     true
                 ),
-                IconStyle().apply { scale = 0.2f }
+                IconStyle().apply { scale = PLACE_PIN_SCALE }
             )
         }
     }

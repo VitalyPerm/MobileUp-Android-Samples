@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.utils
+package ru.mobileup.samples.core.map.utils
 
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.geometry.Geometry
