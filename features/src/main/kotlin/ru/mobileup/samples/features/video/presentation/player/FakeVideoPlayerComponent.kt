@@ -12,7 +12,7 @@ import ru.mobileup.samples.features.video.domain.VideoTransform
 
 class FakeVideoPlayerComponent : VideoPlayerComponent {
 
-    override val media: Uri = Uri.EMPTY
+    override val mediaUri: Uri = Uri.EMPTY
 
     override val playerConfig = MutableStateFlow(PlayerConfig.Off)
 

@@ -16,7 +16,7 @@ import ru.mobileup.samples.features.document.data.DocumentManager
 import ru.mobileup.samples.features.document.domain.DocumentMetadata
 
 class RealDocumentPreviewComponent(
-    private val media: String,
+    private val mediaUri: String,
     componentContext: ComponentContext,
     documentManager: DocumentManager,
     private val activityProvider: ActivityProvider,
@@ -26,7 +26,7 @@ class RealDocumentPreviewComponent(
     override val documentMetadataState = MutableStateFlow<DocumentMetadata?>(null)
 
     init {
-        documentManager.loadMetadata(media.toUri())?.let { documentMetadata ->
+        documentManager.loadMetadata(mediaUri.toUri())?.let { documentMetadata ->
             documentMetadataState.update {
                 documentMetadata
             }
@@ -43,7 +43,7 @@ class RealDocumentPreviewComponent(
 
     override fun onOpenClick() {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(media.toUri(), "application/pdf")
+            setDataAndType(mediaUri.toUri(), "application/pdf")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }

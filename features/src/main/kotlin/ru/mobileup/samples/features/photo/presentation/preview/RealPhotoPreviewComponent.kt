@@ -24,7 +24,7 @@ import ru.mobileup.samples.features.image.presentation.carousel.ImageCarouselCom
 import ru.mobileup.samples.features.photo.data.PhotoFileManager
 
 class RealPhotoPreviewComponent(
-    private val mediaList: List<String>,
+    private val mediaUriList: List<String>,
     componentContext: ComponentContext,
     componentFactory: ComponentFactory,
     private val photoFileManager: PhotoFileManager,
@@ -34,7 +34,7 @@ class RealPhotoPreviewComponent(
 
     override val imageCarouselComponent: ImageCarouselComponent =
         componentFactory.createImageCarouselComponent(
-            mediaList.map { ImageResource(it.toString()) },
+            mediaUriList.map { ImageResource(it.toString()) },
             childContext("imageCarousel")
         )
 
@@ -70,7 +70,7 @@ class RealPhotoPreviewComponent(
 
     private fun savePhoto() {
         componentScope.launch {
-            mediaList.getOrNull(imageCarouselComponent.imageCarousel.value.currentImagePosition)
+            mediaUriList.getOrNull(imageCarouselComponent.imageCarousel.value.currentImagePosition)
                 ?.let {
                     val result = photoFileManager.movePhotoToMediaStore(it.toUri())
 

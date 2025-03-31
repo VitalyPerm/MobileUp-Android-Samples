@@ -42,7 +42,7 @@ class RealDocumentComponent(
         is ChildConfig.Preview -> {
             DocumentComponent.Child.Preview(
                 componentFactory.createDocumentPreviewComponent(
-                    config.media,
+                    config.mediaUri,
                     componentContext
                 )
             )
@@ -53,7 +53,7 @@ class RealDocumentComponent(
         when (output) {
             is DocumentMenuComponent.Output.PreviewRequested -> navigation.safePush(
                 ChildConfig.Preview(
-                    output.media.toString()
+                    output.mediaUri.toString()
                 )
             )
         }
@@ -66,6 +66,6 @@ class RealDocumentComponent(
         data object Menu : ChildConfig
 
         @Serializable
-        data class Preview(val media: String) : ChildConfig
+        data class Preview(val mediaUri: String) : ChildConfig
     }
 }

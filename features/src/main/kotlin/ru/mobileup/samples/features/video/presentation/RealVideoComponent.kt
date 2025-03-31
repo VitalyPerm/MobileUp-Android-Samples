@@ -67,7 +67,7 @@ class RealVideoComponent(
         is ChildConfig.Player -> {
             VideoComponent.Child.Player(
                 componentFactory.createVideoPlayerComponent(
-                    media = config.uri.toUri(),
+                    mediaUri = config.mediaUri.toUri(),
                     componentContext
                 )
             )
@@ -88,7 +88,7 @@ class RealVideoComponent(
     private fun onRecorderOutput(output: VideoRecorderComponent.Output) {
         when (output) {
             is VideoRecorderComponent.Output.PlayerRequested -> navigation.safePush(
-                ChildConfig.Player(uri = output.uri.toString())
+                ChildConfig.Player(mediaUri = output.uri.toString())
             )
         }
     }
@@ -103,6 +103,6 @@ class RealVideoComponent(
         data object Recorder : ChildConfig
 
         @Serializable
-        data class Player(val uri: String) : ChildConfig
+        data class Player(val mediaUri: String) : ChildConfig
     }
 }

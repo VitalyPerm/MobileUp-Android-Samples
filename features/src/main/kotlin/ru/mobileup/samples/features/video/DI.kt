@@ -45,8 +45,8 @@ fun ComponentFactory.createVideoRecorderComponent(
 }
 
 fun ComponentFactory.createVideoPlayerComponent(
-    media: Uri,
+    mediaUri: Uri,
     componentContext: ComponentContext,
 ): VideoPlayerComponent {
-    return RealVideoPlayerComponent(media, componentContext, get(), get(), get(), get())
+    return RealVideoPlayerComponent(mediaUri, componentContext, get(), get(), get(), get())
 }

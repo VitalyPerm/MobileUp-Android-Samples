@@ -33,9 +33,7 @@ class RealPhotoCameraComponent(
     override fun onPhotoTaken(uri: Uri) {
         cameraState.update {
             it.copy(
-                mediaList = it.mediaList.toMutableList().apply {
-                    add(uri)
-                }
+                mediaList = it.mediaList + uri
             )
         }
     }

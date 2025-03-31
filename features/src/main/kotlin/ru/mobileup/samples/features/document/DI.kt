@@ -29,8 +29,8 @@ fun ComponentFactory.createDocumentMenuComponent(
 }
 
 fun ComponentFactory.createDocumentPreviewComponent(
-    media: String,
+    mediaUri: String,
     componentContext: ComponentContext
 ): DocumentPreviewComponent {
-    return RealDocumentPreviewComponent(media, componentContext, get(), get(), get())
+    return RealDocumentPreviewComponent(mediaUri, componentContext, get(), get(), get())
 }
