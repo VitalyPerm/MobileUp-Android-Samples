@@ -12,11 +12,6 @@ data class RecorderState(
     val durationMs: Long
 ) {
     companion object {
-        val availableCameraSelectorList = listOf(
-            CameraSelector.DEFAULT_BACK_CAMERA,
-            CameraSelector.DEFAULT_FRONT_CAMERA
-        )
-
         val availableFpsList = listOf(30, 60)
 
         val availableQualityList = listOf(Quality.SD, Quality.HD, Quality.FHD, Quality.UHD)

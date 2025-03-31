@@ -17,14 +17,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.mobileup.samples.features.video.domain.events.PlayerEvent
+import ru.mobileup.samples.features.video.domain.events.VideoPlayerEvent
 
 private const val POSITION_REFRESH_DELAY_MILLIS = 18L
 
 @UnstableApi
-class PlayerController(
+class VideoPlayerController(
     private val context: Context,
-    private val onPlayerEvent: (PlayerEvent, PlayerController) -> Unit,
+    private val onVideoPlayerEvent: (VideoPlayerEvent, VideoPlayerController) -> Unit,
 ) : Player.Listener {
     private val progressScope = CoroutineScope(Dispatchers.Main)
     private val factory: DefaultMediaSourceFactory = DefaultMediaSourceFactory(context)
@@ -45,11 +45,11 @@ class PlayerController(
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        onPlayerEvent(
-            PlayerEvent.PlayingStateChanged(
+        onVideoPlayerEvent(
+            VideoPlayerEvent.PlayingStateChanged(
                 isPlaying = isPlaying,
                 playFrom = 0f
-            ), this@PlayerController
+            ), this@VideoPlayerController
         )
         if (isPlaying) {
             startVideoProgressUpdate()
@@ -110,7 +110,7 @@ class PlayerController(
             .build()
             .apply {
                 playWhenReady = false
-                addListener(this@PlayerController)
+                addListener(this@VideoPlayerController)
                 prepare()
             }
     }

@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.mobileup.samples.features.video.data.render.GlFilter
-import ru.mobileup.samples.features.video.data.utils.VideoEditorDirectory
+import ru.mobileup.samples.features.video.data.utils.VideoDirectory
 import ru.mobileup.samples.features.video.domain.VideoTransform
 import ru.mobileup.samples.features.video.domain.states.RenderState
 import java.io.File
@@ -59,7 +59,7 @@ class VideoRenderImpl(
         return channelFlow {
             renderProcessJob = launch {
                 val renderDirectory = withContext(Dispatchers.IO) {
-                    VideoEditorDirectory.Render
+                    VideoDirectory.Render
                         .toFile(context)
                         .also(File::mkdirs)
                 }

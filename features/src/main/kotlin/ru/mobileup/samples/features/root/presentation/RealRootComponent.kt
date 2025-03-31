@@ -22,6 +22,7 @@ import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
+import ru.mobileup.samples.features.photo.createPhotoComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.shared_element_transitions.createSharedElementsComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
@@ -75,6 +76,12 @@ class RealRootComponent(
         ChildConfig.Video -> {
             RootComponent.Child.Video(
                 componentFactory.createVideoComponent(componentContext)
+            )
+        }
+
+        ChildConfig.Photo -> {
+            RootComponent.Child.Photo(
+                componentFactory.createPhotoComponent(componentContext)
             )
         }
 
@@ -134,6 +141,7 @@ class RealRootComponent(
                     Sample.Form -> ChildConfig.Form
                     Sample.Otp -> ChildConfig.Otp
                     Sample.Video -> ChildConfig.Video
+                    Sample.Photo -> ChildConfig.Photo
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
@@ -167,6 +175,9 @@ class RealRootComponent(
 
         @Serializable
         data object Video : ChildConfig
+
+        @Serializable
+        data object Photo : ChildConfig
 
         @Serializable
         data object Calendar : ChildConfig

@@ -56,6 +56,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,18 +74,18 @@ import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.video.data.render.availableFilters
 import ru.mobileup.samples.features.video.data.utils.name
 import ru.mobileup.samples.features.video.domain.RecorderConfig
-import ru.mobileup.samples.features.video.domain.events.CameraEvent
 import ru.mobileup.samples.features.video.domain.events.RecordingResult
+import ru.mobileup.samples.features.video.domain.events.VideoRecorderEvent
 import ru.mobileup.samples.features.video.domain.states.RecorderState
-import ru.mobileup.samples.features.video.presentation.recorder.controller.CameraController
+import ru.mobileup.samples.features.video.presentation.recorder.controller.VideoRecorderController
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraEffectIcon
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.CameraFlipIcon
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.FocusIndicator
+import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderButton
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderFilterSelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderFpsSelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderQualitySelector
 import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecorderTorchSelector
-import ru.mobileup.samples.features.video.presentation.recorder.widgets.RecordingButton
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -114,24 +115,24 @@ fun VideoRecorderUi(
         initialPage = 0,
     ) { availableFilters.size }
 
-    val cameraController by remember(context, lifecycleOwner, previewView) {
+    val videoRecorderController by remember(context, lifecycleOwner, previewView) {
         mutableStateOf(
-            CameraController(
+            VideoRecorderController(
                 context = context,
                 lifecycleOwner = lifecycleOwner,
                 previewView = previewView,
-                onCameraRecordingEvent = {
+                onVideoRecorderEvent = {
                     when (it) {
-                        CameraEvent.StartRecord -> {
+                        VideoRecorderEvent.StartRecord -> {
                             component.onUpdateIsRecording(true)
                             component.onUpdateConfig(RecorderConfig.Off)
                         }
 
-                        is CameraEvent.ProgressRecord -> {
+                        is VideoRecorderEvent.ProgressRecord -> {
                             component.onUpdateDuration(it.recordDuration)
                         }
 
-                        is CameraEvent.StopRecord -> {
+                        is VideoRecorderEvent.StopRecord -> {
                             component.onUpdateIsRecording(false)
 
                             when (val result = it.recordingResult) {
@@ -160,7 +161,7 @@ fun VideoRecorderUi(
     }
 
     val previewTransformableState = rememberTransformableState { zoomChange, _, _ ->
-        cameraController.zoomChange(zoomChange = zoomChange)
+        videoRecorderController.zoomChange(zoomChange = zoomChange)
     }
 
     SystemBars(
@@ -172,19 +173,19 @@ fun VideoRecorderUi(
 
     LaunchedEffect(filtersPagerState.settledPage, filtersPagerState.isScrollInProgress) {
         val newEffectIndex = filtersPagerState.settledPage % availableFilters.size
-        if (cameraController.glFilter.ordinal != newEffectIndex && !filtersPagerState.isScrollInProgress) {
+        if (videoRecorderController.glFilter.ordinal != newEffectIndex && !filtersPagerState.isScrollInProgress) {
             val filter = availableFilters[newEffectIndex]
-            cameraController.glFilter = filter
+            videoRecorderController.glFilter = filter
         }
     }
 
     LaunchedEffect(recorderState) {
-        cameraController.recorderState = recorderState
+        videoRecorderController.recorderState = recorderState
     }
 
-    DisposableEffect(cameraController) {
+    DisposableEffect(videoRecorderController) {
         onDispose {
-            cameraController.release()
+            videoRecorderController.release()
         }
     }
 
@@ -197,7 +198,7 @@ fun VideoRecorderUi(
         previewTransformableState = previewTransformableState,
         previewView = previewView,
         cameraPlaceHolder = cameraPlaceHolder,
-        cameraController = cameraController,
+        videoRecorderController = videoRecorderController,
         onUpdateConfig = {
             if (!recorderState.isRecording) {
                 component.onUpdateConfig(
@@ -221,7 +222,7 @@ private fun VideoRecorderContent(
     previewTransformableState: TransformableState,
     previewView: PreviewView,
     cameraPlaceHolder: Pair<Bitmap?, Boolean>,
-    cameraController: CameraController,
+    videoRecorderController: VideoRecorderController,
     onUpdateConfig: (RecorderConfig) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -275,7 +276,7 @@ private fun VideoRecorderContent(
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "Recorder",
+                    text = stringResource(R.string.menu_item_recorder),
                     color = CustomTheme.colors.text.invert,
                     modifier = Modifier
                         .weight(2f)
@@ -337,22 +338,21 @@ private fun VideoRecorderContent(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            val factory = previewView.meteringPointFactory
-                            val point = factory.createPoint(it.x, it.y)
-                            val action = FocusMeteringAction.Builder(point).apply {
-                                setAutoCancelDuration(3, TimeUnit.SECONDS)
-                            }.build()
-                            cameraController.focusChange(action)
-                            onUpdateConfig(RecorderConfig.Off)
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures {
+                        val factory = previewView.meteringPointFactory
+                        val point = factory.createPoint(it.x, it.y)
+                        val action = FocusMeteringAction.Builder(point).apply {
+                            setAutoCancelDuration(3, TimeUnit.SECONDS)
+                        }.build()
+                        videoRecorderController.focusChange(action)
+                        onUpdateConfig(RecorderConfig.Off)
 
-                            focusPoint = it
-                        }
+                        focusPoint = it
                     }
+                }
             ) {
                 AndroidView(
                     modifier = Modifier
@@ -381,7 +381,7 @@ private fun VideoRecorderContent(
                 FocusIndicator(
                     offset = focusPoint,
                     onExposureChange = {
-                        cameraController.exposureChange(it)
+                        videoRecorderController.exposureChange(it)
                     }
                 )
             }
@@ -421,7 +421,7 @@ private fun VideoRecorderContent(
                     torchState = recorderState.torchState,
                     onTorchSelect = {
                         component.onUpdateTorchState(it)
-                        cameraController.changeTorchState(it)
+                        videoRecorderController.changeTorchState(it)
                     }
                 )
 
@@ -457,17 +457,17 @@ private fun VideoRecorderContent(
                         )
                     }
 
-                    RecordingButton(
+                    RecorderButton(
                         isRecording = recorderState.isRecording,
                         onClick = {
                             if (recorderState.isRecording) {
                                 if (recorderState.durationMs < 1000) {
                                     component.onRecordStopFailed()
                                 } else {
-                                    cameraController.stopRecording()
+                                    videoRecorderController.stopRecording()
                                 }
                             } else {
-                                cameraController.startRecording()
+                                videoRecorderController.startRecording()
                             }
                         }
                     )
@@ -478,6 +478,9 @@ private fun VideoRecorderContent(
                             .fillMaxHeight()
                     ) {
                         CameraFlipIcon(
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .align(Alignment.CenterStart),
                             onClick = {
                                 component.onFlipCameraSelector()
                                 animateBlur()

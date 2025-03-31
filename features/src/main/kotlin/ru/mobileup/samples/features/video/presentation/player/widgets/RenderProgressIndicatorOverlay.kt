@@ -65,7 +65,7 @@ fun RenderProgressIndicatorOverlay(
             onClick = onCancel
         ) {
             Text(
-                text = stringResource(R.string.dismiss_btn),
+                text = stringResource(R.string.video_dismiss_btn),
                 color = CustomTheme.colors.palette.white
             )
         }
