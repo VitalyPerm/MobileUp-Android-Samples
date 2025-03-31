@@ -41,14 +41,14 @@ fun PhotoMenuUi(
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_camera),
+            text = stringResource(R.string.photo_menu_item_camera),
             onClick = component::onCameraClick
         )
 
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.menu_item_preview),
+            text = stringResource(R.string.photo_menu_item_preview),
             onClick = {
                 pickerLauncher.launch(
                     PickVisualMediaRequest(

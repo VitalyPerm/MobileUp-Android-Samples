@@ -290,7 +290,7 @@ private fun VideoPlayerContent(
             )
 
             Text(
-                text = stringResource(R.string.menu_item_player),
+                text = stringResource(R.string.video_menu_item_player),
                 color = CustomTheme.colors.text.invert,
                 modifier = Modifier
                     .weight(2f)

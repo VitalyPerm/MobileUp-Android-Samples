@@ -451,7 +451,7 @@ private fun CameraHeader(orientation: Int) {
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = stringResource(R.string.menu_item_camera),
+                text = stringResource(R.string.photo_menu_item_camera),
                 color = CustomTheme.colors.text.invert,
                 modifier = Modifier
                     .weight(2f)

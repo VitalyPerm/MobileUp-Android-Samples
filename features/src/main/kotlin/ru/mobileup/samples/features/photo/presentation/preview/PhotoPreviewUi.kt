@@ -93,7 +93,7 @@ private fun PhotoPreviewContent(
             )
 
             Text(
-                text = stringResource(R.string.menu_item_preview),
+                text = stringResource(R.string.photo_menu_item_preview),
                 color = CustomTheme.colors.text.invert,
                 modifier = Modifier
                     .weight(2f)

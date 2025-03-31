@@ -14,6 +14,7 @@ import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarComponent
+import ru.mobileup.samples.features.document.createDocumentComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.image.createImageComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
@@ -73,15 +74,21 @@ class RealRootComponent(
             )
         }
 
+        ChildConfig.Photo -> {
+            RootComponent.Child.Photo(
+                componentFactory.createPhotoComponent(componentContext)
+            )
+        }
+
         ChildConfig.Video -> {
             RootComponent.Child.Video(
                 componentFactory.createVideoComponent(componentContext)
             )
         }
 
-        ChildConfig.Photo -> {
-            RootComponent.Child.Photo(
-                componentFactory.createPhotoComponent(componentContext)
+        ChildConfig.Document -> {
+            RootComponent.Child.Document(
+                componentFactory.createDocumentComponent(componentContext)
             )
         }
 
@@ -140,8 +147,9 @@ class RealRootComponent(
                 when (output.sample) {
                     Sample.Form -> ChildConfig.Form
                     Sample.Otp -> ChildConfig.Otp
-                    Sample.Video -> ChildConfig.Video
                     Sample.Photo -> ChildConfig.Photo
+                    Sample.Video -> ChildConfig.Video
+                    Sample.Document -> ChildConfig.Document
                     Sample.Calendar -> ChildConfig.Calendar
                     Sample.QrCode -> ChildConfig.QrCode
                     Sample.Chart -> ChildConfig.Chart
@@ -174,10 +182,13 @@ class RealRootComponent(
         data object Otp : ChildConfig
 
         @Serializable
+        data object Photo : ChildConfig
+
+        @Serializable
         data object Video : ChildConfig
 
         @Serializable
-        data object Photo : ChildConfig
+        data object Document : ChildConfig
 
         @Serializable
         data object Calendar : ChildConfig

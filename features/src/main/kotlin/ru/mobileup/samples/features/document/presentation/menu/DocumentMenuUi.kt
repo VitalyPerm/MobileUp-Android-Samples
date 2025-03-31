@@ -1,7 +1,6 @@
-package ru.mobileup.samples.features.video.presentation.menu
+package ru.mobileup.samples.features.document.presentation.menu
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,20 +17,17 @@ import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.video.domain.VideoOption
 
-private const val VIDEO_MIME = "video/*"
+private const val DOCUMENT_MIME_TYPE = "application/pdf"
 
 @Composable
-fun VideoMenuUi(
-    component: VideoMenuComponent,
+fun DocumentMenuUi(
+    component: DocumentMenuComponent,
     modifier: Modifier = Modifier
 ) {
     val pickerLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.let {
-                component.onVideoOptionChosen(VideoOption.Player(it))
-            }
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            component.onPreviewClick(uri)
         }
 
     Column(
@@ -44,18 +40,9 @@ fun VideoMenuUi(
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.video_menu_item_recorder),
+            text = stringResource(R.string.document_menu_item_preview),
             onClick = {
-                component.onVideoOptionChosen(VideoOption.Recorder)
-            }
-        )
-
-        AppButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonType = ButtonType.Secondary,
-            text = stringResource(R.string.video_menu_item_player),
-            onClick = {
-                pickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                pickerLauncher.launch(arrayOf(DOCUMENT_MIME_TYPE))
             }
         )
     }
@@ -63,8 +50,8 @@ fun VideoMenuUi(
 
 @Preview
 @Composable
-private fun VideoMenuUiPreview() {
+private fun DocumentMenuUiPreview() {
     AppTheme {
-        VideoMenuUi(FakeVideoMenuComponent())
+        DocumentMenuUi(FakeDocumentMenuComponent())
     }
 }
