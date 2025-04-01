@@ -24,7 +24,7 @@ class RealPhotoMenuComponent(
         }
     }
 
-    override fun onPreviewClick(mediaList: List<Uri>) {
-        onOutput(PhotoMenuComponent.Output.PreviewRequested(mediaList))
+    override fun onPreviewClick(uris: List<Uri>) {
+        onOutput(PhotoMenuComponent.Output.PreviewRequested(uris))
     }
 }

@@ -1,10 +1,12 @@
 package ru.mobileup.samples.features.document.presentation
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
+import ru.mobileup.samples.core.utils.UriSerializer
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
 import ru.mobileup.samples.features.document.createDocumentMenuComponent
@@ -42,7 +44,7 @@ class RealDocumentComponent(
         is ChildConfig.Preview -> {
             DocumentComponent.Child.Preview(
                 componentFactory.createDocumentPreviewComponent(
-                    config.mediaUri,
+                    config.uri,
                     componentContext
                 )
             )
@@ -53,7 +55,7 @@ class RealDocumentComponent(
         when (output) {
             is DocumentMenuComponent.Output.PreviewRequested -> navigation.safePush(
                 ChildConfig.Preview(
-                    output.mediaUri.toString()
+                    output.uri
                 )
             )
         }
@@ -66,6 +68,8 @@ class RealDocumentComponent(
         data object Menu : ChildConfig
 
         @Serializable
-        data class Preview(val mediaUri: String) : ChildConfig
+        data class Preview(
+            @Serializable(with = UriSerializer::class) val uri: Uri
+        ) : ChildConfig
     }
 }

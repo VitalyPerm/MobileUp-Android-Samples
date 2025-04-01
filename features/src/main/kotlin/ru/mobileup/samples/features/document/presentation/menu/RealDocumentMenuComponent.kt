@@ -14,8 +14,8 @@ class RealDocumentMenuComponent(
     private val messageService: MessageService
 ) : ComponentContext by componentContext, DocumentMenuComponent {
 
-    override fun onPreviewClick(mediaUri: Uri?) {
-        if (mediaUri == null) {
+    override fun onPreviewClick(uri: Uri?) {
+        if (uri == null) {
             messageService.showMessage(
                 Message(
                     text = StringDesc.Resource(
@@ -24,7 +24,7 @@ class RealDocumentMenuComponent(
                 )
             )
         } else {
-            onOutput(DocumentMenuComponent.Output.PreviewRequested(mediaUri))
+            onOutput(DocumentMenuComponent.Output.PreviewRequested(uri))
         }
     }
 }

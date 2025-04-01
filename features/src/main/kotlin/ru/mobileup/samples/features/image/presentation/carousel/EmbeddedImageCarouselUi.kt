@@ -73,7 +73,7 @@ private fun ImagePager(
                 .fillMaxWidth()
                 .aspectRatio(0.8333f)
                 .clickable(onClick = onImageClick),
-            model = imageUrl?.value,
+            model = imageUrl?.uri,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )

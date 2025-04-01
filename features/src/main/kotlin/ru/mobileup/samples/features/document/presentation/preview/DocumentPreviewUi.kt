@@ -1,25 +1,32 @@
 package ru.mobileup.samples.features.document.presentation.preview
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
+import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.widget.FullscreenCircularProgress
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
@@ -31,22 +38,73 @@ fun DocumentPreviewUi(
     component: DocumentPreviewComponent,
     modifier: Modifier = Modifier
 ) {
+    SystemBars(
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
+    )
+
+    DocumentPreviewContent(component, modifier)
+}
+
+@Composable
+private fun DocumentPreviewContent(
+    component: DocumentPreviewComponent,
+    modifier: Modifier = Modifier
+) {
     val documentMetadataState by component.documentMetadataState.collectAsState()
 
-    Box(modifier = modifier.statusBarsPadding()) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            PreviewTopBar()
+        }
+    ) { paddingValues ->
         documentMetadataState?.let { documentMetadata ->
-            DocumentPreviewContent(
+            DocumentPreview(
                 documentMetadata = documentMetadata,
-                onOpenClick = component::onOpenClick
+                onOpenClick = component::onOpenClick,
+                modifier = Modifier.padding(paddingValues)
             )
         } ?: run {
-            FullscreenCircularProgress()
+            FullscreenCircularProgress(
+                modifier = Modifier.padding()
+            )
         }
     }
 }
 
 @Composable
-private fun DocumentPreviewContent(
+private fun PreviewTopBar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(CustomTheme.colors.palette.black)
+            .padding(top = 16.dp)
+            .padding(horizontal = 8.dp, vertical = 24.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_app_logo),
+            contentDescription = "logo",
+            tint = Color.Unspecified,
+            modifier = Modifier.size(24.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.document_menu_item_preview),
+            color = CustomTheme.colors.text.invert,
+            modifier = Modifier
+                .weight(2f)
+                .align(Alignment.CenterVertically)
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun DocumentPreview(
     documentMetadata: DocumentMetadata,
     onOpenClick: () -> Unit,
     modifier: Modifier = Modifier

@@ -33,7 +33,7 @@ class RealPhotoCameraComponent(
     override fun onPhotoTaken(uri: Uri) {
         cameraState.update {
             it.copy(
-                mediaList = it.mediaList + uri
+                uris = it.uris + uri
             )
         }
     }
@@ -49,7 +49,7 @@ class RealPhotoCameraComponent(
     }
 
     override fun onShowPreview() {
-        onOutput(PhotoCameraComponent.Output.PreviewRequested(cameraState.value.mediaList))
+        onOutput(PhotoCameraComponent.Output.PreviewRequested(cameraState.value.uris))
     }
 
     override fun onFlipCameraSelector() {

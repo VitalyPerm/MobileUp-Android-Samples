@@ -1,7 +1,7 @@
 package ru.mobileup.samples.features.photo.presentation.preview
 
+import android.net.Uri
 import android.os.Build
-import androidx.core.net.toUri
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import dev.icerock.moko.resources.desc.StringDesc
@@ -24,7 +24,7 @@ import ru.mobileup.samples.features.image.presentation.carousel.ImageCarouselCom
 import ru.mobileup.samples.features.photo.data.PhotoFileManager
 
 class RealPhotoPreviewComponent(
-    private val mediaUriList: List<String>,
+    private val uris: List<Uri>,
     componentContext: ComponentContext,
     componentFactory: ComponentFactory,
     private val photoFileManager: PhotoFileManager,
@@ -34,7 +34,7 @@ class RealPhotoPreviewComponent(
 
     override val imageCarouselComponent: ImageCarouselComponent =
         componentFactory.createImageCarouselComponent(
-            mediaUriList.map { ImageResource(it.toString()) },
+            uris.map { ImageResource(it) },
             childContext("imageCarousel")
         )
 
@@ -70,9 +70,9 @@ class RealPhotoPreviewComponent(
 
     private fun savePhoto() {
         componentScope.launch {
-            mediaUriList.getOrNull(imageCarouselComponent.imageCarousel.value.currentImagePosition)
+            uris.getOrNull(imageCarouselComponent.imageCarousel.value.currentImagePosition)
                 ?.let {
-                    val result = photoFileManager.movePhotoToMediaStore(it.toUri())
+                    val result = photoFileManager.movePhotoToMediaStore(it)
 
                     messageService.showMessage(
                         Message(

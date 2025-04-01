@@ -1,10 +1,17 @@
 package ru.mobileup.samples.features.image.domain
 
+import android.net.Uri
+import androidx.core.net.toUri
 import kotlinx.serialization.Serializable
+import ru.mobileup.samples.core.utils.UriSerializer
 
 @Serializable
 @JvmInline
-value class ImageResource(val value: String) {
+value class ImageResource(
+    @Serializable(with = UriSerializer::class)
+    val uri: Uri
+) {
+    constructor(string: String) : this(string.toUri())
 
     companion object {
         val MOCK_LIST = listOf(

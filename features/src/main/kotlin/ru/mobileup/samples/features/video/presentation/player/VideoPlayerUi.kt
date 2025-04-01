@@ -188,7 +188,7 @@ fun VideoPlayerUi(
 
     LaunchedEffect(playerState.startPositionMs, playerState.endPositionMs) {
         videoPlayerController.setMedia(
-            uri = component.mediaUri,
+            uri = component.uri,
             startPositionMs = playerState.startPositionMs,
             endPositionMs = playerState.endPositionMs
         )

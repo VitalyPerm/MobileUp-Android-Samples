@@ -1,6 +1,5 @@
 package ru.mobileup.samples.features.image.presentation.carousel
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,9 +48,7 @@ fun FullScreenImageCarouselUi(
     }
 
     Box(
-        modifier = modifier
-            .background(CustomTheme.colors.background.screen)
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         HorizontalPager(
             modifier = Modifier.matchParentSize(),
@@ -68,7 +65,7 @@ fun FullScreenImageCarouselUi(
                             maxScale,
                             onEndOfContentReached = { scrollEnabled = it }
                         ),
-                    model = imageCarousel.imageResources.getOrNull(it)?.value,
+                    model = imageCarousel.imageResources.getOrNull(it)?.uri,
                     contentDescription = null
                 )
             }

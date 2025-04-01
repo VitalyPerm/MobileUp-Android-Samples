@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.document
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
@@ -29,8 +30,8 @@ fun ComponentFactory.createDocumentMenuComponent(
 }
 
 fun ComponentFactory.createDocumentPreviewComponent(
-    mediaUri: String,
+    uri: Uri,
     componentContext: ComponentContext
 ): DocumentPreviewComponent {
-    return RealDocumentPreviewComponent(mediaUri, componentContext, get(), get(), get())
+    return RealDocumentPreviewComponent(uri, componentContext, get(), get(), get(), get())
 }

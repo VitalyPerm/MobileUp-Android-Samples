@@ -4,9 +4,9 @@ import android.net.Uri
 
 interface DocumentMenuComponent {
 
-    fun onPreviewClick(mediaUri: Uri?)
+    fun onPreviewClick(uri: Uri?)
 
     sealed interface Output {
-        data class PreviewRequested(val mediaUri: Uri) : Output
+        data class PreviewRequested(val uri: Uri) : Output
     }
 }

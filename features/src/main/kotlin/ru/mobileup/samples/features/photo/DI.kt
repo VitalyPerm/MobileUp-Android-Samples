@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.photo
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
@@ -38,8 +39,8 @@ fun ComponentFactory.createPhotoCameraComponent(
 }
 
 fun ComponentFactory.createPhotoPreviewComponent(
-    mediaUriList: List<String>,
+    uris: List<Uri>,
     componentContext: ComponentContext
 ): PhotoPreviewComponent {
-    return RealPhotoPreviewComponent(mediaUriList, componentContext, get(), get(), get(), get())
+    return RealPhotoPreviewComponent(uris, componentContext, get(), get(), get(), get())
 }

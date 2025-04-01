@@ -3,14 +3,13 @@ package ru.mobileup.samples.features.photo.presentation.preview
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,8 +60,28 @@ private fun PhotoPreviewContent(
     component: PhotoPreviewComponent,
     modifier: Modifier = Modifier
 ) {
-    val configuration = LocalConfiguration.current
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            PreviewTopBar(
+                onSaveClick = component::onSaveClick
+            )
+        }
+    ) { paddingValues ->
+        FullScreenImageCarouselUi(
+            component = component.imageCarouselComponent,
+            modifier = Modifier
+                .background(CustomTheme.colors.palette.grayscale.l900)
+                .padding(paddingValues)
+        )
+    }
+}
 
+@Composable
+private fun PreviewTopBar(
+    onSaveClick: () -> Unit
+) {
+    val configuration = LocalConfiguration.current
     var orientation by remember { mutableIntStateOf(Configuration.ORIENTATION_PORTRAIT) }
 
     LaunchedEffect(configuration) {
@@ -70,56 +89,45 @@ private fun PhotoPreviewContent(
             .collect { orientation = it }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(CustomTheme.colors.palette.grayscale.l900)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(CustomTheme.colors.palette.black)
-                .run {
-                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        padding(horizontal = 8.dp, vertical = 24.dp)
-                    } else {
-                        padding(horizontal = 24.dp, vertical = 8.dp)
-                    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(CustomTheme.colors.palette.black)
+            .run {
+                if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    padding(horizontal = 8.dp, vertical = 24.dp)
+                } else {
+                    padding(horizontal = 24.dp, vertical = 8.dp)
                 }
-                .padding(top = 16.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_app_logo),
-                contentDescription = "logo",
-                tint = Color.Unspecified,
-                modifier = Modifier.size(24.dp)
-            )
+            }
+            .padding(top = 16.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_app_logo),
+            contentDescription = "logo",
+            tint = Color.Unspecified,
+            modifier = Modifier.size(24.dp)
+        )
 
-            Text(
-                text = stringResource(R.string.photo_menu_item_preview),
-                color = CustomTheme.colors.text.invert,
-                modifier = Modifier
-                    .weight(2f)
-                    .align(Alignment.CenterVertically)
-            )
+        Text(
+            text = stringResource(R.string.photo_menu_item_preview),
+            color = CustomTheme.colors.text.invert,
+            modifier = Modifier
+                .weight(2f)
+                .align(Alignment.CenterVertically)
+        )
 
-            Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
 
-            Icon(
-                painter = painterResource(id = R.drawable.ic_download),
-                contentDescription = "download",
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .clickable {
-                        component.onSaveClick()
-                    }
-            )
-        }
-
-        FullScreenImageCarouselUi(
-            component = component.imageCarouselComponent,
-            modifier = Modifier.background(CustomTheme.colors.palette.grayscale.l900)
+        Icon(
+            painter = painterResource(id = R.drawable.ic_download),
+            contentDescription = "download",
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .clickable {
+                    onSaveClick()
+                }
         )
     }
 }

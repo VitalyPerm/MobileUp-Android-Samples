@@ -296,7 +296,7 @@ fun CameraPortraitContent(
                             }
                         )
 
-                        cameraState.mediaList.lastOrNull()?.let { uri ->
+                        cameraState.uris.lastOrNull()?.let { uri ->
                             Image(
                                 painter = rememberAsyncImagePainter(uri),
                                 contentDescription = null,
@@ -364,7 +364,7 @@ fun CameraLandscapeContent(
                             .weight(1f)
                             .fillMaxWidth()
                     ) {
-                        cameraState.mediaList.lastOrNull()?.let { uri ->
+                        cameraState.uris.lastOrNull()?.let { uri ->
                             Image(
                                 painter = rememberAsyncImagePainter(uri),
                                 contentDescription = null,

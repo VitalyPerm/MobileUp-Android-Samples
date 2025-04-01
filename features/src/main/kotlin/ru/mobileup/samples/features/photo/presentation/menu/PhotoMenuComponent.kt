@@ -6,10 +6,10 @@ interface PhotoMenuComponent {
 
     fun onCameraClick()
 
-    fun onPreviewClick(mediaList: List<Uri>)
+    fun onPreviewClick(uris: List<Uri>)
 
     sealed interface Output {
         data object CameraRequested : Output
-        data class PreviewRequested(val mediaList: List<Uri>) : Output
+        data class PreviewRequested(val uris: List<Uri>) : Output
     }
 }

@@ -21,6 +21,6 @@ interface PhotoCameraComponent {
     fun onUpdateTorchState()
 
     sealed interface Output {
-        data class PreviewRequested(val uriList: List<Uri>) : Output
+        data class PreviewRequested(val uris: List<Uri>) : Output
     }
 }
