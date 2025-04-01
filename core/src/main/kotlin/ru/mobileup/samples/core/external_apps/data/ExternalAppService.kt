@@ -5,6 +5,7 @@ import ru.mobileup.samples.core.error_handling.ExternalAppNotFoundException
 
 interface ExternalAppService {
 
+    @Throws(ExternalAppNotFoundException::class)
     fun openFile(uri: Uri, mime: String)
 
     @Throws(ExternalAppNotFoundException::class)

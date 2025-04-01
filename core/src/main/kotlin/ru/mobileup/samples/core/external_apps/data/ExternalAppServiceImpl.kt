@@ -22,6 +22,7 @@ class ExternalAppServiceImpl(
     private val context: Context
 ) : ExternalAppService {
 
+    @Throws(ExternalAppNotFoundException::class)
     override fun openFile(uri: Uri, mime: String) {
         safeActivityLaunch {
             Intent(Intent.ACTION_VIEW).apply {
