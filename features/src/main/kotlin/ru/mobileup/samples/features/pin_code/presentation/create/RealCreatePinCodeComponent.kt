@@ -117,6 +117,7 @@ class RealCreatePinCodeComponent(
 
             CreatePinCodeComponent.PinInputStep.PreviouslyErred,
             CreatePinCodeComponent.PinInputStep.None -> {
+                if (currentPinCode.length >= PinCode.LENGTH) return
                 currentPinCode += digit
                 updateProgressState()
             }

@@ -21,9 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.custom.CustomTheme
@@ -48,69 +46,16 @@ fun PinCodeProgress(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                val progressAnimatables = remember {
-                    List(PinCode.LENGTH) {
-                        Animatable(1f)
-                    }
-                }
-
-                val successAnimatable = remember {
-                    Animatable(1f)
-                }
-
-                val errorAnimatable = remember {
-                    Animatable(1f)
-                }
-
                 repeat(PinCode.LENGTH) { index ->
-                    val (animatable, color) = when (pinProgressState) {
-                        PinCodeProgressState.Error -> {
-                            errorAnimatable to CustomTheme.colors.common.negative
-                        }
-
-                        is PinCodeProgressState.Progress -> {
-                            val color = if (pinProgressState.count > index) {
-                                CustomTheme.colors.icon.primary
-                            } else {
-                                CustomTheme.colors.icon.secondary
-                            }
-                            progressAnimatables[index] to color
-                        }
-
-                        PinCodeProgressState.Success -> {
-                            successAnimatable to CustomTheme.colors.common.positive
-                        }
-                    }
-
                     ProgressDot(
-                        color = color,
-                        size = 12.dp,
-                        getScale = { animatable.value }
-                    )
-
-                    LaunchedEffect(pinProgressState) {
-                        when (pinProgressState) {
-                            PinCodeProgressState.Error -> coroutineScope.launch {
-                                errorAnimatable.animateDot()
-                                onDotsAnimationEnd?.invoke()
-                            }
-                            PinCodeProgressState.Success -> coroutineScope.launch {
-                                successAnimatable.animateDot()
-                                onDotsAnimationEnd?.invoke()
-                            }
-
-                            is PinCodeProgressState.Progress -> {
-                                if (index + 1 == pinProgressState.count) {
-                                    coroutineScope.launch {
-                                        progressAnimatables[index].animateDot()
-                                        if (pinProgressState.count == PinCode.LENGTH) {
-                                            onDotsAnimationEnd?.invoke()
-                                        }
-                                    }
-                                }
-                            }
+                        pinProgressState = pinProgressState,
+                        index = index,
+                        onAnimationEnd = if (index + 1 == PinCode.LENGTH) {
+                            onDotsAnimationEnd
+                        } else {
+                            null
                         }
-                    }
+                    )
                 }
             }
         }
@@ -119,20 +64,67 @@ fun PinCodeProgress(
 
 @Composable
 fun ProgressDot(
-    color: Color,
-    size: Dp,
-    getScale: () -> Float,
-    modifier: Modifier = Modifier
-) = Box(
-    modifier = modifier
-        .graphicsLayer {
-            scaleX = getScale()
-            scaleY = getScale()
+    pinProgressState: PinCodeProgressState,
+    index: Int,
+    modifier: Modifier = Modifier,
+    onAnimationEnd: (() -> Unit)? = null,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val animatable = remember {
+        Animatable(1f)
+    }
+
+    LaunchedEffect(pinProgressState) {
+        when (pinProgressState) {
+            PinCodeProgressState.Error -> coroutineScope.launch {
+                animatable.animateDot()
+                onAnimationEnd?.invoke()
+            }
+            PinCodeProgressState.Success -> coroutineScope.launch {
+                animatable.animateDot()
+                onAnimationEnd?.invoke()
+            }
+
+            is PinCodeProgressState.Progress -> {
+                if (index + 1 == pinProgressState.count) {
+                    coroutineScope.launch {
+                        animatable.animateDot()
+                        onAnimationEnd?.invoke()
+                    }
+                }
+            }
         }
-        .clip(CircleShape)
-        .size(size)
-        .background(color)
-)
+    }
+
+    val color = when (pinProgressState) {
+        PinCodeProgressState.Error -> {
+            CustomTheme.colors.common.negative
+        }
+
+        is PinCodeProgressState.Progress -> {
+            if (pinProgressState.count > index) {
+                CustomTheme.colors.icon.primary
+            } else {
+                CustomTheme.colors.icon.secondary
+            }
+        }
+
+        PinCodeProgressState.Success -> {
+            CustomTheme.colors.common.positive
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = animatable.value
+                scaleY = animatable.value
+            }
+            .clip(CircleShape)
+            .size(12.dp)
+            .background(color)
+    )
+}
 
 private suspend fun Animatable<Float, AnimationVector1D>.animateDot() {
     animateBackAndForth(

@@ -13,6 +13,7 @@ import ru.mobileup.samples.core.biometric.data.BiometricEnablingStorage
 import ru.mobileup.samples.core.biometric.data.BiometricService
 import ru.mobileup.samples.core.biometric.domain.BiometricAuthResult
 import ru.mobileup.samples.core.biometric.domain.BiometricEnableStatus
+import ru.mobileup.samples.core.biometric.domain.BiometricSupportStatus
 import ru.mobileup.samples.core.dialog.standard.DialogButton
 import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.core.dialog.standard.StandardDialogData
@@ -29,7 +30,6 @@ import ru.mobileup.samples.features.pin_code.domain.PinCode
 import ru.mobileup.samples.features.pin_code.domain.PinCode.Companion.COUNT_TOO_MANY_ATTEMPTS
 import ru.mobileup.samples.features.pin_code.domain.PinCode.Companion.PIN_CODE_LOCK_TIME
 import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
-import kotlin.math.max
 import ru.mobileup.samples.core.R as CoreR
 
 class RealCheckPinCodeComponent(
@@ -42,13 +42,13 @@ class RealCheckPinCodeComponent(
     private val onOutput: (CheckPinCodeComponent.Output) -> Unit
 ) : ComponentContext by componentContext, CheckPinCodeComponent {
 
-    private var pinCode = MutableStateFlow("")
+    private var pinCode = ""
 
     override val pinProgressState = MutableStateFlow<PinCodeProgressState>(
         PinCodeProgressState.Progress(0)
     )
 
-    override val isBiometricsSupported = MutableStateFlow(false)
+    private val isBiometricsSupported = MutableStateFlow(false)
 
     override val isError = MutableStateFlow(false)
 
@@ -75,15 +75,17 @@ class RealCheckPinCodeComponent(
     )
 
     override val endButtonState: StateFlow<CheckPinCodeComponent.EndButtonState> =
-        computed(pinProgressState, isBiometricsSupported) { pinProgressState, isBiometricsSupported ->
-            if (
-                (pinProgressState is PinCodeProgressState.Progress &&
-                pinProgressState.count > 0) ||
-                !isBiometricsSupported
-                ) {
-                CheckPinCodeComponent.EndButtonState.Erase
-            } else {
-                CheckPinCodeComponent.EndButtonState.Biometrics
+        computed(
+            pinProgressState,
+            isBiometricsSupported
+        ) { pinProgressState, isBiometricsSupported ->
+            when {
+                pinProgressState is PinCodeProgressState.Progress && pinProgressState.count > 0 -> {
+                    CheckPinCodeComponent.EndButtonState.Erase
+                }
+
+                isBiometricsSupported -> CheckPinCodeComponent.EndButtonState.Biometrics
+                else -> CheckPinCodeComponent.EndButtonState.None
             }
         }
 
@@ -117,18 +119,18 @@ class RealCheckPinCodeComponent(
 
     override fun onDigitClick(digit: Int) {
         componentScope.launch {
-            if (pinCodeStorage.getBadAuthTimestamp() >= Clock.System.now().toEpochMilliseconds() - PIN_CODE_LOCK_TIME) {
+            if (shouldShowTimerDialog()) {
                 dialogControl.show(timerDialogData)
             } else {
                 when {
                     pinProgressState.value is PinCodeProgressState.Error -> {
-                        pinCode.value = digit.toString()
+                        pinCode = digit.toString()
                         updateProgressState()
                     }
 
-                    pinCode.value.length != PinCode.LENGTH -> {
-                        pinCode.value += digit
-                        if (pinCode.value.length == PinCode.LENGTH) {
+                    pinCode.length != PinCode.LENGTH -> {
+                        pinCode += digit
+                        if (pinCode.length == PinCode.LENGTH) {
                             validatePinCode()
                         } else {
                             updateProgressState()
@@ -140,7 +142,7 @@ class RealCheckPinCodeComponent(
     }
 
     override fun onEraseClick() {
-        pinCode.update { it.take(max(it.length - 1, 0)) }
+        pinCode = pinCode.dropLast(1)
         updateProgressState()
     }
 
@@ -172,7 +174,7 @@ class RealCheckPinCodeComponent(
     }
 
     private fun updateProgressState() {
-        pinProgressState.update { PinCodeProgressState.Progress(pinCode.value.length) }
+        pinProgressState.update { PinCodeProgressState.Progress(pinCode.length) }
     }
 
     private fun validatePinCode() {
@@ -180,7 +182,7 @@ class RealCheckPinCodeComponent(
             val pinCodeFromStorage = pinCodeStorage.getPinCode()?.value
                 ?: onOutput(CheckPinCodeComponent.Output.CheckSucceeded)
 
-            if (pinCode.value == pinCodeFromStorage) {
+            if (pinCode == pinCodeFromStorage) {
                 pinProgressState.update { PinCodeProgressState.Success }
             } else {
                 pinCodeStorage.incrementAttemptsCounter()
@@ -189,7 +191,7 @@ class RealCheckPinCodeComponent(
                     pinCodeStorage.setBadAuthTimestamp(Clock.System.now().toEpochMilliseconds())
                     dialogControl.show(timerDialogData)
                 }
-                pinCode.value = ""
+                pinCode = ""
                 pinProgressState.update { PinCodeProgressState.Error }
             }
         }
@@ -203,11 +205,23 @@ class RealCheckPinCodeComponent(
         dialogControl.dismiss()
     }
 
+    private suspend fun shouldShowTimerDialog(): Boolean {
+        val now = Clock.System.now().toEpochMilliseconds()
+        val pinCodeUnlockTime = pinCodeStorage.getBadAuthTimestamp() + PIN_CODE_LOCK_TIME
+        return now < pinCodeUnlockTime
+    }
+
     init {
         backHandler.register(BackCallback {})
 
         componentScope.safeLaunch(errorHandler) {
-            if (biometricEnablingStorage.getBiometricEnableStatus() == BiometricEnableStatus.Enabled) {
+            val isBiometricsSupportedOnDevice =
+                biometricService.getBiometricSupportStatus() == BiometricSupportStatus.Supported
+
+            val isBiometricsEnabled =
+                biometricEnablingStorage.getBiometricEnableStatus() == BiometricEnableStatus.Enabled
+
+            if (isBiometricsSupportedOnDevice && isBiometricsEnabled) {
                 isBiometricsSupported.value = true
                 startFingerprintAuth()
             }
@@ -215,10 +229,7 @@ class RealCheckPinCodeComponent(
 
         lifecycle.doOnResume {
             componentScope.launch {
-                val shouldShowTimerDialog = pinCodeStorage.getBadAuthTimestamp() >
-                        Clock.System.now().toEpochMilliseconds() - PIN_CODE_LOCK_TIME
-
-                if (shouldShowTimerDialog) {
+                if (shouldShowTimerDialog()) {
                     dialogControl.show(timerDialogData)
                 }
             }

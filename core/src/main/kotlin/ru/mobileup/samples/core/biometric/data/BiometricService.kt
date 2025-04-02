@@ -15,7 +15,7 @@ interface BiometricService {
         title: StringDesc?,
         description: StringDesc?,
         negativeButtonText: StringDesc? = R.string.biometric_prompt_negative_button_text.strResDesc(),
-        callback: (authStatus: BiometricAuthResult) -> Unit
+        callback: (authResult: BiometricAuthResult) -> Unit
     )
 
     fun getBiometricSupportStatus(): BiometricSupportStatus

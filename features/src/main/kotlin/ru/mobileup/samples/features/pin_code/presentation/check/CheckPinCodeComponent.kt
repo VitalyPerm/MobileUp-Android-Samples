@@ -6,7 +6,6 @@ import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 
 interface CheckPinCodeComponent {
     val pinProgressState: StateFlow<PinCodeProgressState>
-    val isBiometricsSupported: StateFlow<Boolean>
     val isError: StateFlow<Boolean>
 
     val dialogControl: StandardDialogControl

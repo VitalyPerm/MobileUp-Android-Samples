@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -48,14 +47,12 @@ fun CheckPinCodeUi(
     modifier: Modifier = Modifier,
 ) {
     val pinProgressState by component.pinProgressState.collectAsState()
-    val isBiometricsSupported by component.isBiometricsSupported.collectAsState()
     val isError by component.isError.collectAsState()
     val endButtonState by component.endButtonState.collectAsState()
 
     CheckPinCodeContent(
         modifier = modifier,
         pinProgressState = pinProgressState,
-        isBiometricsSupported = isBiometricsSupported,
         onDigitClick = component::onDigitClick,
         onEraseClick = component::onEraseClick,
         onBiometricClick = component::onBiometricClick,
@@ -72,7 +69,6 @@ fun CheckPinCodeUi(
 @Composable
 fun CheckPinCodeContent(
     pinProgressState: PinCodeProgressState,
-    isBiometricsSupported: Boolean,
     isError: Boolean,
     endButtonState: CheckPinCodeComponent.EndButtonState,
     onDigitClick: (digit: Int) -> Unit,
@@ -82,7 +78,6 @@ fun CheckPinCodeContent(
     modifier: Modifier = Modifier,
     onDotsAnimationEnd: (() -> Unit)? = null,
 ) {
-    val progressCounter = (pinProgressState as? PinCodeProgressState.Progress)?.count ?: 0
     val onRightBtnClickSource = remember { MutableInteractionSource() }
 
     onRightBtnClickSource.onLongPressed {
@@ -160,12 +155,16 @@ fun CheckPinCodeContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .combinedClickable(
-                            enabled = progressCounter > 0 || isBiometricsSupported,
+                            enabled = endButtonState != CheckPinCodeComponent.EndButtonState.None,
                             onClick = {
-                                if (progressCounter > 0) {
-                                    onEraseClick()
-                                } else {
-                                    onBiometricClick()
+                                when (endButtonState) {
+                                    CheckPinCodeComponent.EndButtonState.Erase -> {
+                                        onEraseClick()
+                                    }
+                                    CheckPinCodeComponent.EndButtonState.Biometrics -> {
+                                        onBiometricClick()
+                                    }
+                                    CheckPinCodeComponent.EndButtonState.None -> {}
                                 }
                             },
                             role = Role.Button,
@@ -180,7 +179,6 @@ fun CheckPinCodeContent(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_24_cancel),
                                 contentDescription = null,
-                                modifier = Modifier.alpha(if (progressCounter == 0) 0f else 1f),
                                 tint = CustomTheme.colors.icon.secondary
                             )
                         }
