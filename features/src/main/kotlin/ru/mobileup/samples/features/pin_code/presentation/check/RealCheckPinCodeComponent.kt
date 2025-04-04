@@ -50,7 +50,7 @@ class RealCheckPinCodeComponent(
 
     private val isBiometricsSupported = MutableStateFlow(false)
 
-    override val isError = MutableStateFlow(false)
+    override val isErrorText = MutableStateFlow(false)
 
     private val timerDialogData = StandardDialogData(
         title = R.string.pin_code_alert_error_header.strResDesc(),
@@ -149,7 +149,7 @@ class RealCheckPinCodeComponent(
     override fun onPinCodeInputAnimationEnd() {
         when (pinProgressState.value) {
             PinCodeProgressState.Error -> {
-                isError.value = true
+                isErrorText.value = true
                 updateProgressState()
             }
 

@@ -12,9 +12,9 @@ interface BiometricService {
     val biometricType: BiometricType
 
     fun startBiometricAuth(
-        title: StringDesc?,
-        description: StringDesc?,
-        negativeButtonText: StringDesc? = R.string.biometric_prompt_negative_button_text.strResDesc(),
+        title: StringDesc,
+        description: StringDesc,
+        negativeButtonText: StringDesc? = R.string.common_cancel.strResDesc(),
         callback: (authResult: BiometricAuthResult) -> Unit
     )
 

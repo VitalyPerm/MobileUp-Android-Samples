@@ -47,7 +47,7 @@ fun CheckPinCodeUi(
     modifier: Modifier = Modifier,
 ) {
     val pinProgressState by component.pinProgressState.collectAsState()
-    val isError by component.isError.collectAsState()
+    val isError by component.isErrorText.collectAsState()
     val endButtonState by component.endButtonState.collectAsState()
 
     CheckPinCodeContent(

@@ -68,7 +68,7 @@ fun TutorialOverlayUi(
 
         AppButton(
             buttonType = ButtonType.Secondary,
-            text = stringResource(id = R.string.tutorial_button_skip),
+            text = stringResource(id = R.string.common_skip),
             onClick = component::onSkipClick,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -191,7 +191,7 @@ private fun TutorialMessagePopup(
                         modifier = Modifier.align(Alignment.End)
                     ) {
                         Text(
-                            text = stringResource(id = R.string.tutorial_button_ok),
+                            text = stringResource(id = R.string.common_ok),
                             style = CustomTheme.typography.button.bold,
                             color = CustomTheme.colors.text.primary
                         )

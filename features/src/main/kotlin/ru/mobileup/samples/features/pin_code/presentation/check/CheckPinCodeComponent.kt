@@ -6,7 +6,7 @@ import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 
 interface CheckPinCodeComponent {
     val pinProgressState: StateFlow<PinCodeProgressState>
-    val isError: StateFlow<Boolean>
+    val isErrorText: StateFlow<Boolean>
 
     val dialogControl: StandardDialogControl
 

@@ -7,7 +7,7 @@ import ru.mobileup.samples.features.pin_code.domain.PinCodeProgressState
 
 class FakeCheckPinCodeComponent : CheckPinCodeComponent {
     override val pinProgressState = MutableStateFlow<PinCodeProgressState>(PinCodeProgressState.Success)
-    override val isError = MutableStateFlow(false)
+    override val isErrorText = MutableStateFlow(false)
     override val dialogControl: StandardDialogControl = fakeStandardDialogControl()
     override val endButtonState = MutableStateFlow(CheckPinCodeComponent.EndButtonState.Erase)
 

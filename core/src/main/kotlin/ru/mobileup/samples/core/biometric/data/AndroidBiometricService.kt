@@ -29,16 +29,16 @@ class AndroidBiometricService(
     }
 
     override fun startBiometricAuth(
-        title: StringDesc?,
-        description: StringDesc?,
+        title: StringDesc,
+        description: StringDesc,
         negativeButtonText: StringDesc?,
         callback: (authResult: BiometricAuthResult) -> Unit
     ) {
         val biometricPrompt = createBiometricPrompt(callback)
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .apply {
-                title?.let { setTitle(it.toString(context)) }
-                description?.let { setDescription(it.toString(context)) }
+                setTitle(title.toString(context))
+                setDescription(description.toString(context))
                 negativeButtonText?.let { setNegativeButtonText(it.toString(context)) }
             }
             .build()
