@@ -57,7 +57,7 @@ class RealOtpComponent(
     }
 
     private val codeLengthIsCorrect = confirmationCodeInputControl
-        .text
+        .value
         .map { it.length == CONFIRMATION_CODE_LENGTH }
         .stateIn(
             scope = componentScope,
@@ -69,7 +69,7 @@ class RealOtpComponent(
         timer.start(RESEND_CODE_AGAIN_TIMER_LOCK)
 
         // Чтобы убрать ошибку после изменения введенного кода
-        confirmationCodeInputControl.text
+        confirmationCodeInputControl.value
             .onEach { confirmationCodeInputControl.error.value = null }
             .launchIn(componentScope)
 
@@ -94,22 +94,22 @@ class RealOtpComponent(
             confirmationCodeInputControl.enabled.value = !enterFieldDisable
         }.launchIn(componentScope)
 
-        confirmationCodeInputControl.onFocusChanged(true)
+        confirmationCodeInputControl.onFocusChange(true)
     }
 
     private fun sendCode() {
         componentScope.safeLaunch(errorHandler) {
             withProgress(isConfirmationInProgress) {
                 delay(2000)
-                if (confirmationCodeInputControl.text.value == "1234") {
+                if (confirmationCodeInputControl.value.value == "1234") {
                     isConfirmCodeCorrect.value = true
                     delay(SUCCESSFULLY_ANIMATION_DELAY)
                     onOutput(OtpComponent.Output.OtpSuccessfullyVerified)
                 } else {
-                    confirmationCodeInputControl.setText("")
+                    confirmationCodeInputControl.onValueChange("")
                     confirmationCodeInputControl.error.value =
                         R.string.otp_error_code.strResDesc()
-                    confirmationCodeInputControl.onFocusChanged(true)
+                    confirmationCodeInputControl.onFocusChange(true)
                 }
             }
         }
@@ -120,14 +120,14 @@ class RealOtpComponent(
             withProgress(isCodeResendInProgress) {
                 delay(2000)
                 timer.start(RESEND_CODE_AGAIN_TIMER_LOCK)
-                confirmationCodeInputControl.onFocusChanged(true)
+                confirmationCodeInputControl.onFocusChange(true)
             }
         }
     }
 
     override fun onSmsCodeRetrieved(result: SmsRetrievingResult) {
         if (result is SmsRetrievingResult.Success) {
-            confirmationCodeInputControl.setText(result.otpCode)
+            confirmationCodeInputControl.onValueChange(result.otpCode)
         }
     }
 }

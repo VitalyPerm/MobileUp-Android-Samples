@@ -30,11 +30,11 @@ class RealNavigationAlertDialogsComponent(
     )
 
     override fun onShowSimpleDialogControlClick() {
-        simpleDialogControl.show(nameInputControl.text.value)
+        simpleDialogControl.show(nameInputControl.value.value)
     }
 
     override fun onClearTextClick() {
-        nameInputControl.setText("")
+        nameInputControl.onValueChange("")
         simpleDialogControl.dismiss()
     }
 
@@ -52,7 +52,7 @@ class RealNavigationAlertDialogsComponent(
                 confirmButton = DialogButton(
                     text = R.string.navigation_clear.strResDesc(),
                     action = {
-                        nameInputControl.setText("")
+                        nameInputControl.onValueChange("")
                         standardDialogControl.dismiss()
                     }
                 ),
@@ -81,7 +81,7 @@ class RealNavigationAlertDialogsComponent(
         when (output) {
             NavigationCustomDialogComponent.Output.CloseRequest -> customDialogControl.dismiss()
             NavigationCustomDialogComponent.Output.SubmitRequest -> {
-                nameInputControl.setText("")
+                nameInputControl.onValueChange("")
                 customDialogControl.dismiss()
             }
         }
@@ -89,7 +89,7 @@ class RealNavigationAlertDialogsComponent(
 
     override fun onShowCustomDialogControlClick() {
         customDialogControl.show(
-            NavigationCustomDialogComponent.Config(nameInputControl.text.value)
+            NavigationCustomDialogComponent.Config(nameInputControl.value.value)
         )
     }
 }
