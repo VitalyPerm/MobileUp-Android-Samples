@@ -24,11 +24,11 @@ class RealNavigationBottomSheetsComponent(
     )
 
     override fun onShowSimpleDialogControlClick() {
-        simpleDialogControl.show(nameInputControl.text.value)
+        simpleDialogControl.show(nameInputControl.value.value)
     }
 
     override fun onClearTextClick() {
-        nameInputControl.setText("")
+        nameInputControl.onValueChange("")
         simpleDialogControl.dismiss()
     }
 
@@ -49,7 +49,7 @@ class RealNavigationBottomSheetsComponent(
         when (output) {
             NavigationCustomDialogComponent.Output.CloseRequest -> customDialogControl.dismiss()
             NavigationCustomDialogComponent.Output.SubmitRequest -> {
-                nameInputControl.setText("")
+                nameInputControl.onValueChange("")
                 customDialogControl.dismiss()
             }
         }
@@ -57,7 +57,7 @@ class RealNavigationBottomSheetsComponent(
 
     override fun onShowCustomDialogControlClick() {
         customDialogControl.show(
-            NavigationCustomDialogComponent.Config(nameInputControl.text.value)
+            NavigationCustomDialogComponent.Config(nameInputControl.value.value)
         )
     }
 }

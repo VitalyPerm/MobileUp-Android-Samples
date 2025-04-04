@@ -26,11 +26,11 @@ fun AppCheckbox(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: CheckboxColors = AppCheckboxDefaults.colors,
 ) {
-    val value by checkControl.checked.collectAsState()
+    val value by checkControl.value.collectAsState()
     val enabled by checkControl.enabled.collectAsState()
     AppCheckbox(
         isChecked = value,
-        onCheckedChange = checkControl::onCheckedChanged,
+        onCheckedChange = checkControl::onValueChange,
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,

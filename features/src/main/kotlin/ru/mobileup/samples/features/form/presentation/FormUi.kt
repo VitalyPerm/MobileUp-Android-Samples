@@ -56,7 +56,7 @@ fun FormUi(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            val phone by component.phoneInputControl.text.collectAsState()
+            val phone by component.phoneInputControl.value.collectAsState()
             val phoneHasFocus by component.phoneInputControl.hasFocus.collectAsState()
 
             AppTextField(
