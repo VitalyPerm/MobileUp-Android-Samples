@@ -3,6 +3,7 @@ package ru.mobileup.samples.core.external_apps.data
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
