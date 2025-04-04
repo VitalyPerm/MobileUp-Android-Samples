@@ -9,6 +9,7 @@ menu
 navigation
 otp
 photo
+pin_code
 qr_code
 root
 shared_element_transitions
@@ -26,6 +27,7 @@ root -> menu
 root -> navigation
 root -> otp
 root -> photo
+root -> pin_code
 root -> qr_code
 root -> shared_element_transitions
 root -> tutorial
