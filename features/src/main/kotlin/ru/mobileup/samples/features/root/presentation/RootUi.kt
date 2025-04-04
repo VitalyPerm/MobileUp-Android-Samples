@@ -7,13 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ru.mobileup.samples.core.message.presentation.MessageUi
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
 import ru.mobileup.samples.core.utils.ConfigureSystemBars
-import ru.mobileup.samples.core.theme.custom.CustomTheme
-import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
 import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
@@ -26,7 +23,6 @@ import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
 import ru.mobileup.samples.features.photo.presentation.PhotoUi
-import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementUi
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
