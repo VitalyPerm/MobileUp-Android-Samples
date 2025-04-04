@@ -2,8 +2,8 @@ package ru.mobileup.samples
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import com.arkivanov.decompose.retainedComponent
 import com.arkivanov.essenty.lifecycle.asEssentyLifecycle
@@ -20,7 +20,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        enableEdgeToEdge()
 
         val activityProvider = application.koin.get<ActivityProvider>()
         activityProvider.attachActivity(this)

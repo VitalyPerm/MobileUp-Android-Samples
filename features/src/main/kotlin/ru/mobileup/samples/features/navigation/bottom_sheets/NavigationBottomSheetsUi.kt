@@ -31,7 +31,7 @@ fun NavigationBottomSheetsUi(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues()
 ) {
-    val name by component.nameInputControl.text.collectAsState()
+    val name by component.nameInputControl.value.collectAsState()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp),

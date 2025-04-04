@@ -1,32 +1,43 @@
 package ru.mobileup.samples.features.tutorial.presentation
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.StringDesc
@@ -40,46 +51,48 @@ import ru.mobileup.samples.features.tutorial.domain.TutorialFilter
 @Composable
 fun TutorialSampleUi(
     component: TutorialSampleComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
     val items by component.items.collectAsState()
     val selectedFilter by component.selectedFilter.collectAsState()
     val availableFilters by component.availableFilters.collectAsState()
 
     Scaffold(
-        modifier = modifier.systemBarsPadding(),
+        modifier = modifier,
         topBar = {
             Toolbar(modifier = Modifier.padding(horizontal = 4.dp))
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 20.dp)
+            modifier = Modifier.padding(top = 8.dp + paddingValues.calculateTopPadding()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             FiltersSection(
+                modifier = Modifier.padding(horizontal = 20.dp),
                 availableFilters = availableFilters,
                 selectedFilter = selectedFilter,
                 onFilterSelect = component::onFilterSelected
             )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(vertical = 12.dp)
+                contentPadding = PaddingValues(vertical = 12.dp, horizontal = 20.dp)
             ) {
                 items(items) {
                     Text(
-                        text = it.toString(),
-                        style = CustomTheme.typography.button.bold,
-                        color = CustomTheme.colors.text.invert,
                         modifier = Modifier
+                            .fillMaxWidth()
                             .background(
                                 color = CustomTheme.colors.button.primary,
                                 shape = RoundedCornerShape(12.dp)
                             )
-                            .fillMaxWidth()
-                            .padding(12.dp)
+                            .padding(12.dp),
+                        text = it.toString(),
+                        style = CustomTheme.typography.button.bold,
+                        color = CustomTheme.colors.text.invert
                     )
+                }
+                item {
+                    Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
                 }
             }
         }
@@ -91,7 +104,7 @@ fun FiltersSection(
     availableFilters: List<TutorialFilter>,
     selectedFilter: TutorialFilter,
     onFilterSelect: (TutorialFilter) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
@@ -99,26 +112,37 @@ fun FiltersSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         availableFilters.forEach { filter ->
-            Text(
-                text = filter.displayName.localized(),
-                style = CustomTheme.typography.button.bold,
-                color = if (filter == selectedFilter) {
+            val containerColor by animateColorAsState(
+                if (filter == selectedFilter) {
+                    CustomTheme.colors.text.primary
+                } else {
+                    CustomTheme.colors.text.invert
+                }
+            )
+            val textColor by animateColorAsState(
+                if (filter == selectedFilter) {
                     CustomTheme.colors.text.invert
                 } else {
                     CustomTheme.colors.text.primary
-                },
+                }
+            )
+
+            BasicText(
                 modifier = Modifier
-                    .background(
-                        color = if (filter == selectedFilter) {
-                            CustomTheme.colors.text.primary
-                        } else {
-                            CustomTheme.colors.text.invert
-                        },
-                        shape = RoundedCornerShape(16.dp)
-                    )
+                    .clip(RoundedCornerShape(12.dp))
+                    .drawBehind { drawRect(containerColor) }
                     .clickable { onFilterSelect(filter) }
-                    .highlightableItem(key = filter.toTutorialMsssageKey())
-                    .padding(12.dp)
+                    .highlightableItem(
+                        key = filter.toTutorialMsssageKey(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .minimumInteractiveComponentSize()
+                    .padding(12.dp),
+                text = filter.displayName.localized(),
+                style = CustomTheme.typography.button.bold.copy(
+                    textAlign = TextAlign.Center
+                ),
+                color = { textColor }
             )
         }
     }
@@ -126,10 +150,14 @@ fun FiltersSection(
 
 @Composable
 private fun Toolbar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+    ) {
         IconButton(
             onClick = { dispatchOnBackPressed(context) },
             modifier = Modifier

@@ -83,7 +83,7 @@ fun OtpTextField(
     val hasFocus by inputControl.hasFocus.collectAsState()
     val error by inputControl.error.collectAsState()
     val enabled by inputControl.enabled.collectAsState()
-    val text by inputControl.text.collectAsState()
+    val text by inputControl.value.collectAsState()
     val textFieldStatus by remember(isCorrectCode, error) {
         mutableStateOf(
             when {
@@ -100,8 +100,8 @@ fun OtpTextField(
         otpCount = inputControl.maxLength,
         textFieldStatus = textFieldStatus,
         isEnabled = enabled,
-        onTextChange = inputControl::onTextChanged,
-        onFocusChange = inputControl::onFocusChanged,
+        onTextChange = inputControl::onValueChange,
+        onFocusChange = inputControl::onFocusChange,
         hasFocus = hasFocus,
         keyboardOptions = inputControl.keyboardOptions.toCompose()
     )

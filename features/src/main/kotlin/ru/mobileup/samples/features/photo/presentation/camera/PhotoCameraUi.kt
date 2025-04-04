@@ -12,6 +12,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +44,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -54,9 +58,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.viewinterop.AndroidView
+import coil3.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBarIconsColor
 import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.photo.domain.events.PhotoCameraEvent
@@ -118,8 +125,10 @@ fun PhotoCameraUi(
     }
 
     SystemBars(
-        transparentNavigationBar = true,
-        lightStatusBarIcons = true
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        statusBarIconsColor = SystemBarIconsColor.Light,
+        navigationBarIconsColor = SystemBarIconsColor.Light
     )
 
     LaunchedEffect(cameraState) {
@@ -207,6 +216,12 @@ fun CameraPortraitContent(
     onBlurChange: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
+
+    var isPhotoBlackoutVisible by remember {
+        mutableStateOf(false)
+    }
+
     Column(modifier = modifier.fillMaxSize()) {
         CameraHeader(Configuration.ORIENTATION_PORTRAIT)
 
@@ -223,6 +238,14 @@ fun CameraPortraitContent(
                     photoCameraController = photoCameraController,
                     blur = blur
                 )
+
+                if (isPhotoBlackoutVisible) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(CustomTheme.colors.palette.black)
+                    )
+                }
 
                 Row(
                     modifier = Modifier
@@ -247,7 +270,15 @@ fun CameraPortraitContent(
                     }
 
                     CameraButton(
-                        onClick = photoCameraController::takePhoto
+                        onClick = {
+                            photoCameraController.takePhoto()
+
+                            scope.launch {
+                                isPhotoBlackoutVisible = true
+                                delay(100)
+                                isPhotoBlackoutVisible = false
+                            }
+                        }
                     )
 
                     Box(
@@ -264,6 +295,21 @@ fun CameraPortraitContent(
                                 onBlurChange()
                             }
                         )
+
+                        cameraState.uris.lastOrNull()?.let { uri ->
+                            Image(
+                                painter = rememberAsyncImagePainter(uri),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .padding(end = 24.dp)
+                                    .size(52.dp)
+                                    .clip(CircleShape)
+                                    .border(width = 1.dp, color = Color.White, CircleShape)
+                                    .align(Alignment.CenterEnd)
+                                    .clickable { component.onShowPreview() }
+                            )
+                        }
                     }
                 }
             }
@@ -282,6 +328,12 @@ fun CameraLandscapeContent(
     onBlurChange: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
+
+    var isPhotoBlackoutVisible by remember {
+        mutableStateOf(false)
+    }
+
     Row(modifier = modifier.fillMaxSize()) {
         CameraHeader(Configuration.ORIENTATION_LANDSCAPE)
 
@@ -312,6 +364,21 @@ fun CameraLandscapeContent(
                             .weight(1f)
                             .fillMaxWidth()
                     ) {
+                        cameraState.uris.lastOrNull()?.let { uri ->
+                            Image(
+                                painter = rememberAsyncImagePainter(uri),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .size(52.dp)
+                                    .clip(CircleShape)
+                                    .border(width = 1.dp, color = Color.White, CircleShape)
+                                    .align(Alignment.TopCenter)
+                                    .clickable { component.onShowPreview() }
+                            )
+                        }
+
                         CameraFlipIcon(
                             modifier = Modifier
                                 .padding(bottom = 16.dp)
@@ -324,7 +391,15 @@ fun CameraLandscapeContent(
                     }
 
                     CameraButton(
-                        onClick = photoCameraController::takePhoto
+                        onClick = {
+                            photoCameraController.takePhoto()
+
+                            scope.launch {
+                                isPhotoBlackoutVisible = true
+                                delay(100)
+                                isPhotoBlackoutVisible = false
+                            }
+                        }
                     )
 
                     Box(
@@ -379,7 +454,7 @@ private fun CameraHeader(orientation: Int) {
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = stringResource(R.string.menu_item_camera),
+                text = stringResource(R.string.photo_menu_item_camera),
                 color = CustomTheme.colors.text.invert,
                 modifier = Modifier
                     .weight(2f)
