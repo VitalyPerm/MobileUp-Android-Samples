@@ -456,7 +456,7 @@ private fun CameraHeader(orientation: Int) {
             )
             Text(
                 text = stringResource(R.string.photo_menu_item_camera),
-                color = CustomTheme.colors.text.invert,
+                color = CustomTheme.colors.palette.white,
                 modifier = Modifier
                     .weight(2f)
                     .align(Alignment.CenterVertically)
