@@ -24,5 +24,6 @@ fun ComponentFactory.createYandexMapComponent(
         get(),
         get(),
         get(),
+        get(),
     )
 }

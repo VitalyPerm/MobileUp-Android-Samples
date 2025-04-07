@@ -1,5 +1,6 @@
 package ru.mobileup.samples.features.yandex_map.presentation.widgets
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -26,6 +27,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
@@ -44,13 +47,42 @@ import kotlin.math.roundToInt
 fun MapThemeSwitch(
     theme: MapTheme,
     onThemeSwitch: (MapTheme) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
     val iconsSize = remember { 48.dp }
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
+
+    val backgroundColor by animateColorAsState(
+        when (theme) {
+            MapTheme.Dark -> Color(0xFF2C2C2C).copy(alpha = 0.8f)
+            MapTheme.Default -> Color(0xFFEFEFEF).copy(alpha = 0.8f)
+            MapTheme.Bright -> Color.White.copy(alpha = 0.8f)
+        }
+    )
+
+    val borderColor by animateColorAsState(
+        when (theme) {
+            MapTheme.Dark -> Color(0xFF444444)
+            else -> Color.White
+        }
+    )
+
+    val iconTint by animateColorAsState(
+        when (theme) {
+            MapTheme.Dark -> Color.White
+            else -> Color.Black
+        }
+    )
+
+    val handleColor by animateColorAsState(
+        when (theme) {
+            MapTheme.Dark -> Color.White.copy(alpha = 0.3f)
+            else -> Color.Black.copy(alpha = 0.2f)
+        }
+    )
 
     val dragState = remember {
         AnchoredDraggableState(
@@ -81,8 +113,9 @@ fun MapThemeSwitch(
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White.copy(alpha = 0.7f), CircleShape)
-                .border(1.dp, Color.White, CircleShape)
+                .clip(CircleShape)
+                .drawBehind { drawRect(backgroundColor) }
+                .border(1.dp, borderColor, CircleShape)
                 .anchoredDraggable(
                     state = dragState,
                     orientation = Orientation.Vertical
@@ -91,6 +124,7 @@ fun MapThemeSwitch(
             Icon(
                 painter = painterResource(R.drawable.ic_day),
                 contentDescription = null,
+                tint = iconTint,
                 modifier = Modifier
                     .size(iconsSize)
                     .padding(8.dp)
@@ -101,6 +135,7 @@ fun MapThemeSwitch(
             Icon(
                 painter = painterResource(R.drawable.ic_cloudy),
                 contentDescription = null,
+                tint = iconTint,
                 modifier = Modifier
                     .size(iconsSize)
                     .padding(8.dp)
@@ -111,6 +146,7 @@ fun MapThemeSwitch(
             Icon(
                 painter = painterResource(R.drawable.ic_night),
                 contentDescription = null,
+                tint = iconTint,
                 modifier = Modifier
                     .size(iconsSize)
                     .padding(8.dp)
@@ -119,6 +155,7 @@ fun MapThemeSwitch(
                     }
             )
         }
+
         Spacer(
             modifier = Modifier
                 .offset {
@@ -130,8 +167,7 @@ fun MapThemeSwitch(
                     )
                 }
                 .size(48.dp)
-                .background(Color.Red.copy(alpha = 0.1f), CircleShape)
-
+                .background(handleColor, CircleShape)
         )
     }
 }

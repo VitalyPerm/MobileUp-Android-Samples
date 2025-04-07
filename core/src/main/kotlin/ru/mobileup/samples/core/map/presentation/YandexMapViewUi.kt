@@ -13,7 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -36,6 +38,7 @@ import ru.mobileup.samples.core.map.domain.MapTheme
 import ru.mobileup.samples.core.map.domain.executeCommand
 import ru.mobileup.samples.core.map.utils.toPoint
 import ru.mobileup.samples.core.utils.OnLifecycleEvent
+import kotlin.math.roundToInt
 import com.yandex.mapkit.logo.Alignment as LogoAlignment
 
 @Composable
@@ -114,8 +117,12 @@ fun YandexMapViewUi(
                     else -> Unit
                 }
             }
-            val logoVerticalPadding = WindowInsets.statusBars.asPaddingValues()
-                .calculateTopPadding().value + 8
+
+            val density = LocalDensity.current
+            val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+            val logoHorizontalPadding = density.run { 8.dp.toPx() }.roundToInt()
+            val logoVerticalPadding =
+                density.run { statusBarPadding.toPx() + 8.dp.toPx() }.roundToInt()
 
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
@@ -124,13 +131,16 @@ fun YandexMapViewUi(
                         mapWindow.map.logo.setAlignment(
                             LogoAlignment(HorizontalAlignment.RIGHT, VerticalAlignment.TOP)
                         )
-                        val density = context.resources.displayMetrics.density
-                        mapWindow.map.logo.setPadding(
-                            Padding((8 * density).toInt(), (logoVerticalPadding * density).toInt())
-                        )
                         mapWindow.map.move(
                             savedCameraPosition
-                                .run { CameraPosition(geoCoordinate.toPoint(), zoom, azimuth, tilt) }
+                                .run {
+                                    CameraPosition(
+                                        geoCoordinate.toPoint(),
+                                        zoom,
+                                        azimuth,
+                                        tilt
+                                    )
+                                }
                         )
                         mapWindow.map.addCameraListener(cameraListener)
                         overlays.forEach { overlay -> overlay.setup(this) }
@@ -140,6 +150,9 @@ fun YandexMapViewUi(
                 update = {
                     mapView.apply {
                         mapWindow.map.setMapStyle(theme.json)
+                        mapWindow.map.logo.setPadding(
+                            Padding(logoHorizontalPadding, logoVerticalPadding)
+                        )
                     }
                 }
             )

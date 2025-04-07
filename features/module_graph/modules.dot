@@ -16,6 +16,7 @@ settings
 shared_element_transitions
 tutorial
 video
+yandex_map
 photo -> image
 photo -> video
 root -> calendar
@@ -34,5 +35,6 @@ root -> settings
 root -> shared_element_transitions
 root -> tutorial
 root -> video
+root -> yandex_map
 shared_element_transitions -> image
 }
