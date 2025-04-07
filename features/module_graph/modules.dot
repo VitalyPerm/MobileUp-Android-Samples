@@ -2,27 +2,32 @@ digraph {
 calendar
 charts
 collapsing_toolbar
+document
 form
 image
 menu
 navigation
 otp
 photo
+pin_code
 qr_code
 root
 shared_element_transitions
 tutorial
 video
+photo -> image
 photo -> video
 root -> calendar
 root -> charts
 root -> collapsing_toolbar
+root -> document
 root -> form
 root -> image
 root -> menu
 root -> navigation
 root -> otp
 root -> photo
+root -> pin_code
 root -> qr_code
 root -> shared_element_transitions
 root -> tutorial

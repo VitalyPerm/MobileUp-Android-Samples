@@ -39,8 +39,10 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.ktorfit.lib)
 
+    // Security
     implementation(libs.security.crypto)
     implementation(libs.security.crypto.ktx)
+    implementation(libs.biometrics)
 
     // Architecture
     implementation(libs.bundles.decompose)
@@ -49,6 +51,13 @@ dependencies {
     implementation(libs.moko.resourcesCompose)
 
     implementation(libs.form.validation)
+
+    // location
+    implementation(libs.gms.location)
+    implementation(libs.gms.coroutines)
+
+    // Geo
+    implementation(libs.yandex.mapkit)
 
     // Debugging
     debugImplementation(libs.chucker)

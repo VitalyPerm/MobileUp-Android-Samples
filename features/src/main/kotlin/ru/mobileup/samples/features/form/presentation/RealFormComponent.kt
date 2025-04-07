@@ -77,10 +77,9 @@ class RealFormComponent(
         input(phoneInputControl) {
             isNotBlank(CoreR.string.field_error_is_blank.strResDesc())
 
-            validation(
-                { it.length == PHONE_DIGIT_COUNT_WITHOUT_PREFIX },
-                CoreR.string.field_error_invalid_format.strResDesc()
-            )
+            validation(CoreR.string.field_error_invalid_format.strResDesc()) {
+                it.length == PHONE_DIGIT_COUNT_WITHOUT_PREFIX
+            }
         }
 
         input(passwordInputControl) {
@@ -146,8 +145,8 @@ class RealFormComponent(
 
         componentScope.safeLaunch(errorHandler) {
             withProgress(isLoginInProgress) {
-                val phone = PHONE_PREFIX_DIGIT + phoneInputControl.text.value
-                val password = passwordInputControl.text.value
+                val phone = PHONE_PREFIX_DIGIT + phoneInputControl.value.value
+                val password = passwordInputControl.value.value
                 delay(2000)
                 messageService.showMessage(
                     Message(CoreR.string.common_success.strResDesc())

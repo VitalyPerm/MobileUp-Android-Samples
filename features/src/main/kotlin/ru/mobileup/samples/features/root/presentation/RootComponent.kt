@@ -13,12 +13,15 @@ import ru.mobileup.samples.features.image.presentation.ImageComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
+import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
+import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsComponent
 import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.uploader.presentation.UploaderComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
+import ru.mobileup.samples.features.yandex_map.presentation.YandexMapComponent
 
 /**
  * A root of a Decompose component tree.
@@ -32,6 +35,8 @@ interface RootComponent {
     val tutorialOverlayComponent: TutorialOverlayComponent
 
     val messageComponent: MessageComponent
+
+    val checkPinCodeManagementComponent: CheckPinCodeManagementComponent
 
     sealed interface Child {
         class Menu(val component: MenuComponent) : Child
@@ -49,5 +54,7 @@ interface RootComponent {
         class Image(val component: ImageComponent) : Child
         class Tutorial(val component: TutorialSampleComponent) : Child
         class SharedElements(val component: SharedElementsComponent) : Child
+        class PinCodeSettings(val component: PinCodeSettingsComponent) : Child
+        class YandexMap(val component: YandexMapComponent) : Child
     }
 }

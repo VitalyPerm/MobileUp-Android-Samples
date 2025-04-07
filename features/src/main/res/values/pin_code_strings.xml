@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Create  -->
+
+    <string name="pin_code_create_header">Set a passcode to log in to the app</string>
+    <string name="pin_code_create_success">Great!\nEnter the passcode again</string>
+    <string name="pin_code_create_error">"The passcode doesn't match\ntry again"</string>
+
+    <!--  Check  -->
+    <string name="pin_code_check_header">Enter the passcode to log in to the app</string>
+    <string name="pin_code_check_error">Incorrect passcode!\nTry again</string>
+
+
+    <!--  Alerts  -->
+    <string name="pin_code_alert_biometric_header">Activate the login using biometrics?</string>
+    <string name="pin_code_alert_biometric_disabled_text">Use Touch ID to avoid entering a 4-digit passcode.</string>
+    <string name="pin_code_alert_biometric_not_enrolled_text">You can do this later in the app settings.</string>
+    <string name="pin_code_alert_error_header">Exceeded the number of attempts</string>
+    <string name="pin_code_alert_error_text">Try again after 5 minutes</string>
+    <string name="pin_code_alert_logout_header">Do you want to log out?</string>
+    <string name="pin_code_alert_logout_text">Then all your data will be deleted.</string>
+
+    <string name="pin_code_keyboard_logout">Log out</string>
+    <string name="biometric_too_many_attempts">Too many attempts</string>
+
+    <string name="pin_code_settings_pin_code">Pin code</string>
+    <string name="pin_code_settings_biometric">Biometric</string>
+</resources>

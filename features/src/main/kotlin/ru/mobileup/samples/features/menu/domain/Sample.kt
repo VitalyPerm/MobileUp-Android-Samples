@@ -22,5 +22,7 @@ enum class Sample(
     CollapsingToolbar(R.string.menu_item_collapsing_toolbar.strResDesc()),
     Image(R.string.menu_item_image.strResDesc()),
     Tutorial(R.string.menu_item_tutorial.strResDesc()),
-    SharedTransitions(R.string.menu_item_shared_elements_transition.strResDesc())
+    SharedTransitions(R.string.menu_item_shared_elements_transition.strResDesc()),
+    PinCodeSettings(R.string.menu_item_pin_code_settings.strResDesc()),
+    YandexMap(R.string.menu_item_yandex_map.strResDesc())
 }

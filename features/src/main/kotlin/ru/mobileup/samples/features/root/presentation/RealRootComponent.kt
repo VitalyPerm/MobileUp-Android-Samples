@@ -24,15 +24,19 @@ import ru.mobileup.samples.features.navigation.createNavigationComponent
 import ru.mobileup.samples.features.otp.createOtpComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
 import ru.mobileup.samples.features.photo.createPhotoComponent
+import ru.mobileup.samples.features.pin_code.createCheckPinCodeManagementComponent
+import ru.mobileup.samples.features.pin_code.createPinCodeSettingsComponent
+import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
 import ru.mobileup.samples.features.qr_code.createQrCodeComponent
 import ru.mobileup.samples.features.shared_element_transitions.createSharedElementsComponent
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.uploader.createUploaderComponent
 import ru.mobileup.samples.features.video.createVideoComponent
+import ru.mobileup.samples.features.yandex_map.createYandexMapComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
-    private val componentFactory: ComponentFactory,
+    private val componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<ChildConfig>()
@@ -52,6 +56,11 @@ class RealRootComponent(
     override val tutorialOverlayComponent = componentFactory.createTutorialOverlayComponent(
         childContext("tutorialOverlay")
     )
+
+    override val checkPinCodeManagementComponent: CheckPinCodeManagementComponent =
+        componentFactory.createCheckPinCodeManagementComponent(
+            childContext("checkPinCodeManagement")
+        )
 
     private fun createChild(
         config: ChildConfig,
@@ -146,6 +155,18 @@ class RealRootComponent(
                 componentFactory.createSharedElementsComponent(componentContext)
             )
         }
+
+        ChildConfig.PinCodeSettings -> {
+            RootComponent.Child.PinCodeSettings(
+                componentFactory.createPinCodeSettingsComponent(componentContext)
+            )
+        }
+
+        ChildConfig.YandexMap -> {
+            RootComponent.Child.YandexMap(
+                componentFactory.createYandexMapComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -166,6 +187,8 @@ class RealRootComponent(
                     Sample.Image -> ChildConfig.Image
                     Sample.Tutorial -> ChildConfig.Tutorial
                     Sample.SharedTransitions -> ChildConfig.SharedElements
+                    Sample.PinCodeSettings -> ChildConfig.PinCodeSettings
+                    Sample.YandexMap -> ChildConfig.YandexMap
                 }
             )
         }
@@ -224,5 +247,11 @@ class RealRootComponent(
 
         @Serializable
         data object SharedElements : ChildConfig
+
+        @Serializable
+        data object PinCodeSettings : ChildConfig
+
+        @Serializable
+        data object YandexMap : ChildConfig
     }
 }
