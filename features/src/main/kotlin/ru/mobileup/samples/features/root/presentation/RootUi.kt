@@ -1,6 +1,7 @@
 package ru.mobileup.samples.features.root.presentation
 
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,31 +44,31 @@ fun RootUi(
     val childStack by component.childStack.collectAsState()
     val systemBarsSettings = LocalSystemBarsSettings.current.accumulate()
 
-    Surface(
-        modifier = modifier,
-        color = CustomTheme.colors.background.screen
-    ) {
-        Children(childStack) { child ->
-            when (val instance = child.instance) {
-                is RootComponent.Child.Menu -> MenuUi(instance.component)
-                is RootComponent.Child.Form -> FormUi(instance.component)
-                is RootComponent.Child.Otp -> OtpUi(instance.component)
-                is RootComponent.Child.Photo -> PhotoUi(instance.component)
-                is RootComponent.Child.Video -> VideoUi(instance.component)
-                is RootComponent.Child.Document -> DocumentUi(instance.component)
-                is RootComponent.Child.Uploader -> UploaderUi(instance.component)
-                is RootComponent.Child.Calendar -> CalendarUi(instance.component)
-                is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
-                is RootComponent.Child.Chart -> ChartUi(instance.component)
-                is RootComponent.Child.Navigation -> NavigationUi(instance.component)
-                is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
-                is RootComponent.Child.Image -> ImageUi(instance.component)
-                is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
-                is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
-                is RootComponent.Child.Settings -> SettingsUi(instance.component)
-                is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
-                is RootComponent.Child.YandexMap -> YandexMapUi(instance.component)
-            }
+    Children(
+        modifier = modifier
+            .fillMaxSize()
+            .background(CustomTheme.colors.background.screen),
+        stack = childStack
+    ) { child ->
+        when (val instance = child.instance) {
+            is RootComponent.Child.Menu -> MenuUi(instance.component)
+            is RootComponent.Child.Form -> FormUi(instance.component)
+            is RootComponent.Child.Otp -> OtpUi(instance.component)
+            is RootComponent.Child.Photo -> PhotoUi(instance.component)
+            is RootComponent.Child.Video -> VideoUi(instance.component)
+            is RootComponent.Child.Document -> DocumentUi(instance.component)
+            is RootComponent.Child.Uploader -> UploaderUi(instance.component)
+            is RootComponent.Child.Calendar -> CalendarUi(instance.component)
+            is RootComponent.Child.QrCode -> QrCodeUi(instance.component)
+            is RootComponent.Child.Chart -> ChartUi(instance.component)
+            is RootComponent.Child.Navigation -> NavigationUi(instance.component)
+            is RootComponent.Child.CollapsingToolbar -> CollapsingToolbarUi(instance.component)
+            is RootComponent.Child.Image -> ImageUi(instance.component)
+            is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
+            is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
+            is RootComponent.Child.Settings -> SettingsUi(instance.component)
+            is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
+            is RootComponent.Child.YandexMap -> YandexMapUi(instance.component)
         }
     }
 

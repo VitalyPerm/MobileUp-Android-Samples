@@ -1,9 +1,9 @@
 package ru.mobileup.samples.core.app_settings.data
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import ru.mobileup.samples.core.app_settings.domain.AppSettings
-import ru.mobileup.samples.core.app_settings.domain.AppSettingsState
 import ru.mobileup.samples.core.settings.SettingsFactory
 import ru.mobileup.samples.core.theme.AppTheme
 
@@ -18,19 +18,13 @@ class AppSettingsStorageImpl(
 
     private val settingsPrefs = settingsFactory.createSettings(SETTINGS_NAME)
 
-    override val settings = MutableStateFlow<AppSettingsState>(AppSettingsState.Uninitialized)
-
-    init {
-        initSettings()
-    }
-
-    private fun initSettings() = runBlocking {
-        settings.value = AppSettingsState.Initialized(
+    override val settings = MutableStateFlow(
+        runBlocking {
             AppSettings(
                 theme = getTheme()
             )
-        )
-    }
+        }
+    )
 
     override suspend fun getTheme(): AppTheme = settingsPrefs.getString(KEY_THEME)?.let {
         runCatching { AppTheme.valueOf(it) }.getOrElse { AppTheme.System }
@@ -39,20 +33,6 @@ class AppSettingsStorageImpl(
     override suspend fun setTheme(theme: AppTheme) = settingsPrefs.putString(
         KEY_THEME, theme.name
     ).also {
-        updateSettingsState { it.copy(theme = theme) }
-    }
-
-    private fun updateSettingsState(update: (AppSettings) -> AppSettings) = synchronized(this) {
-        val updatedSettings = when (val currentState = settings.value) {
-            is AppSettingsState.Initialized -> {
-                val updatedValue = update(currentState.value)
-                currentState.copy(value = updatedValue)
-            }
-
-            AppSettingsState.Uninitialized -> {
-                AppSettingsState.Initialized(update(AppSettings()))
-            }
-        }
-        settings.value = updatedSettings
+        settings.update { it.copy(theme = theme) }
     }
 }

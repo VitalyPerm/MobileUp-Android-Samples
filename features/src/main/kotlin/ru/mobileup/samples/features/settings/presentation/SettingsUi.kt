@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,12 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -35,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.app_settings.domain.AppSettings
-import ru.mobileup.samples.core.app_settings.domain.AppSettingsState
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.features.R
@@ -47,30 +44,14 @@ fun SettingsUi(
 ) {
     val settings by component.settings.collectAsState()
 
-    Box(
+    SettingsContent(
         modifier = modifier
-            .statusBarsPadding()
-            .padding(vertical = 32.dp)
-    ) {
-        when (val state = settings) {
-            AppSettingsState.Uninitialized -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is AppSettingsState.Initialized -> {
-                SettingsContent(
-                    modifier = Modifier.fillMaxSize(),
-                    settings = state.value,
-                    onThemeClick = component::onThemeClick,
-                )
-            }
-        }
-    }
+            .fillMaxSize()
+            .systemBarsPadding()
+            .padding(vertical = 32.dp),
+        settings = settings,
+        onThemeClick = component::onThemeClick,
+    )
 }
 
 @Composable

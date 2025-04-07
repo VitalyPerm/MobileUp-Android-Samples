@@ -120,7 +120,6 @@ fun CheckPinCodeContent(
                         stringResource(R.string.pin_code_check_header)
                     },
                     style = CustomTheme.typography.title.regular,
-                    color = CustomTheme.colors.text.primary
                 )
 
                 PinCodeProgress(
