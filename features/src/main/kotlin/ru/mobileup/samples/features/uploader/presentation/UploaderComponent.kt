@@ -8,7 +8,7 @@ interface UploaderComponent {
 
     val uploaderState: StateFlow<UploaderState>
 
-    fun onPickFileClick(uri: Uri)
+    fun onFilePicked(uri: Uri)
 
     fun onUploadFileClick(uri: Uri)
 

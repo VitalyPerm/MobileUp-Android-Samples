@@ -10,4 +10,6 @@ sealed interface UploadProgress {
     data class Completed(
         val link: String
     ) : UploadProgress
+
+    data object Failed : UploadProgress
 }

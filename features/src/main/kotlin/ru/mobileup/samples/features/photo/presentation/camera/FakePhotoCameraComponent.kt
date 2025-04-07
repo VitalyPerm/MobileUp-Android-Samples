@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ru.mobileup.samples.features.photo.domain.states.CameraState
 
 class FakePhotoCameraComponent : PhotoCameraComponent {
-    override val cameraState = MutableStateFlow(CameraState.build())
+    override val cameraState = MutableStateFlow(CameraState())
     override fun onCameraInitializationFailed() = Unit
     override fun onPhotoTaken(uri: Uri) = Unit
     override fun onPhotoFailed() = Unit

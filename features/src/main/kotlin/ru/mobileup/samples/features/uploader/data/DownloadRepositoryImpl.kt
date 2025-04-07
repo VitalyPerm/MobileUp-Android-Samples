@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
+import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.uploader.domain.progress.DownloadProgress
 import java.io.File
 import java.io.FileInputStream
@@ -34,40 +35,46 @@ class DownloadRepositoryImpl(
     private val context: Context
 ) : DownloadRepository {
 
+    private val httpClient = HttpClient()
+
     override fun downloadWithKtor(url: String): Flow<DownloadProgress> = channelFlow {
         withContext(Dispatchers.IO) {
-            val fileName = url.split("/").last()
-            val file = File(context.cacheDir, fileName.replace("\n", ""))
+            try {
+                val fileName = url.split("/").last()
+                val file = File(context.cacheDir, fileName.replace("\n", ""))
 
-            HttpClient().prepareGet(url) {
-                onDownload { bytesProcessed, bytesTotal ->
-                    if (bytesTotal != null) {
-                        send(
-                            DownloadProgress.InProgress(
-                                bytesProcessed = bytesProcessed,
-                                bytesTotal = bytesTotal
+                httpClient.prepareGet(url) {
+                    onDownload { bytesProcessed, bytesTotal ->
+                        if (bytesTotal != null && bytesTotal != 0L) {
+                            send(
+                                DownloadProgress.InProgress(
+                                    bytesProcessed = bytesProcessed,
+                                    bytesTotal = bytesTotal
+                                )
                             )
-                        )
+                        }
                     }
-                }
-            }.execute { response ->
-                val channel: ByteReadChannel = response.body()
+                }.execute { response ->
+                    val channel: ByteReadChannel = response.body()
 
-                file.outputStream().use { output ->
-                    val buffer = ByteArray(BUFFER_SIZE)
+                    file.outputStream().use { output ->
+                        val buffer = ByteArray(BUFFER_SIZE)
 
-                    while (!channel.isClosedForRead) {
-                        val readBytes = channel.readAvailable(buffer)
-                        if (readBytes > 0) {
-                            output.write(buffer, 0, readBytes)
-                            output.flush()
+                        while (!channel.isClosedForRead) {
+                            val readBytes = channel.readAvailable(buffer)
+                            if (readBytes > 0) {
+                                output.write(buffer, 0, readBytes)
+                                output.flush()
+                            }
                         }
                     }
                 }
-            }
 
-            moveFileToMediaStore(file)
-            send(DownloadProgress.Completed)
+                moveFileToMediaStore(file)
+                send(DownloadProgress.Completed)
+            } catch (e: Exception) {
+                send(DownloadProgress.Failed)
+            }
         }
     }
 
@@ -76,8 +83,8 @@ class DownloadRepositoryImpl(
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val request = DownloadManager.Request(Uri.parse(url)).apply {
-            setTitle("Download file")
-            setDescription("Download in progress")
+            setTitle(context.getString(R.string.uploader_download_manager_title))
+            setDescription(context.getString(R.string.uploader_download_manager_description))
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_DOWNLOADS,

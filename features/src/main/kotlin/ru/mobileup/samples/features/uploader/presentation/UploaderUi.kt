@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -84,7 +86,7 @@ private fun UploaderTopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(CustomTheme.colors.palette.black)
-            .padding(top = 16.dp)
+            .statusBarsPadding()
             .padding(horizontal = 8.dp, vertical = 24.dp)
     ) {
         Icon(
@@ -107,7 +109,7 @@ private fun UploaderTopBar(
 }
 
 @Composable
-fun Uploader(
+private fun Uploader(
     component: UploaderComponent,
     modifier: Modifier = Modifier
 ) {
@@ -116,7 +118,7 @@ fun Uploader(
     val pickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
-        uri?.let { component.onPickFileClick(it) }
+        uri?.let { component.onFilePicked(it) }
     }
 
     Column(
@@ -192,12 +194,14 @@ fun Uploader(
                                 .align(Alignment.CenterVertically)
                         )
 
+                        val clipboard = LocalClipboardManager.current
+
                         AppButton(
                             modifier = Modifier
                                 .padding(vertical = 8.dp)
                                 .padding(start = 8.dp),
                             buttonType = ButtonType.Secondary,
-                            text = stringResource(R.string.uploader_copy_btn),
+                            text = stringResource(R.string.uploader_link_copy_btn),
                             onClick = {
                                 component.onCopyClick(uploadProgress.link)
                             }
@@ -243,7 +247,7 @@ fun Uploader(
                     }
                 }
 
-                null -> {
+                else -> {
                     // Do nothing
                 }
             }
@@ -254,7 +258,8 @@ fun Uploader(
 @Composable
 private fun ProgressIndicator(
     bytesProcessed: Long,
-    bytesTotal: Long
+    bytesTotal: Long,
+    modifier: Modifier = Modifier
 ) {
     val progressString by remember(bytesProcessed, bytesTotal) {
         derivedStateOf {
@@ -262,19 +267,23 @@ private fun ProgressIndicator(
         }
     }
 
-    LinearProgressIndicator(
-        progress = { bytesProcessed.toFloat() / bytesTotal },
-        modifier = Modifier.fillMaxWidth()
-    )
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        LinearProgressIndicator(
+            progress = { bytesProcessed.toFloat() / bytesTotal },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    Text(
-        text = progressString,
-        color = CustomTheme.colors.text.primary,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-    )
+        Text(
+            text = progressString,
+            color = CustomTheme.colors.text.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+    }
 }
 
 @Composable

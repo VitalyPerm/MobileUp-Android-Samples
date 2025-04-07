@@ -8,4 +8,6 @@ sealed interface DownloadProgress {
     ) : DownloadProgress
 
     data object Completed : DownloadProgress
+
+    data object Failed : DownloadProgress
 }

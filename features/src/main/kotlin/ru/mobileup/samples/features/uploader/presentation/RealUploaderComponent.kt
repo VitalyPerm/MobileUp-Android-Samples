@@ -1,10 +1,10 @@
 package ru.mobileup.samples.features.uploader.presentation
 
 import android.net.Uri
+import android.os.Build
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -31,9 +31,9 @@ class RealUploaderComponent(
     private val errorHandler: ErrorHandler
 ) : ComponentContext by componentContext, UploaderComponent {
 
-    override val uploaderState = MutableStateFlow(UploaderState.build())
+    override val uploaderState = MutableStateFlow(UploaderState())
 
-    override fun onPickFileClick(uri: Uri) {
+    override fun onFilePicked(uri: Uri) {
         uploaderState.update {
             it.copy(
                 uri = uri,
@@ -44,6 +44,12 @@ class RealUploaderComponent(
 
     override fun onCopyClick(url: String) {
         clipboardManager.copyToClipboard(url)
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            messageService.showMessage(
+                Message(text = StringDesc.Resource(R.string.uploader_link_copied))
+            )
+        }
     }
 
     override fun onUploadFileClick(uri: Uri) {
@@ -52,23 +58,23 @@ class RealUploaderComponent(
                 it.copy(uploadProgress = uploadProgress)
             }
 
-            if (uploadProgress is UploadProgress.Completed) {
-                messageService.showMessage(
-                    Message(
-                        text = StringDesc.Resource(
-                            R.string.uploader_upload_completed
-                        )
+            when (uploadProgress) {
+                is UploadProgress.Completed -> {
+                    messageService.showMessage(
+                        Message(text = StringDesc.Resource(R.string.uploader_upload_completed))
                     )
-                )
+                }
+
+                UploadProgress.Failed -> {
+                    messageService.showMessage(
+                        Message(text = StringDesc.Resource(R.string.uploader_upload_failed))
+                    )
+                }
+
+                else -> {
+                    // Do nothing
+                }
             }
-        }.catch {
-            messageService.showMessage(
-                Message(
-                    text = StringDesc.Resource(
-                        R.string.uploader_upload_failed
-                    )
-                )
-            )
         }.launchIn(componentScope)
     }
 
@@ -78,33 +84,33 @@ class RealUploaderComponent(
                 it.copy(downloadProgress = downloadProgress)
             }
 
-            if (downloadProgress is DownloadProgress.Completed) {
-                messageService.showMessage(
-                    Message(
-                        text = StringDesc.Resource(
-                            R.string.uploader_download_completed
-                        )
+            when (downloadProgress) {
+                DownloadProgress.Completed -> {
+                    messageService.showMessage(
+                        Message(text = StringDesc.Resource(R.string.uploader_download_completed))
                     )
-                )
-            }
-        }.catch {
-            uploaderState.update {
-                it.copy(downloadProgress = null)
-            }
+                }
 
-            messageService.showMessage(
-                Message(text = StringDesc.Resource(R.string.uploader_download_failed))
-            )
+                DownloadProgress.Failed -> {
+                    messageService.showMessage(
+                        Message(text = StringDesc.Resource(R.string.uploader_download_failed))
+                    )
+                }
+
+                else -> {
+                    // Do nothing
+                }
+            }
         }.launchIn(componentScope)
     }
 
     override fun onDownloadWithManagerClick(url: String) {
         safeRun(errorHandler) {
             downloadRepository.downloadWithDownloadManager(url)
-        }
 
-        messageService.showMessage(
-            Message(text = StringDesc.Resource(R.string.uploader_download_start_manager))
-        )
+            messageService.showMessage(
+                Message(text = StringDesc.Resource(R.string.uploader_download_start_manager))
+            )
+        }
     }
 }

@@ -23,39 +23,47 @@ class UploadRepositoryImpl(
     private val context: Context
 ) : UploadRepository {
 
+    private val httpClient = HttpClient()
+
     override fun upload(uri: Uri): Flow<UploadProgress> = channelFlow {
-        val contentResolver = context.contentResolver
-        val descriptor =
-            contentResolver.openAssetFileDescriptor(uri, "r") ?: throw FileNotFoundException()
-        val fileSize = descriptor.length
-        val mimeType = contentResolver.getType(uri) ?: ""
+        try {
+            val contentResolver = context.contentResolver
+            val descriptor =
+                contentResolver.openAssetFileDescriptor(uri, "r") ?: throw FileNotFoundException()
+            val fileSize = descriptor.length
+            val mimeType = contentResolver.getType(uri) ?: ""
 
-        descriptor.close()
+            descriptor.close()
 
-        val result = HttpClient().submitFormWithBinaryData(
-            url = BASE_URL,
-            formData = formData {
-                append(
-                    FILE_KEY, InputProvider(
-                        fileSize
-                    ) { context.contentResolver.openInputStream(uri)!!.asInput() }, Headers.build {
-                        append(HttpHeaders.ContentType, mimeType)
-                        append(HttpHeaders.ContentDisposition, "filename=test")
-                    })
-            }
-        ) {
-            onUpload { bytesSent, bytesTotal ->
-                if (bytesTotal != null) {
-                    send(
-                        UploadProgress.Uploading(
-                            bytesProcessed = bytesSent,
-                            bytesTotal = bytesTotal
+            val result = httpClient.submitFormWithBinaryData(
+                url = BASE_URL,
+                formData = formData {
+                    append(
+                        FILE_KEY,
+                        InputProvider(
+                            fileSize
+                        ) { context.contentResolver.openInputStream(uri)!!.asInput() },
+                        Headers.build {
+                            append(HttpHeaders.ContentType, mimeType)
+                            append(HttpHeaders.ContentDisposition, "filename=test")
+                        })
+                }
+            ) {
+                onUpload { bytesSent, bytesTotal ->
+                    if (bytesTotal != null && bytesTotal != 0L) {
+                        send(
+                            UploadProgress.Uploading(
+                                bytesProcessed = bytesSent,
+                                bytesTotal = bytesTotal
+                            )
                         )
-                    )
+                    }
                 }
             }
-        }
 
-        send(UploadProgress.Completed(result.bodyAsText()))
+            send(UploadProgress.Completed(result.bodyAsText()))
+        } catch (e: Exception) {
+            send(UploadProgress.Failed)
+        }
     }
 }
