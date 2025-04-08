@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -444,8 +445,8 @@ private fun CameraHeader(orientation: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CustomTheme.colors.palette.black)
+                .statusBarsPadding()
                 .padding(horizontal = 8.dp, vertical = 24.dp)
-                .padding(top = 16.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_app_logo),

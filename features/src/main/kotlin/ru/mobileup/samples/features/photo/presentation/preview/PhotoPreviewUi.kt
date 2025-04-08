@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -93,6 +94,7 @@ private fun PreviewTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(CustomTheme.colors.palette.black)
+            .statusBarsPadding()
             .run {
                 if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     padding(horizontal = 8.dp, vertical = 24.dp)
@@ -100,7 +102,6 @@ private fun PreviewTopBar(
                     padding(horizontal = 24.dp, vertical = 8.dp)
                 }
             }
-            .padding(top = 16.dp)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_app_logo),

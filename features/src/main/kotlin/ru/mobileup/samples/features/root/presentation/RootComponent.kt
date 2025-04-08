@@ -19,6 +19,7 @@ import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
+import ru.mobileup.samples.features.uploader.presentation.UploaderComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
 import ru.mobileup.samples.features.yandex_map.presentation.YandexMapComponent
 
@@ -44,6 +45,7 @@ interface RootComponent {
         class Photo(val component: PhotoComponent) : Child
         class Video(val component: VideoComponent) : Child
         class Document(val component: DocumentComponent) : Child
+        class Uploader(val component: UploaderComponent) : Child
         class Calendar(val component: CalendarComponent) : Child
         class QrCode(val component: QrCodeComponent) : Child
         class Chart(val component: ChartComponent) : Child

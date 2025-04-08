@@ -18,7 +18,7 @@ class RealPhotoCameraComponent(
     private val messageService: MessageService
 ) : ComponentContext by componentContext, PhotoCameraComponent {
 
-    override val cameraState = MutableStateFlow(CameraState.build())
+    override val cameraState = MutableStateFlow(CameraState())
 
     override fun onCameraInitializationFailed() {
         messageService.showMessage(

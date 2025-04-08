@@ -55,7 +55,7 @@ class PhotoCameraController(
     private var isReleased = false
     private var exposureRange: Range<Int> = Range(0, 0)
 
-    var cameraState = CameraState.build()
+    var cameraState = CameraState()
         set(value) {
             // Rebuild only if we changed the camera configuration
             imageCapture?.flashMode = if (value.torchState) {

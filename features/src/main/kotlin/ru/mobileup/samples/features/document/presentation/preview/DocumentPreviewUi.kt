@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -81,7 +82,7 @@ private fun PreviewTopBar() {
         modifier = Modifier
             .fillMaxWidth()
             .background(CustomTheme.colors.palette.black)
-            .padding(top = 16.dp)
+            .statusBarsPadding()
             .padding(horizontal = 8.dp, vertical = 24.dp)
     ) {
         Icon(
