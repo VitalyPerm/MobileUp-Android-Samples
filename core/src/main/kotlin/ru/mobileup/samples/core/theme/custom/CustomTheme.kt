@@ -1,5 +1,6 @@
 package ru.mobileup.samples.core.theme.custom
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -8,13 +9,17 @@ import androidx.compose.runtime.ReadOnlyComposable
 fun CustomTheme(
     colors: CustomColors,
     typography: CustomTypography,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
         LocalCustomColors provides colors,
-        LocalCustomTypography provides typography
+        LocalCustomTypography provides typography,
     ) {
-        content()
+        CompositionLocalProvider(
+            LocalContentColor provides CustomTheme.colors.text.primary
+        ) {
+            content()
+        }
     }
 }
 

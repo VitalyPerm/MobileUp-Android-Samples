@@ -12,9 +12,11 @@ photo
 pin_code
 qr_code
 root
+settings
 shared_element_transitions
 tutorial
 video
+yandex_map
 photo -> image
 photo -> video
 root -> calendar
@@ -29,8 +31,10 @@ root -> otp
 root -> photo
 root -> pin_code
 root -> qr_code
+root -> settings
 root -> shared_element_transitions
 root -> tutorial
 root -> video
+root -> yandex_map
 shared_element_transitions -> image
 }

@@ -1,6 +1,8 @@
 package ru.mobileup.samples.features.yandex_map.presentation
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
+import android.content.res.Configuration
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.channels.Channel
@@ -8,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.runBlocking
+import ru.mobileup.samples.core.app_settings.data.AppSettingsStorage
 import ru.mobileup.samples.core.dialog.simple.SimpleDialogControl
 import ru.mobileup.samples.core.dialog.simple.simpleDialogControl
 import ru.mobileup.samples.core.dialog.standard.DialogButton
@@ -20,11 +23,11 @@ import ru.mobileup.samples.core.external_apps.data.ExternalAppService
 import ru.mobileup.samples.core.location.CLOSE_MAP_ZOOM
 import ru.mobileup.samples.core.location.GeoCoordinate
 import ru.mobileup.samples.core.location.LocationService
-import ru.mobileup.samples.core.map.data.MapStorage
 import ru.mobileup.samples.core.map.domain.MapCommand
 import ru.mobileup.samples.core.map.domain.MapTheme
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.permissions.SinglePermissionResult
+import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.observe
 import ru.mobileup.samples.core.utils.withProgress
@@ -36,9 +39,10 @@ class RealYandexMapComponent(
     private val permissionService: PermissionService,
     private val errorHandler: ErrorHandler,
     private val locationService: LocationService,
-    private val mapStorage: MapStorage,
     mapRepository: MapRepository,
-    private val externalAppService: ExternalAppService
+    private val externalAppService: ExternalAppService,
+    settingsStorage: AppSettingsStorage,
+    context: Context,
 ) : ComponentContext by componentContext, YandexMapComponent {
 
     private val _mapCommands = Channel<MapCommand>()
@@ -48,7 +52,15 @@ class RealYandexMapComponent(
 
     override val isLocationSearchInProgress = MutableStateFlow(false)
 
-    override val theme = MutableStateFlow(runBlocking { mapStorage.getTheme() })
+    override val theme = MutableStateFlow(
+        runBlocking {
+            when (settingsStorage.getTheme()) {
+                AppTheme.Light -> MapTheme.Bright
+                AppTheme.Dark -> MapTheme.Dark
+                AppTheme.System -> if (context.isSystemInDarkTheme()) MapTheme.Dark else MapTheme.Bright
+            }
+        }
+    )
 
     private val placesReplica = mapRepository.placesReplica
     override val placesState = placesReplica.observe(this, errorHandler)
@@ -107,7 +119,6 @@ class RealYandexMapComponent(
     override fun onThemeSwitch(newTheme: MapTheme) {
         componentScope.safeLaunch(errorHandler) {
             theme.value = newTheme
-            mapStorage.setTheme(newTheme)
         }
     }
 
@@ -169,4 +180,9 @@ class RealYandexMapComponent(
             )
         )
     }
+}
+
+private fun Context.isSystemInDarkTheme(): Boolean {
+    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    return currentNightMode == Configuration.UI_MODE_NIGHT_YES
 }

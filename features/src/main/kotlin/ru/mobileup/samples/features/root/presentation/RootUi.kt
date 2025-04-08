@@ -1,5 +1,7 @@
 package ru.mobileup.samples.features.root.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import ru.mobileup.samples.core.message.presentation.MessageUi
 import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
 import ru.mobileup.samples.core.utils.ConfigureSystemBars
 import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
@@ -26,6 +29,7 @@ import ru.mobileup.samples.features.photo.presentation.PhotoUi
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementUi
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsUi
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeUi
+import ru.mobileup.samples.features.settings.presentation.SettingsUi
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsUi
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
 import ru.mobileup.samples.features.uploader.presentation.UploaderUi
@@ -35,12 +39,17 @@ import ru.mobileup.samples.features.yandex_map.presentation.YandexMapUi
 @Composable
 fun RootUi(
     component: RootComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val childStack by component.childStack.collectAsState()
     val systemBarsSettings = LocalSystemBarsSettings.current.accumulate()
 
-    Children(childStack, modifier) { child ->
+    Children(
+        modifier = modifier
+            .fillMaxSize()
+            .background(CustomTheme.colors.background.screen),
+        stack = childStack
+    ) { child ->
         when (val instance = child.instance) {
             is RootComponent.Child.Menu -> MenuUi(instance.component)
             is RootComponent.Child.Form -> FormUi(instance.component)
@@ -57,6 +66,7 @@ fun RootUi(
             is RootComponent.Child.Image -> ImageUi(instance.component)
             is RootComponent.Child.Tutorial -> TutorialSampleUi(instance.component)
             is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
+            is RootComponent.Child.Settings -> SettingsUi(instance.component)
             is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
             is RootComponent.Child.YandexMap -> YandexMapUi(instance.component)
         }
@@ -73,6 +83,7 @@ fun RootUi(
 
     ConfigureSystemBars(systemBarsSettings)
 }
+
 @Preview(showSystemUi = true)
 @Composable
 private fun RootUiPreview() {

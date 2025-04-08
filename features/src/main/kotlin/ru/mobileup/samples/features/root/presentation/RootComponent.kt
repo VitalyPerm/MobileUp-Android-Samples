@@ -17,6 +17,8 @@ import ru.mobileup.samples.features.pin_code.presentation.check_management.Check
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsComponent
 import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
+import ru.mobileup.samples.features.settings.presentation.SettingsComponent
+import ru.mobileup.samples.core.theme.component.ThemeComponent
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.uploader.presentation.UploaderComponent
@@ -38,6 +40,8 @@ interface RootComponent {
 
     val checkPinCodeManagementComponent: CheckPinCodeManagementComponent
 
+    val themeComponent: ThemeComponent
+
     sealed interface Child {
         class Menu(val component: MenuComponent) : Child
         class Form(val component: FormComponent) : Child
@@ -56,5 +60,6 @@ interface RootComponent {
         class SharedElements(val component: SharedElementsComponent) : Child
         class PinCodeSettings(val component: PinCodeSettingsComponent) : Child
         class YandexMap(val component: YandexMapComponent) : Child
+        class Settings(val component: SettingsComponent) : Child
     }
 }

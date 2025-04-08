@@ -10,6 +10,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.mobileup.samples.core.activity.ActivityProvider
+import ru.mobileup.samples.core.app_settings.data.AppSettingsStorage
+import ru.mobileup.samples.core.app_settings.data.AppSettingsStorageImpl
 import ru.mobileup.samples.core.biometric.data.AndroidBiometricService
 import ru.mobileup.samples.core.biometric.data.BiometricEnablingStorage
 import ru.mobileup.samples.core.biometric.data.BiometricEnablingStorageImpl
@@ -21,8 +23,6 @@ import ru.mobileup.samples.core.external_apps.data.ExternalAppService
 import ru.mobileup.samples.core.external_apps.data.ExternalAppServiceImpl
 import ru.mobileup.samples.core.location.AndroidLocationService
 import ru.mobileup.samples.core.location.LocationService
-import ru.mobileup.samples.core.map.data.MapStorage
-import ru.mobileup.samples.core.map.data.MapStorageImpl
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.data.MessageServiceImpl
 import ru.mobileup.samples.core.message.presentation.MessageComponent
@@ -32,6 +32,8 @@ import ru.mobileup.samples.core.network.createOkHttpEngine
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.settings.AndroidSettingsFactory
 import ru.mobileup.samples.core.settings.SettingsFactory
+import ru.mobileup.samples.core.theme.component.RealThemeComponent
+import ru.mobileup.samples.core.theme.component.ThemeComponent
 import ru.mobileup.samples.core.tutorial.data.TutorialStatusStorage
 import ru.mobileup.samples.core.tutorial.data.TutorialStatusStorageImpl
 import ru.mobileup.samples.core.tutorial.domain.Tutorial
@@ -65,7 +67,7 @@ fun coreModule(backendUrl: String) = module {
     single<BiometricService> { AndroidBiometricService(get(), get()) }
     single<BiometricEnablingStorage> { BiometricEnablingStorageImpl(get()) }
     single<LocationService> { AndroidLocationService(get()) }
-    single<MapStorage> { MapStorageImpl(get()) }
+    single<AppSettingsStorage> { AppSettingsStorageImpl(get()) }
 }
 
 fun ComponentFactory.createMessageComponent(
@@ -92,3 +94,7 @@ fun ComponentFactory.createTutorialOverlayComponent(
 ): TutorialOverlayComponent {
     return RealTutorialOverlayComponent(componentContext, get())
 }
+
+fun ComponentFactory.createThemeComponent(
+    componentContext: ComponentContext,
+): ThemeComponent = RealThemeComponent(componentContext, get())
