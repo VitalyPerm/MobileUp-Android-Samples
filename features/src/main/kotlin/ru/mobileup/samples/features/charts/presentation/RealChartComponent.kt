@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.charts.presentation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.utils.safePush
@@ -27,6 +28,8 @@ class RealChartComponent(
         handleBackButton = true,
         childFactory = ::createChild
     ).toStateFlow(lifecycle)
+
+    override fun onBackClick() = navigation.pop()
 
     private fun createChild(
         config: ChildConfig,

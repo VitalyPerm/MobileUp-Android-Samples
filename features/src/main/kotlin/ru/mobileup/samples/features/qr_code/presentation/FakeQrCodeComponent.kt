@@ -1,19 +1,18 @@
 package ru.mobileup.samples.features.qr_code.presentation
 
-import com.arkivanov.decompose.router.stack.ChildStack
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import ru.mobileup.samples.core.utils.createFakeChildStack
+import androidx.activity.OnBackPressedDispatcher
+import com.arkivanov.essenty.backhandler.BackHandler
+import ru.mobileup.samples.core.utils.createFakeChildStackStateFlow
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent.Child
 import ru.mobileup.samples.features.qr_code.presentation.generator.FakeQrCodeGeneratorComponent
 
 class FakeQrCodeComponent : QrCodeComponent {
-    override val stack: StateFlow<ChildStack<*, Child>> =
-        MutableStateFlow(
-            createFakeChildStack(
-                Child.Generator(
-                    FakeQrCodeGeneratorComponent()
-                )
-            )
-        )
+
+    override val stack = createFakeChildStackStateFlow(
+        Child.Generator(FakeQrCodeGeneratorComponent())
+    )
+
+    override val backHandler = BackHandler(OnBackPressedDispatcher())
+
+    override fun onBackClick() = Unit
 }

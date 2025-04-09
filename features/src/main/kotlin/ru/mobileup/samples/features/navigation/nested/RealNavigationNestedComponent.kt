@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import dev.icerock.moko.resources.desc.strResDesc
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
@@ -35,6 +36,8 @@ class RealNavigationNestedComponent(
     override val isBottomBarVisible = computed(stack) {
         it.active.instance !is NavigationNestedComponent.Child.LeafWithoutBottomBar
     }
+
+    override fun onBackClick() = navigation.pop()
 
     private fun createChild(
         config: Config,

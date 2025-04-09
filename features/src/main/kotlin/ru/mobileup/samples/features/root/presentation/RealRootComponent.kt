@@ -68,6 +68,8 @@ class RealRootComponent(
         childContext("theme")
     )
 
+    override fun onBackClick() = navigation.pop()
+
     private fun createChild(
         config: ChildConfig,
         componentContext: ComponentContext,

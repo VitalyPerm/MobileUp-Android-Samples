@@ -4,6 +4,7 @@ import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
@@ -41,6 +42,8 @@ class RealPhotoComponent(
         handleBackButton = true,
         childFactory = ::createChild
     ).toStateFlow(lifecycle)
+
+    override fun onBackClick() = navigation.pop()
 
     private fun createChild(
         config: ChildConfig,

@@ -1,21 +1,21 @@
 package ru.mobileup.samples.features.navigation.nested
 
-import com.arkivanov.decompose.router.stack.ChildStack
+import androidx.activity.OnBackPressedDispatcher
+import com.arkivanov.essenty.backhandler.BackHandler
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import ru.mobileup.samples.core.utils.createFakeChildStack
+import ru.mobileup.samples.core.utils.createFakeChildStackStateFlow
 import ru.mobileup.samples.features.navigation.nested.NavigationNestedComponent.Child
 import ru.mobileup.samples.features.navigation.nested.main.FakeNavigationNestedMainComponent
 
 class FakeNavigationNestedComponent : NavigationNestedComponent {
-    override val stack: StateFlow<ChildStack<*, Child>> =
-        MutableStateFlow(
-            createFakeChildStack(
-                Child.Main(
-                    FakeNavigationNestedMainComponent()
-                )
-            )
-        )
+
+    override val stack = createFakeChildStackStateFlow(
+        Child.Main(FakeNavigationNestedMainComponent())
+    )
 
     override val isBottomBarVisible = MutableStateFlow(false)
+
+    override val backHandler = BackHandler(OnBackPressedDispatcher())
+
+    override fun onBackClick() = Unit
 }

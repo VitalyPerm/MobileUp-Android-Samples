@@ -38,10 +38,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
+import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.tutorial.presentation.overlay.highlightableItem
 import ru.mobileup.samples.core.utils.dispatchOnBackPressed
@@ -100,7 +102,7 @@ fun TutorialSampleUi(
 }
 
 @Composable
-fun FiltersSection(
+private fun FiltersSection(
     availableFilters: List<TutorialFilter>,
     selectedFilter: TutorialFilter,
     onFilterSelect: (TutorialFilter) -> Unit,
@@ -188,7 +190,7 @@ private fun Toolbar(
     }
 }
 
-val TutorialFilter.displayName: StringDesc
+private val TutorialFilter.displayName: StringDesc
     get() = when (this) {
         TutorialFilter.All -> R.string.tutorial_filter_all.strResDesc()
         TutorialFilter.First -> R.string.tutorial_filter_first.strResDesc()
@@ -196,9 +198,17 @@ val TutorialFilter.displayName: StringDesc
         TutorialFilter.Third -> R.string.tutorial_filter_third.strResDesc()
     }
 
-fun TutorialFilter.toTutorialMsssageKey() = when (this) {
+private fun TutorialFilter.toTutorialMsssageKey() = when (this) {
     TutorialFilter.All -> TutorialMessageKeys.All
     TutorialFilter.First -> TutorialMessageKeys.First
     TutorialFilter.Second -> TutorialMessageKeys.Second
     TutorialFilter.Third -> TutorialMessageKeys.Third
+}
+
+@Preview
+@Composable
+private fun TutorialPreview() {
+    AppTheme {
+        TutorialSampleUi(FakeTutorialSampleComponent())
+    }
 }

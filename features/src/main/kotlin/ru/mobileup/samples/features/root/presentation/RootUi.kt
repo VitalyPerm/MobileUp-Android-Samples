@@ -8,7 +8,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.mobileup.samples.core.message.presentation.MessageUi
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
@@ -36,6 +43,7 @@ import ru.mobileup.samples.features.uploader.presentation.UploaderUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
 import ru.mobileup.samples.features.yandex_map.presentation.YandexMapUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun RootUi(
     component: RootComponent,
@@ -48,7 +56,13 @@ fun RootUi(
         modifier = modifier
             .fillMaxSize()
             .background(CustomTheme.colors.background.screen),
-        stack = childStack
+        stack = childStack,
+        animation = predictiveBackAnimation(
+            backHandler = component.backHandler,
+            fallbackAnimation = stackAnimation(fade() + slide()),
+            selector = { backEvent, _, _ -> androidPredictiveBackAnimatable(backEvent) },
+            onBack = component::onBackClick,
+        ),
     ) { child ->
         when (val instance = child.instance) {
             is RootComponent.Child.Menu -> MenuUi(instance.component)
