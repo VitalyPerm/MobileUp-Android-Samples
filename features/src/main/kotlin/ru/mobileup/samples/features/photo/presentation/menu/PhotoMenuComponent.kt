@@ -8,8 +8,11 @@ interface PhotoMenuComponent {
 
     fun onPreviewClick(uris: List<Uri>)
 
+    fun onCroppingClick()
+
     sealed interface Output {
         data object CameraRequested : Output
+        data object CroppingRequested : Output
         data class PreviewRequested(val uris: List<Uri>) : Output
     }
 }

@@ -57,6 +57,13 @@ fun PhotoMenuUi(
                 )
             }
         )
+
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = ButtonType.Secondary,
+            text = stringResource(R.string.photo_menu_item_cropping),
+            onClick = component::onCroppingClick
+        )
     }
 }
 

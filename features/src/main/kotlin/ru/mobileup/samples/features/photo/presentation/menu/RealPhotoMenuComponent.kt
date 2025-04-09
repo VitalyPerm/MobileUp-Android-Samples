@@ -27,4 +27,8 @@ class RealPhotoMenuComponent(
     override fun onPreviewClick(uris: List<Uri>) {
         onOutput(PhotoMenuComponent.Output.PreviewRequested(uris))
     }
+
+    override fun onCroppingClick() {
+        onOutput(PhotoMenuComponent.Output.CroppingRequested)
+    }
 }
