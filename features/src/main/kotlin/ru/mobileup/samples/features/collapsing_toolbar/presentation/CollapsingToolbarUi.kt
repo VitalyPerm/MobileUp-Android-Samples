@@ -7,13 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatable
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.common.CollapsingToolbarCommonUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.main.CollapsingToolbarMainUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.specific.CollapsingToolbarSpecificUi
@@ -29,12 +24,7 @@ fun CollapsingToolbarUi(
     Children(
         modifier = modifier,
         stack = stack,
-        animation = predictiveBackAnimation(
-            backHandler = component.backHandler,
-            fallbackAnimation = stackAnimation(fade() + slide()),
-            selector = { backEvent, _, _ -> androidPredictiveBackAnimatable(backEvent) },
-            onBack = component::onBackClick,
-        ),
+        animation = component.predictiveBackAnimation(),
     ) {
         when (val instance = it.instance) {
             is CollapsingToolbarComponent.Child.Main -> CollapsingToolbarMainUi(instance.component)

@@ -1,16 +1,14 @@
 package ru.mobileup.samples.features.charts.presentation
 
 import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import kotlinx.coroutines.flow.StateFlow
+import ru.mobileup.samples.core.utils.PredictiveBackComponent
 import ru.mobileup.samples.features.charts.presentation.cartesian.CartesianChartComponent
 import ru.mobileup.samples.features.charts.presentation.menu.ChartMenuComponent
 import ru.mobileup.samples.features.charts.presentation.radial.RadialChartComponent
 
-interface ChartComponent : BackHandlerOwner {
+interface ChartComponent : PredictiveBackComponent {
     val childStack: StateFlow<ChildStack<*, Child>>
-
-    fun onBackClick()
 
     sealed interface Child {
         class Menu(val component: ChartMenuComponent) : Child

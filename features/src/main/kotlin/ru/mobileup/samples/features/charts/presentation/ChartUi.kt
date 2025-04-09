@@ -6,12 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatable
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.charts.presentation.cartesian.CartesianChartUi
 import ru.mobileup.samples.features.charts.presentation.menu.ChartMenuUi
 import ru.mobileup.samples.features.charts.presentation.radial.RadialChartUi
@@ -27,12 +22,7 @@ fun ChartUi(
     Children(
         modifier = modifier,
         stack = childStack,
-        animation = predictiveBackAnimation(
-            backHandler = component.backHandler,
-            fallbackAnimation = stackAnimation(fade() + slide()),
-            selector = { backEvent, _, _ -> androidPredictiveBackAnimatable(backEvent) },
-            onBack = component::onBackClick,
-        ),
+        animation = component.predictiveBackAnimation(),
     ) { child ->
         when (val instance = child.instance) {
             is ChartComponent.Child.Menu -> ChartMenuUi(instance.component)

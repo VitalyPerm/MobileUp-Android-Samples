@@ -10,12 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatable
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.mobileup.samples.core.message.presentation.MessageUi
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
@@ -23,6 +17,7 @@ import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayUi
 import ru.mobileup.samples.core.utils.ConfigureSystemBars
 import ru.mobileup.samples.core.utils.LocalSystemBarsSettings
 import ru.mobileup.samples.core.utils.accumulate
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
 import ru.mobileup.samples.features.charts.presentation.ChartUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarUi
@@ -57,12 +52,7 @@ fun RootUi(
             .fillMaxSize()
             .background(CustomTheme.colors.background.screen),
         stack = childStack,
-        animation = predictiveBackAnimation(
-            backHandler = component.backHandler,
-            fallbackAnimation = stackAnimation(fade() + slide()),
-            selector = { backEvent, _, _ -> androidPredictiveBackAnimatable(backEvent) },
-            onBack = component::onBackClick,
-        ),
+        animation = component.predictiveBackAnimation()
     ) { child ->
         when (val instance = child.instance) {
             is RootComponent.Child.Menu -> MenuUi(instance.component)

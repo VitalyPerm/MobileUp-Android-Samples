@@ -3,10 +3,21 @@ package ru.mobileup.samples.core.utils
 import androidx.compose.runtime.State
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigator
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackEvent
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.doOnDestroy
@@ -122,3 +133,32 @@ fun <C : Any> StackNavigator<C>.safePush(configuration: C, onComplete: () -> Uni
  */
 inline fun <reified C : Any> ChildStack<*, *>.getChild(): C? =
     items.map { it.instance }.filterIsInstance<C>().lastOrNull()
+
+/**
+ * A component that supports predictive back gesture handling.
+ */
+interface PredictiveBackComponent : BackHandlerOwner {
+
+    fun onBackClick()
+}
+
+/**
+ * A convenient wrapper around [com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation]
+ * for components implementing [PredictiveBackComponent].
+ */
+@OptIn(ExperimentalDecomposeApi::class)
+fun PredictiveBackComponent.predictiveBackAnimation(
+    fallBackAnimation: StackAnimation<Any, Any> = stackAnimation(fade() + slide()),
+    selector: (
+        initialBackEvent: BackEvent,
+        exitChild: Child.Created<Any, Any>,
+        enterChild: Child.Created<Any, Any>,
+    ) -> PredictiveBackAnimatable = { backEvent, _, _ ->
+        androidPredictiveBackAnimatable(backEvent)
+    },
+) = predictiveBackAnimation(
+    backHandler = backHandler,
+    fallbackAnimation = fallBackAnimation,
+    selector = selector,
+    onBack = ::onBackClick
+)

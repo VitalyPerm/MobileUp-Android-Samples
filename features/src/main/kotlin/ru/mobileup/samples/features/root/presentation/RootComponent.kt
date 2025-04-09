@@ -1,11 +1,11 @@
 package ru.mobileup.samples.features.root.presentation
 
 import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.message.presentation.MessageComponent
 import ru.mobileup.samples.core.theme.component.ThemeComponent
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayComponent
+import ru.mobileup.samples.core.utils.PredictiveBackComponent
 import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarComponent
@@ -31,7 +31,7 @@ import ru.mobileup.samples.features.yandex_map.presentation.YandexMapComponent
  *
  * Note: Try to minimize child count in RootComponent. It should operate by flows of screens rather than separate screens.
  */
-interface RootComponent : BackHandlerOwner {
+interface RootComponent : PredictiveBackComponent {
 
     val childStack: StateFlow<ChildStack<*, Child>>
 
@@ -42,8 +42,6 @@ interface RootComponent : BackHandlerOwner {
     val checkPinCodeManagementComponent: CheckPinCodeManagementComponent
 
     val themeComponent: ThemeComponent
-
-    fun onBackClick()
 
     sealed interface Child {
         class Menu(val component: MenuComponent) : Child
