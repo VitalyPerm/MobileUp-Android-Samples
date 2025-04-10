@@ -58,8 +58,7 @@ fun DetailsSharedElementsUi(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp),
+                .padding(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val context = LocalContext.current
@@ -78,8 +77,10 @@ fun DetailsSharedElementsUi(
                                     stiffness = 380f
                                 )
                             },
+                            renderInOverlayDuringTransition = false,
                         )
-                    },
+                    }
+                    .padding(horizontal = 16.dp),
                 model = ImageRequest.Builder(context)
                     .crossfade(true)
                     .data(component.item.image.uri)
@@ -90,7 +91,9 @@ fun DetailsSharedElementsUi(
                 contentScale = ContentScale.FillWidth,
             )
 
-            Row {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
                 Text(
                     modifier = Modifier
                         .weight(1f)
@@ -121,26 +124,23 @@ fun DetailsSharedElementsUi(
                 )
             }
 
-            Column(
+            Text(
                 modifier = Modifier
+                    .sharedScopeModifier { animScope ->
+                        Modifier.sharedBounds(
+                            rememberSharedContentState(key = SharedKeys.text(component.item.id)),
+                            animatedVisibilityScope = animScope,
+                            resizeMode = ScaleToBounds(ContentScale.FillWidth, Alignment.TopStart),
+                            renderInOverlayDuringTransition = false,
+                        )
+                    }
                     .verticalScroll(rememberScrollState())
                     .navigationBarsPadding()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .sharedScopeModifier { animScope ->
-                            Modifier.sharedBounds(
-                                rememberSharedContentState(key = SharedKeys.text(component.item.id)),
-                                animatedVisibilityScope = animScope,
-                                resizeMode = ScaleToBounds(ContentScale.FillWidth, Alignment.TopStart),
-                            )
-                        },
-                    text = component.item.text,
-                    style = CustomTheme.typography.body.regular,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                text = component.item.text,
+                style = CustomTheme.typography.body.regular,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
