@@ -1,8 +1,7 @@
 package ru.mobileup.samples.features.document.presentation
 
-import androidx.activity.OnBackPressedDispatcher
-import com.arkivanov.essenty.backhandler.BackHandler
 import ru.mobileup.samples.core.utils.createFakeChildStackStateFlow
+import ru.mobileup.samples.core.utils.fakeBackHandler
 import ru.mobileup.samples.features.document.presentation.menu.FakeDocumentMenuComponent
 
 class FakeDocumentComponent : DocumentComponent {
@@ -11,7 +10,7 @@ class FakeDocumentComponent : DocumentComponent {
         DocumentComponent.Child.Menu(FakeDocumentMenuComponent())
     )
 
-    override val backHandler = BackHandler(OnBackPressedDispatcher())
+    override val backHandler = fakeBackHandler
 
     override fun onBackClick() = Unit
 }

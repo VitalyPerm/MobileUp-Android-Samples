@@ -1,8 +1,7 @@
 package ru.mobileup.samples.features.photo.presentation
 
-import androidx.activity.OnBackPressedDispatcher
-import com.arkivanov.essenty.backhandler.BackHandler
 import ru.mobileup.samples.core.utils.createFakeChildStackStateFlow
+import ru.mobileup.samples.core.utils.fakeBackHandler
 import ru.mobileup.samples.features.photo.presentation.menu.FakePhotoMenuComponent
 
 class FakePhotoComponent : PhotoComponent {
@@ -11,7 +10,7 @@ class FakePhotoComponent : PhotoComponent {
         PhotoComponent.Child.Menu(FakePhotoMenuComponent())
     )
 
-    override val backHandler = BackHandler(OnBackPressedDispatcher())
+    override val backHandler = fakeBackHandler
 
     override fun onBackClick() = Unit
 }
