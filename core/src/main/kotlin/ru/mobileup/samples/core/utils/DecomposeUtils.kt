@@ -1,5 +1,6 @@
 package ru.mobileup.samples.core.utils
 
+import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.runtime.State
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.ComponentContext
@@ -17,6 +18,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigator
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackEvent
+import com.arkivanov.essenty.backhandler.BackHandler
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
@@ -58,6 +60,11 @@ fun <C : Any, T : Any> createFakeChildSlot(
         )
     )
 }
+
+/**
+ * A fake [BackHandler] used only for Jetpack Compose previews.
+ */
+val fakeBackHandler = BackHandler(OnBackPressedDispatcher())
 
 /**
  * Converts [Value] from Decompose to [State] from Jetpack Compose.

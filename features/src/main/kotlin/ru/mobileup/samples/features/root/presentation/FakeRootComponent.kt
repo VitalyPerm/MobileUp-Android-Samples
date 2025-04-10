@@ -1,12 +1,12 @@
 package ru.mobileup.samples.features.root.presentation
 
-import androidx.activity.OnBackPressedDispatcher
 import com.arkivanov.essenty.backhandler.BackHandler
 import ru.mobileup.samples.core.message.presentation.FakeMessageComponent
 import ru.mobileup.samples.core.theme.component.FakeThemeComponent
 import ru.mobileup.samples.core.tutorial.presentation.overlay.FakeTutorialOverlayComponent
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayComponent
 import ru.mobileup.samples.core.utils.createFakeChildStackStateFlow
+import ru.mobileup.samples.core.utils.fakeBackHandler
 import ru.mobileup.samples.features.menu.presentation.FakeMenuComponent
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
 import ru.mobileup.samples.features.pin_code.presentation.check_management.FakeCheckPinCodeManagementComponent
@@ -26,7 +26,7 @@ class FakeRootComponent : RootComponent {
 
     override val themeComponent = FakeThemeComponent()
 
-    override val backHandler: BackHandler = BackHandler(OnBackPressedDispatcher())
+    override val backHandler: BackHandler = fakeBackHandler
 
     override fun onBackClick() = Unit
 }
