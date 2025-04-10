@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import dev.icerock.moko.resources.compose.localized
 import ru.mobileup.samples.core.message.presentation.noOverlapByMessage
 import ru.mobileup.samples.core.theme.AppTheme
@@ -48,7 +49,7 @@ import ru.mobileup.samples.core.R as CoreR
 @Composable
 fun NavigationUi(
     component: NavigationComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val stack by component.stack.collectAsState()
     val isBottomBarVisible by component.isBottomBarVisible.collectAsState()
@@ -57,7 +58,10 @@ fun NavigationUi(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         content = { paddingValues ->
-            Children(stack) {
+            Children(
+                stack = stack,
+                animation = stackAnimation()
+            ) {
                 when (val instance = it.instance) {
                     is AlertDialogs -> NavigationAlertDialogsUi(
                         component = instance.component,

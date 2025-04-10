@@ -14,12 +14,9 @@ fun CustomTheme(
     CompositionLocalProvider(
         LocalCustomColors provides colors,
         LocalCustomTypography provides typography,
+        LocalContentColor provides colors.text.primary
     ) {
-        CompositionLocalProvider(
-            LocalContentColor provides CustomTheme.colors.text.primary
-        ) {
-            content()
-        }
+        content()
     }
 }
 

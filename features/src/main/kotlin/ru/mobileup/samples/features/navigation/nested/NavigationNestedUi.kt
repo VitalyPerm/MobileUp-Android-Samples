@@ -7,21 +7,27 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.navigation.nested.leaf.NavigationNestedLeafUi
 import ru.mobileup.samples.features.navigation.nested.main.NavigationNestedMainUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun NavigationNestedUi(
     component: NavigationNestedComponent,
     modifier: Modifier = Modifier,
-    paddingValues: PaddingValues = PaddingValues()
+    paddingValues: PaddingValues = PaddingValues(),
 ) {
     val stack by component.stack.collectAsState()
 
-    Children(stack, modifier.padding(paddingValues)) {
-
+    Children(
+        modifier = modifier.padding(paddingValues),
+        stack = stack,
+        animation = component.predictiveBackAnimation(),
+    ) {
         when (val instance = it.instance) {
             is NavigationNestedComponent.Child.LeafWithBottomBar -> NavigationNestedLeafUi(instance.component)
             is NavigationNestedComponent.Child.LeafWithoutBottomBar -> NavigationNestedLeafUi(

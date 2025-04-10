@@ -5,20 +5,27 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.qr_code.presentation.generator.QrCodeGeneratorUi
 import ru.mobileup.samples.features.qr_code.presentation.main.QrCodeMainUi
 import ru.mobileup.samples.features.qr_code.presentation.scanner.QrCodeScannerUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun QrCodeUi(
     component: QrCodeComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val stack by component.stack.collectAsState()
 
-    Children(stack, modifier) {
+    Children(
+        modifier = modifier,
+        stack = stack,
+        animation = component.predictiveBackAnimation(),
+    ) {
         when (val instance = it.instance) {
             is QrCodeComponent.Child.Generator -> QrCodeGeneratorUi(instance.component)
             is QrCodeComponent.Child.Main -> QrCodeMainUi(instance.component)

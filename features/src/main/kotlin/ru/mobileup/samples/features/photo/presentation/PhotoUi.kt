@@ -6,16 +6,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.utils.LockScreenOrientation
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.photo.presentation.camera.PhotoCameraUi
 import ru.mobileup.samples.features.photo.presentation.cropping.PhotoCroppingUi
 import ru.mobileup.samples.features.photo.presentation.menu.PhotoMenuUi
 import ru.mobileup.samples.features.photo.presentation.preview.PhotoPreviewUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun PhotoUi(
     component: PhotoComponent,
@@ -26,9 +27,9 @@ fun PhotoUi(
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR)
 
     Children(
+        modifier = modifier,
         stack = childStack,
-        animation = stackAnimation(slide()),
-        modifier = modifier
+        animation = component.predictiveBackAnimation()
     ) { child ->
         when (val instance = child.instance) {
             is PhotoComponent.Child.Menu -> PhotoMenuUi(instance.component)

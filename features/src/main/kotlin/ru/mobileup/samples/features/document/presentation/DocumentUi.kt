@@ -5,24 +5,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.mobileup.samples.core.theme.AppTheme
+import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.document.presentation.menu.DocumentMenuUi
 import ru.mobileup.samples.features.document.presentation.preview.DocumentPreviewUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun DocumentUi(
     component: DocumentComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val childStack by component.childStack.collectAsState()
 
     Children(
+        modifier = modifier,
         stack = childStack,
-        animation = stackAnimation(slide()),
-        modifier = modifier
+        animation = component.predictiveBackAnimation()
     ) { child ->
         when (val instance = child.instance) {
             is DocumentComponent.Child.Menu -> DocumentMenuUi(instance.component)

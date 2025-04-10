@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 import ru.mobileup.samples.core.ComponentFactory
@@ -28,6 +29,8 @@ class RealSharedElementsComponent(
             childFactory = ::createChild,
             handleBackButton = true
         ).toStateFlow(lifecycle)
+
+    override fun onBackClick() = navigation.pop()
 
     private fun createChild(
         config: Config,

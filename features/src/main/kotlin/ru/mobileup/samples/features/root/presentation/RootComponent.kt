@@ -3,7 +3,9 @@ package ru.mobileup.samples.features.root.presentation
 import com.arkivanov.decompose.router.stack.ChildStack
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.message.presentation.MessageComponent
+import ru.mobileup.samples.core.theme.component.ThemeComponent
 import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayComponent
+import ru.mobileup.samples.core.utils.PredictiveBackComponent
 import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarComponent
@@ -13,12 +15,11 @@ import ru.mobileup.samples.features.image.presentation.ImageComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
+import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.pin_code.presentation.check_management.CheckPinCodeManagementComponent
 import ru.mobileup.samples.features.pin_code.presentation.settings.PinCodeSettingsComponent
-import ru.mobileup.samples.features.photo.presentation.PhotoComponent
 import ru.mobileup.samples.features.qr_code.presentation.QrCodeComponent
 import ru.mobileup.samples.features.settings.presentation.SettingsComponent
-import ru.mobileup.samples.core.theme.component.ThemeComponent
 import ru.mobileup.samples.features.shared_element_transitions.presentation.SharedElementsComponent
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.uploader.presentation.UploaderComponent
@@ -30,7 +31,7 @@ import ru.mobileup.samples.features.yandex_map.presentation.YandexMapComponent
  *
  * Note: Try to minimize child count in RootComponent. It should operate by flows of screens rather than separate screens.
  */
-interface RootComponent {
+interface RootComponent : PredictiveBackComponent {
 
     val childStack: StateFlow<ChildStack<*, Child>>
 
