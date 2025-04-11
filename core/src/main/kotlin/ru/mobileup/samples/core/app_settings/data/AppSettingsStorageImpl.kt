@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import ru.mobileup.samples.core.app_settings.domain.AppSettings
+import ru.mobileup.samples.core.app_settings.domain.AppTheme
 import ru.mobileup.samples.core.settings.SettingsFactory
-import ru.mobileup.samples.core.theme.AppTheme
 
 class AppSettingsStorageImpl(
     settingsFactory: SettingsFactory,

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.runBlocking
 import ru.mobileup.samples.core.app_settings.data.AppSettingsStorage
+import ru.mobileup.samples.core.app_settings.domain.AppTheme
 import ru.mobileup.samples.core.dialog.simple.SimpleDialogControl
 import ru.mobileup.samples.core.dialog.simple.simpleDialogControl
 import ru.mobileup.samples.core.dialog.standard.DialogButton
@@ -27,7 +28,6 @@ import ru.mobileup.samples.core.map.domain.MapCommand
 import ru.mobileup.samples.core.map.domain.MapTheme
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.permissions.SinglePermissionResult
-import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.observe
 import ru.mobileup.samples.core.utils.withProgress
