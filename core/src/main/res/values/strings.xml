@@ -8,6 +8,7 @@
     <string name="common_no">No</string>
     <string name="common_skip">Skip</string>
     <string name="common_cancel">Cancel</string>
+    <string name="common_view">View</string>
 
     <!-- Errors -->
     <string name="error_unexpected">Something went wrong. The developers are already fixing the problem.</string>
