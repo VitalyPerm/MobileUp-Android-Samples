@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation
+package ru.mobileup.samples.features.map.presentation
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
@@ -26,16 +26,18 @@ import ru.mobileup.samples.core.location.GeoCoordinate
 import ru.mobileup.samples.core.location.LocationService
 import ru.mobileup.samples.core.map.domain.MapCommand
 import ru.mobileup.samples.core.map.domain.MapTheme
+import ru.mobileup.samples.core.map.domain.MapVendor
 import ru.mobileup.samples.core.permissions.PermissionService
 import ru.mobileup.samples.core.permissions.SinglePermissionResult
 import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.core.utils.observe
 import ru.mobileup.samples.core.utils.withProgress
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.yandex_map.data.MapRepository
+import ru.mobileup.samples.features.map.data.MapRepository
 
-class RealYandexMapComponent(
+class RealMapComponent(
     componentContext: ComponentContext,
+    override val vendor: MapVendor,
     private val permissionService: PermissionService,
     private val errorHandler: ErrorHandler,
     private val locationService: LocationService,
@@ -43,12 +45,13 @@ class RealYandexMapComponent(
     private val externalAppService: ExternalAppService,
     settingsStorage: AppSettingsStorage,
     context: Context,
-) : ComponentContext by componentContext, YandexMapComponent {
+) : ComponentContext by componentContext, MapComponent {
 
     private val _mapCommands = Channel<MapCommand>()
     override val mapCommands = _mapCommands.receiveAsFlow()
     override val isCurrentLocationAvailable =
         MutableStateFlow(permissionService.isPermissionGranted(ACCESS_FINE_LOCATION))
+    override val userCoordinate = MutableStateFlow<GeoCoordinate?>(null)
 
     override val isLocationSearchInProgress = MutableStateFlow(false)
 
@@ -112,6 +115,15 @@ class RealYandexMapComponent(
         }
     }
 
+    override fun onClusterClick(places: List<GeoCoordinate>) {
+        _mapCommands.trySend(
+            MapCommand.MoveToBoundingBox(
+                coordinates = places,
+                animate = true
+            )
+        )
+    }
+
     override fun onPlaceClick(place: GeoCoordinate) {
         placeDialogControl.show(place)
     }
@@ -133,6 +145,7 @@ class RealYandexMapComponent(
                     val coordinate = locationService.getCurrentLocation()
                     isCurrentLocationAvailable.value = true
                     _mapCommands.send(MapCommand.MoveTo(coordinate, CLOSE_MAP_ZOOM))
+                    userCoordinate.value = coordinate
                 }
             } catch (_: LocationNotAvailableException) {
                 isCurrentLocationAvailable.value = false
@@ -144,17 +157,17 @@ class RealYandexMapComponent(
     private fun showLocationPermissionPermanentlyDeniedDialog() {
         locationDialogControl.show(
             StandardDialogData(
-                title = R.string.yandex_map_geo_permission_dialog_denied_title.strResDesc(),
-                message = R.string.yandex_map_geo_permission_dialog_text.strResDesc(),
+                title = R.string.map_geo_permission_dialog_denied_title.strResDesc(),
+                message = R.string.map_geo_permission_dialog_text.strResDesc(),
                 confirmButton = DialogButton(
-                    text = R.string.shops_map_geo_permission_dialog_denied_confirm.strResDesc(),
+                    text = R.string.map_geo_permission_dialog_denied_confirm.strResDesc(),
                     action = {
                         externalAppService.openAppSettings()
                         locationDialogControl.dismiss()
                     }
                 ),
                 dismissButton = DialogButton(
-                    text = R.string.shops_map_geo_permission_dialog_denied_cancel.strResDesc(),
+                    text = R.string.map_geo_permission_dialog_denied_cancel.strResDesc(),
                     action = locationDialogControl::dismiss
                 )
             )
@@ -164,17 +177,17 @@ class RealYandexMapComponent(
     private fun showLocationDisabledDialog() {
         locationDialogControl.show(
             StandardDialogData(
-                title = R.string.yandex_map_geo_permission_dialog_disabled_title.strResDesc(),
-                message = R.string.yandex_map_geo_permission_dialog_text.strResDesc(),
+                title = R.string.map_geo_permission_dialog_disabled_title.strResDesc(),
+                message = R.string.map_geo_permission_dialog_text.strResDesc(),
                 confirmButton = DialogButton(
-                    text = R.string.yandex_map_geo_permission_dialog_disabled_confirm.strResDesc(),
+                    text = R.string.map_geo_permission_dialog_disabled_confirm.strResDesc(),
                     action = {
                         externalAppService.openLocationSettings()
                         locationDialogControl.dismiss()
                     }
                 ),
                 dismissButton = DialogButton(
-                    text = R.string.yandex_map_geo_permission_dialog_disabled_cancel.strResDesc(),
+                    text = R.string.map_geo_permission_dialog_disabled_cancel.strResDesc(),
                     action = locationDialogControl::dismiss
                 )
             )

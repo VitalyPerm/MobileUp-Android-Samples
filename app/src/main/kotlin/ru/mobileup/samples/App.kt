@@ -4,11 +4,12 @@ import android.app.Application
 import android.content.Context
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
-import org.koin.core.Koin
 import com.yandex.mapkit.MapKitFactory
+import org.koin.core.Koin
 import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.core.KoinProvider
 import ru.mobileup.samples.core.debug_tools.DebugTools
+import ru.mobileup.samples.core.BuildConfig as CoreBuildConfig
 
 class App : Application(), KoinProvider {
 
@@ -20,7 +21,7 @@ class App : Application(), KoinProvider {
         initLogger()
         koin = createKoin()
         launchDebugTools()
-        MapKitFactory.setApiKey(BuildConfig.YANDEX_MAP_API_KEY)
+        MapKitFactory.setApiKey(CoreBuildConfig.YANDEX_MAP_API_KEY)
     }
 
     private fun initLogger() {

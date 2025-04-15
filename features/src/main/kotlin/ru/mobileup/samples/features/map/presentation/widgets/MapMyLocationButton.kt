@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widgets
+package ru.mobileup.samples.features.map.presentation.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

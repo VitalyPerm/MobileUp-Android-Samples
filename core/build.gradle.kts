@@ -1,3 +1,16 @@
+import java.util.Properties
+import kotlin.apply
+
+// Function to read properties from local.properties
+fun getLocalProperty(key: String, project: Project): String? {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        val properties = Properties().apply { load(localPropertiesFile.inputStream()) }
+        return properties.getProperty(key)
+    }
+    return null
+}
+
 plugins {
     alias(libs.plugins.convetion.library)
     alias(libs.plugins.kotlin.android)
@@ -12,6 +25,15 @@ android {
     }
 
     namespace = "ru.mobileup.samples.core"
+
+    defaultConfig {
+        val googleMapsApiKey = getLocalProperty("google.map.api.key", project) ?: "\"not_found\""
+        manifestPlaceholders["GOOGLE_MAP_API_KEY"] = googleMapsApiKey
+        buildConfigField("String", "GOOGLE_MAP_API_KEY", "\"$googleMapsApiKey\"")
+
+        val yandexMapApiKey = getLocalProperty("yandex.map.api.key", project) ?: "\"not_found\""
+        buildConfigField("String", "YANDEX_MAP_API_KEY", yandexMapApiKey)
+    }
 }
 
 dependencies {
@@ -58,6 +80,7 @@ dependencies {
 
     // Geo
     implementation(libs.yandex.mapkit)
+    implementation(libs.bundles.google.maps)
 
     // Debugging
     debugImplementation(libs.chucker)

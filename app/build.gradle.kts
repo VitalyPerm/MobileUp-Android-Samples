@@ -24,12 +24,6 @@ android {
         targetSdk = targetSdkVersion
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
-
-        buildConfigField(
-            "String",
-            "YANDEX_MAP_API_KEY",
-            "\"3190c942-1591-4552-be8c-306743ee51b7\""
-        )
     }
 
     signingConfigs {

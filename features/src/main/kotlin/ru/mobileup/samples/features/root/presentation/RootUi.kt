@@ -24,6 +24,7 @@ import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingTo
 import ru.mobileup.samples.features.document.presentation.DocumentUi
 import ru.mobileup.samples.features.form.presentation.FormUi
 import ru.mobileup.samples.features.image.presentation.ImageUi
+import ru.mobileup.samples.features.map.presentation.main.MapMainUi
 import ru.mobileup.samples.features.menu.presentation.MenuUi
 import ru.mobileup.samples.features.navigation.NavigationUi
 import ru.mobileup.samples.features.otp.presentation.OtpUi
@@ -36,7 +37,6 @@ import ru.mobileup.samples.features.shared_element_transitions.presentation.Shar
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
 import ru.mobileup.samples.features.uploader.presentation.UploaderUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
-import ru.mobileup.samples.features.yandex_map.presentation.YandexMapUi
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -72,7 +72,7 @@ fun RootUi(
             is RootComponent.Child.SharedElements -> SharedElementsUi(instance.component)
             is RootComponent.Child.Settings -> SettingsUi(instance.component)
             is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
-            is RootComponent.Child.YandexMap -> YandexMapUi(instance.component)
+            is RootComponent.Child.Map -> MapMainUi(instance.component)
         }
     }
 

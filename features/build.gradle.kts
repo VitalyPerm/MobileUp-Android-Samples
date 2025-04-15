@@ -77,9 +77,6 @@ dependencies {
     implementation(libs.google.playservice.auth)
     implementation(libs.google.playservice.auth.phone)
 
-    // Geo
-    implementation(libs.yandex.mapkit)
-
     // Image Cropping
     implementation(libs.android.image.cropper)
 }

@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation.widgets
+package ru.mobileup.samples.features.map.presentation.widgets
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.spring

@@ -24,5 +24,5 @@ enum class Sample(
     Tutorial(R.string.menu_item_tutorial.strResDesc()),
     SharedTransitions(R.string.menu_item_shared_elements_transition.strResDesc()),
     PinCodeSettings(R.string.menu_item_pin_code_settings.strResDesc()),
-    YandexMap(R.string.menu_item_yandex_map.strResDesc())
+    Map(R.string.menu_item_yandex_map.strResDesc())
 }

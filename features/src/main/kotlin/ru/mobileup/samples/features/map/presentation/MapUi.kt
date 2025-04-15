@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation
+package ru.mobileup.samples.features.map.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -13,54 +13,60 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.dialog.BottomSheet
 import ru.mobileup.samples.core.dialog.standard.StandardDialog
-import ru.mobileup.samples.core.map.presentation.MyLocationMarkerOverlay
-import ru.mobileup.samples.core.map.presentation.PlacePinsOverlay
-import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapMyLocationButton
-import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapThemeSwitch
-import ru.mobileup.samples.core.map.presentation.YandexMapViewUi
-import ru.mobileup.samples.features.yandex_map.presentation.widgets.MapZoomButtons
+import ru.mobileup.samples.core.map.domain.MapVendor
+import ru.mobileup.samples.core.map.presentation.AppGoogleMap
+import ru.mobileup.samples.core.map.presentation.yandex.AppYandexMap
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.core.utils.SystemBars
 import ru.mobileup.samples.core.utils.clickableNoRipple
+import ru.mobileup.samples.features.map.presentation.widgets.MapMyLocationButton
+import ru.mobileup.samples.features.map.presentation.widgets.MapThemeSwitch
+import ru.mobileup.samples.features.map.presentation.widgets.MapZoomButtons
 
 @Composable
-fun YandexMapUi(
-    component: YandexMapComponent,
+fun MapUi(
+    component: MapComponent,
     modifier: Modifier = Modifier
 ) {
     val isCurrentLocationAvailable by component.isCurrentLocationAvailable.collectAsState()
     val isLocationSearchInProgress by component.isLocationSearchInProgress.collectAsState()
     val placesState by component.placesState.collectAsState()
+    val userCoordinate by component.userCoordinate.collectAsState()
     val theme by component.theme.collectAsState()
 
-    val myLocationOverlay = remember { MyLocationMarkerOverlay() }
-    val placesPinOverlay = remember { PlacePinsOverlay(component::onPlaceClick) }
-
-    LaunchedEffect(isCurrentLocationAvailable) {
-        myLocationOverlay.updateIsCurrentLocationAvailable(isCurrentLocationAvailable)
-    }
-
-    LaunchedEffect(placesState) {
-        placesPinOverlay.updatePlaces(placesState.data.orEmpty())
-    }
-
+    SystemBars(
+        statusBarColor = Color.Transparent,
+    )
     Box(
         modifier = modifier,
     ) {
-        YandexMapViewUi(
-            mapCommands = component.mapCommands,
-            theme = theme,
-            overlays = listOf(myLocationOverlay, placesPinOverlay)
-        )
+        when (component.vendor) {
+            MapVendor.Yandex -> AppYandexMap(
+                mapCommands = component.mapCommands,
+                theme = theme,
+                onPlaceClick = component::onPlaceClick,
+                onClusterClick = component::onClusterClick,
+                isCurrentLocationAvailable = isCurrentLocationAvailable,
+                placesState = placesState
+            )
+            MapVendor.Google -> AppGoogleMap(
+                mapCommands = component.mapCommands,
+                placesState = placesState,
+                onPlaceClick = component::onPlaceClick,
+                userCoordinate = userCoordinate,
+                onClusterClick = component::onClusterClick,
+                theme = theme
+            )
+        }
 
         MapZoomButtons(
             modifier = Modifier
@@ -73,7 +79,7 @@ fun YandexMapUi(
             modifier = Modifier
                 .align(BiasAlignment(0.9f, 0.9f)),
             onClick = component::onMyLocationClick,
-            isLocationSearchInProgress = !isLocationSearchInProgress
+            isLocationSearchInProgress = isLocationSearchInProgress
         )
 
         MapThemeSwitch(
