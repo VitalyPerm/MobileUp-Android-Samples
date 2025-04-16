@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_toolbar_title">Обучение</string>
+    <string name="tutorial_filter_all">Все</string>
+    <string name="tutorial_filter_first">Mod 0</string>
+    <string name="tutorial_filter_second">Mod 1</string>
+    <string name="tutorial_filter_third">Mod 2</string>
+
+    <string name="tutorial_text_all">Здесь вы можете просмотреть все элементы</string>
+    <string name="tutorial_text_first">Здесь отображаются элементы, которые делятся на 3 с остатком 0</string>
+    <string name="tutorial_text_second">Здесь отображаются элементы, которые делятся на 3 с остатком 1</string>
+    <string name="tutorial_text_third">Здесь отображаются элементы, которые делятся на 3 с остатком 2</string>
+    <string name="tutorial_text_back">Кнопка \"Назад\". Нажмите здесь, чтобы вернуться</string>
+    <string name="tutorial_text_title">Здесь отображается заголовок экрана</string>
+</resources>

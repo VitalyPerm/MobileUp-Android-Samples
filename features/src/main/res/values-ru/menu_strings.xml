@@ -1,0 +1,18 @@
+<resources>
+    <string name="menu_item_form">Form</string>
+    <string name="menu_item_otp">OTP</string>
+    <string name="menu_item_photo">Фото</string>
+    <string name="menu_item_video">Видео</string>
+    <string name="menu_item_document">Документ</string>
+    <string name="menu_item_uploader">Загрузчик</string>
+    <string name="menu_item_calendar">Календарь</string>
+    <string name="menu_item_navigation">Навигация</string>
+    <string name="menu_item_qr_code">QR-код</string>
+    <string name="menu_item_chart">Графики</string>
+    <string name="menu_item_collapsing_toolbar">Схлопывающийся тулбар</string>
+    <string name="menu_item_image">Карусель изображений</string>
+    <string name="menu_item_tutorial">Туториал</string>
+    <string name="menu_item_pin_code_settings">Настройки PIN-кода</string>
+    <string name="menu_item_shared_elements_transition">Shared elements transition</string>
+    <string name="menu_item_yandex_map">Яндекс.Карты</string>
+</resources>

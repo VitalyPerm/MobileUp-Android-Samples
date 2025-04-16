@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo_confirm_btn">Сохранить</string>
+    <string name="photo_dismiss_btn">Отмена</string>
+
+    <string name="photo_menu_item_camera">Камера</string>
+    <string name="photo_menu_item_preview">Просмотр</string>
+    <string name="photo_menu_item_cropping">Обрезка</string>
+
+    <string name="camera_initialization_failed">Ошибка инициализации камеры</string>
+    <string name="photo_failed">Не удалось сделать фото</string>
+    <string name="photo_saved">Фото сохранено</string>
+    <string name="photo_save_failed">Не удалось сохранить фото</string>
+    <string name="save_photo_dialog_title">Сохранение фото</string>
+    <string name="save_photo_dialog_message">Сохранить это фото?</string>
+</resources>

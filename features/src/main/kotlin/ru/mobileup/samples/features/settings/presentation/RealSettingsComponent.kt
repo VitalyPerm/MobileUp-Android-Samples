@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.settings.presentation
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.app_settings.data.AppSettingsStorage
+import ru.mobileup.samples.core.app_settings.domain.AppLanguage
 import ru.mobileup.samples.core.app_settings.domain.AppSettings
 import ru.mobileup.samples.core.app_settings.domain.AppTheme
 import ru.mobileup.samples.core.error_handling.ErrorHandler
@@ -22,4 +23,10 @@ class RealSettingsComponent(
             appSettingsStorage.setTheme(theme)
         }
     }
+
+    override fun onLanguageClick(language: AppLanguage) {
+        appSettingsStorage.setLanguage(language)
+    }
+
+    override fun onLanguageChange() = appSettingsStorage.syncLanguage()
 }

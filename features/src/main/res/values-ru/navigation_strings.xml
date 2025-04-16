@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  General  -->
+    <string name="navigation_nested_navigation">Вложенная навигация</string>
+    <string name="navigation_bottom_sheets">Боттом шиты</string>
+    <string name="navigation_alert_dialogs">Диалоговые окна</string>
+    <string name="navigation_simple_dialog_title">Заголовок простого диалога</string>
+    <string name="navigation_simple_dialog_text">Ваше имя: %s</string>
+    <string name="navigation_clear">Очистить</string>
+
+    <!--  Custom dialog  -->
+    <string name="navigation_custom_dialog">Кастомный диалог</string>
+    <string name="navigation_custom_dialog_submit">Подтвердить</string>
+    <string name="navigation_custom_dialog_text">Вы уверены, что хотите использовать имя %s?</string>
+
+    <!--  Alert dialogs  -->
+    <string name="navigation_dialogs_standard_dialog_title">Стандартный диалог</string>
+    <string name="navigation_dialogs_standard_dialog_text">Очистить поле с именем?</string>
+    <string name="navigation_dialogs_name_placeholder">Введите ваше имя</string>
+    <string name="navigation_dialogs_show_simple_dialog">Показать простой диалог</string>
+    <string name="navigation_dialogs_show_standard_dialog">Показать стандартный диалог</string>
+    <string name="navigation_dialogs_show_custom_dialog">Показать кастомный диалог</string>
+
+    <!--  Bottom sheets  -->
+    <string name="navigation_bottom_sheets_name_placeholder">Введите ваше имя</string>
+    <string name="navigation_bottom_sheets_show_simple_dialog">Показать простой диалог</string>
+    <string name="navigation_bottom_sheets_show_custom_dialog">Показать кастомный диалог</string>
+
+    <!--  Nested  -->
+    <string name="navigation_nested_with_bottom_bar">Вложенный экран (с боттом баром)</string>
+    <string name="navigation_nested_without_bottom_bar">Вложенный экран 2 (без боттом бара)</string>
+</resources>

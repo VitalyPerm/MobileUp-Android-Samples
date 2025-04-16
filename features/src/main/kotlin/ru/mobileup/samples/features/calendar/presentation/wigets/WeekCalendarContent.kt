@@ -27,14 +27,16 @@ import com.kizitonwose.calendar.core.Week
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
-import kotlinx.datetime.Month
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.utils.toDay
 import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.calendar.domain.CalendarDay
 import ru.mobileup.samples.features.calendar.domain.CalendarEvent
-import ru.mobileup.samples.features.calendar.domain.CalendarEvent.EvenType.*
+import ru.mobileup.samples.features.calendar.domain.CalendarEvent.EvenType.Message
+import ru.mobileup.samples.features.calendar.domain.CalendarEvent.EvenType.Note
+import ru.mobileup.samples.features.calendar.domain.CalendarEvent.EvenType.Work
+import ru.mobileup.samples.features.calendar.presentation.localizedMonthName
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -45,7 +47,7 @@ fun WeekCalendarContent(
     selectedCalendarDay: CalendarDay?,
     calendarEvents: List<CalendarEvent>,
     onClick: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val currentDate = remember { LocalDate.now() }
     val currentMonth = remember { YearMonth.now() }
@@ -97,7 +99,7 @@ private fun Day(
     date: LocalDate,
     isSelected: Boolean,
     events: List<CalendarEvent>,
-    onClick: (LocalDate) -> Unit
+    onClick: (LocalDate) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -186,23 +188,19 @@ private fun getWeekPageTitle(week: Week): String {
     val lastDate = week.days.last().date
 
     return when {
-        firstDate.yearMonth == lastDate.yearMonth -> firstDate.yearMonth.displayText()
+        firstDate.yearMonth == lastDate.yearMonth -> firstDate.yearMonth.displayText
 
         else -> stringResource(
             id = R.string.calendar_week_title,
-            firstDate.yearMonth.displayText(),
-            lastDate.yearMonth.displayText()
+            firstDate.yearMonth.displayText,
+            lastDate.yearMonth.displayText
         )
     }
 }
 
-private fun YearMonth.displayText(short: Boolean = false): String {
-    return "${month.displayText(short = short)} $year"
-}
-
-private fun Month.displayText(short: Boolean = false): String {
-    return getDisplayName(if (short) TextStyle.SHORT else TextStyle.FULL, Locale.getDefault())
-}
+private val YearMonth.displayText: String
+    @Composable
+    get() = "$localizedMonthName $year"
 
 @Preview
 @Composable

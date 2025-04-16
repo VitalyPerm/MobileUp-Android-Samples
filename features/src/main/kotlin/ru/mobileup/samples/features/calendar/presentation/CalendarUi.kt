@@ -16,10 +16,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.calendar.domain.CalendarPeriod
 import ru.mobileup.samples.features.calendar.presentation.wigets.MonthCalendarContent
 import ru.mobileup.samples.features.calendar.presentation.wigets.WeekCalendarContent
@@ -28,7 +30,7 @@ import ru.mobileup.samples.features.calendar.presentation.wigets.YearCalendarCon
 @Composable
 fun CalendarUi(
     component: CalendarComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val selectedCalendarPeriod by component.selectedCalendarPeriod.collectAsState()
     val selectedCalendarDay by component.selectedCalendarDay.collectAsState()
@@ -83,7 +85,7 @@ private fun BoxScope.CalendarPeriods(
 
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = period.name,
+                    text = period.displayName,
                     color = CustomTheme.colors.text.primary,
                     style = CustomTheme.typography.button.bold,
                 )
@@ -91,6 +93,14 @@ private fun BoxScope.CalendarPeriods(
         }
     }
 }
+
+private val CalendarPeriod.displayName: String
+    @Composable
+    get() = when (this) {
+        CalendarPeriod.Year -> R.string.calendar_period_year
+        CalendarPeriod.Month -> R.string.calendar_period_month
+        CalendarPeriod.Week -> R.string.calendar_period_week
+    }.let { stringResource(it) }
 
 @Preview
 @Composable

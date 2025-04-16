@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  Create  -->
-
     <string name="pin_code_create_header">Set a passcode to log in to the app</string>
     <string name="pin_code_create_success">Great!\nEnter the passcode again</string>
     <string name="pin_code_create_error">"The passcode doesn't match\ntry again"</string>
@@ -9,7 +8,6 @@
     <!--  Check  -->
     <string name="pin_code_check_header">Enter the passcode to log in to the app</string>
     <string name="pin_code_check_error">Incorrect passcode!\nTry again</string>
-
 
     <!--  Alerts  -->
     <string name="pin_code_alert_biometric_header">Activate the login using biometrics?</string>

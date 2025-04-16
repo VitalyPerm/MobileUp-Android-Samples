@@ -26,6 +26,7 @@ import com.kizitonwose.calendar.core.ExperimentalCalendarApi
 import com.kizitonwose.calendar.core.daysOfWeek
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
+import ru.mobileup.samples.features.calendar.presentation.localizedMonthName
 import java.time.Year
 import java.time.format.TextStyle
 import java.util.Locale
@@ -83,7 +84,7 @@ private fun MonthHeader(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = calendarMonth.yearMonth.month.name,
+            text = calendarMonth.yearMonth.localizedMonthName,
             color = CustomTheme.colors.text.primary,
             style = CustomTheme.typography.caption.regular,
             textAlign = TextAlign.Center

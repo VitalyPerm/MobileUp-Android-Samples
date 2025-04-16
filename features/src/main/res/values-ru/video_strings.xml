@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="video_confirm_btn">Сохранить</string>
+    <string name="video_dismiss_btn">Отмена</string>
+    <string name="reset_btn">Сброс</string>
+
+    <string name="video_menu_item_recorder">Запись</string>
+    <string name="video_menu_item_player">Плеер</string>
+
+    <string name="recorder_initialization_failed">Ошибка инициализации камеры</string>
+    <string name="recorder_failed">Ошибка записи</string>
+    <string name="recorder_stop_failed">Минимальная продолжительность - 1 секунда</string>
+
+    <string name="recorder_enable">Включить</string>
+    <string name="recorder_disable">Выключить</string>
+
+    <string name="player_cut_start">Начало</string>
+    <string name="player_cut_end">Конец</string>
+
+    <string name="player_reset_transform_title">Сбросить кадрирование</string>
+    <string name="player_reset_transform_message">Вы уверены, что хотите сбросить кадрирование?</string>
+
+    <string name="save_video_dialog_title">Сохранить видео</string>
+    <string name="save_video_dialog_message">Вы уверены, что хотите сохранить видео?</string>
+
+    <string name="render_success">Видео сохранено по адресу "%s"</string>
+    <string name="render_canceled">Отмена обработки видео</string>
+    <string name="render_error">Ошибка обработки видео</string>
+</resources>
