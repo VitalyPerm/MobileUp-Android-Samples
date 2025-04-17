@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calendar_month_title">%s %s</string>
+    <string name="calendar_week_title">%s - %s</string>
+    <string name="calendar_period_year">Год</string>
+    <string name="calendar_period_month">Месяц</string>
+    <string name="calendar_period_week">Неделя</string>
+    <string name="calendar_scroll_vertical">Вертикальный</string>
+    <string name="calendar_scroll_horizontal">Горизонтальный</string>
+</resources>

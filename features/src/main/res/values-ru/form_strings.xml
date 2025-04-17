@@ -1,0 +1,7 @@
+<resources>
+    <string name="form_phone_placeholder">Телефон</string>
+    <string name="form_password_placeholder">Пароль</string>
+    <string name="form_policy">Я согласен с [условиями использования] и [политикой конфиденциальности]</string>
+    <string name="form_login">Войти</string>
+    <string name="form_password_error">Пароль должен быть длиной %1$s–%2$s символов, содержать хотя бы одну цифру, одну строчную букву, одну заглавную букву и один специальный символ (%3$s), а также не должен содержать пробелов.</string>
+</resources>

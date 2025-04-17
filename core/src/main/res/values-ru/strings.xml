@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_retry">Повторить</string>
+    <string name="common_success">Успешно</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_ok">ОК</string>
+    <string name="common_yes">Да</string>
+    <string name="common_no">Нет</string>
+    <string name="common_skip">Пропустить</string>
+    <string name="common_cancel">Отмена</string>
+
+    <!-- Errors -->
+    <string name="error_unexpected">Что-то пошло не так. Разработчики уже работают над решением проблемы.</string>
+    <string name="error_no_internet_connection">Отсутствует подключение к интернету.</string>
+    <string name="error_unauthorized">Требуется авторизация.</string>
+    <string name="error_deserialization">Ошибка обработки данных. Разработчики уже работают над решением.</string>
+    <string name="error_server_unavailable">Не удалось подключиться к серверу. Пожалуйста, попробуйте позже.</string>
+    <string name="error_ssl_handshake">Не удалось установить соединение из-за настроек безопасности сети. Проверьте дату и время на устройстве.</string>
+    <string name="error_server">Ошибка сервера. Пожалуйста, попробуйте позже.</string>
+    <string name="error_matching_application_not_found">Не найдено приложений для выполнения действия.</string>
+
+    <!-- Validation -->
+    <string name="field_error_is_blank">Поле обязательно для заполнения</string>
+    <string name="field_error_invalid_format">Неверный формат ввода</string>
+    <string name="checkbox_error_terms">Пожалуйста, примите условия использования</string>
+
+    <!-- Biometric prompt -->
+    <string name="biometric_prompt_title">Аутентификация</string>
+    <string name="biometric_prompt_description">Необходимо пройти аутентификацию для входа в приложение</string>
+</resources>

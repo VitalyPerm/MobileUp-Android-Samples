@@ -14,6 +14,10 @@ android {
     namespace = "ru.mobileup.samples"
     compileSdk = compileSdkVersion
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     defaultConfig {
         applicationId = "ru.mobileup.samples"
         minSdk = minSdkVersion

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_menu_cartesian_charts">Декартовы графики</string>
+    <string name="chart_menu_radial_charts">Радиальные графики</string>
+    <string name="chart_line">Линейный график</string>
+    <string name="chart_column">Столбчатая диаграмма</string>
+    <string name="chart_combo">Комбинированный график</string>
+    <string name="chart_candlestick">Японские свечи</string>
+    <string name="chart_donut">Кольцевая диаграмма</string>
+    <string name="chart_pie">Круговая диаграмма</string>
+</resources>

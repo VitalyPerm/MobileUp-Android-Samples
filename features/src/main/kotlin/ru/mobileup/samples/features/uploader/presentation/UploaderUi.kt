@@ -49,9 +49,7 @@ fun UploaderUi(
 ) {
     SystemBars(
         statusBarColor = Color.Transparent,
-        navigationBarColor = Color.Transparent,
         statusBarIconsColor = SystemBarIconsColor.Light,
-        navigationBarIconsColor = SystemBarIconsColor.Light
     )
 
     UploaderContent(

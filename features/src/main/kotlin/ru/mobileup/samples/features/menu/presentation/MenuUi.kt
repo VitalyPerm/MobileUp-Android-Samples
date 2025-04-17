@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
+import ru.mobileup.samples.core.message.presentation.noOverlapByMessage
 import ru.mobileup.samples.core.theme.AppTheme
 import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.widget.button.AppButton
@@ -35,6 +36,7 @@ fun MenuUi(
         modifier = modifier,
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.noOverlapByMessage(),
                 onClick = component::onSettingsClick
             ) {
                 Icon(

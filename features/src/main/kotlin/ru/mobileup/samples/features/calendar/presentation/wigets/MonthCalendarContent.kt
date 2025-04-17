@@ -48,6 +48,7 @@ import ru.mobileup.samples.core.theme.custom.CustomTheme
 import ru.mobileup.samples.core.widget.button.AppButton
 import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.features.R
+import ru.mobileup.samples.features.calendar.presentation.localizedMonthName
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -155,14 +156,14 @@ fun MonthCalendarContent(modifier: Modifier = Modifier) {
 private fun MonthHeader(
     yearMonth: YearMonth,
     daysOfWeek: List<DayOfWeek>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(
                 R.string.calendar_month_title,
-                yearMonth.month.name,
+                yearMonth.localizedMonthName,
                 yearMonth.year.toString()
             ),
             color = CustomTheme.colors.text.primary,
@@ -179,7 +180,7 @@ private fun MonthHeader(
 @Composable
 private fun DaysOfWeekTitle(
     daysOfWeek: List<DayOfWeek>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
@@ -218,7 +219,7 @@ private fun Day(
 private fun CalendarThemeButtons(
     selectCalendarTheme: CalendarTheme,
     onClick: (CalendarTheme) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -246,7 +247,7 @@ private fun ColorButton(
     colors: Pair<Color, Color>,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val arcAlpha = if (isSelected) 1f else 0.6f
 
@@ -291,25 +292,24 @@ private fun ColorButton(
 private fun CalendarTypeButtons(
     selectCalendarType: MonthCalendarType,
     onClick: (MonthCalendarType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {
         AppButton(
             modifier = Modifier.weight(1f),
-            text = MonthCalendarType.Horizontal.name,
+            text = MonthCalendarType.Horizontal.displayName,
             buttonType = if (selectCalendarType == MonthCalendarType.Horizontal) {
                 ButtonType.Primary
             } else {
                 ButtonType.Secondary
             },
             onClick = { onClick(MonthCalendarType.Horizontal) },
-
-            )
+        )
 
         Spacer(modifier = Modifier.width(16.dp))
         AppButton(
             modifier = Modifier.weight(1f),
-            text = MonthCalendarType.Vertical.name,
+            text = MonthCalendarType.Vertical.displayName,
             buttonType = if (selectCalendarType == MonthCalendarType.Vertical) {
                 ButtonType.Primary
             } else {
@@ -321,7 +321,14 @@ private fun CalendarTypeButtons(
 }
 
 private enum class MonthCalendarType {
-    Horizontal, Vertical
+    Horizontal, Vertical;
+
+    val displayName: String
+        @Composable
+        get() = when (this) {
+            Horizontal -> R.string.calendar_scroll_horizontal
+            Vertical -> R.string.calendar_scroll_vertical
+        }.let { stringResource(it) }
 }
 
 private enum class CalendarTheme {

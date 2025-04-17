@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="otp_caption_email">Мы отправили письмо с кодом подтверждения на hello@mobileup.ru</string>
+    <string name="otp_send_again_caption">Отправить код повторно</string>
+    <string name="otp_send_again_after_time_caption">Отправить код повторно (через %s)</string>
+    <string name="otp_error_code">Неверный код, попробуйте еще раз</string>
+    <string name="otp_reset_state">Сбросить состояние</string>
+</resources>

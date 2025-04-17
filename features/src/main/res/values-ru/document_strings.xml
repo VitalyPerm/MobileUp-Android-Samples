@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="document_menu_item_preview">Просмотр</string>
+
+    <string name="document_field_name">Имя:</string>
+    <string name="document_field_size">Размер:</string>
+    <string name="document_field_date">Дата:</string>
+    <string name="document_field_mime">MIME-тип:</string>
+    <string name="document_field_flags">Флаги:</string>
+    <string name="document_not_found">Не найдено</string>
+    <string name="document_load_failed">Ошибка загрузки документа</string>
+    <string name="document_pdf_viewer_not_found">Не установлен просмотрщик PDF</string>
+    <string name="document_permission_denied">Доступ запрещён</string>
+    <string name="document_open">Открыть</string>
+    <string name="document_metadata_share">Поделиться метаданными</string>
+</resources>

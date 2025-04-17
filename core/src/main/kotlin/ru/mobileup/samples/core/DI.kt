@@ -21,6 +21,8 @@ import ru.mobileup.samples.core.debug_tools.RealDebugTools
 import ru.mobileup.samples.core.error_handling.ErrorHandler
 import ru.mobileup.samples.core.external_apps.data.ExternalAppService
 import ru.mobileup.samples.core.external_apps.data.ExternalAppServiceImpl
+import ru.mobileup.samples.core.language.LanguageService
+import ru.mobileup.samples.core.language.LanguageServiceImpl
 import ru.mobileup.samples.core.location.AndroidLocationService
 import ru.mobileup.samples.core.location.LocationService
 import ru.mobileup.samples.core.message.data.MessageService
@@ -69,19 +71,20 @@ fun coreModule(backendUrl: String) = module {
     single<BiometricService> { AndroidBiometricService(get(), get()) }
     single<BiometricEnablingStorage> { BiometricEnablingStorageImpl(get()) }
     single<LocationService> { AndroidLocationService(get()) }
-    single<AppSettingsStorage> { AppSettingsStorageImpl(get()) }
+    single<AppSettingsStorage> { AppSettingsStorageImpl(get(), get()) }
     single<SharingService> { SharingServiceImpl(get()) }
+    single<LanguageService> { LanguageServiceImpl(get()) }
 }
 
 fun ComponentFactory.createMessageComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
 ): MessageComponent {
     return RealMessageComponent(componentContext, get())
 }
 
 fun ComponentFactory.createTutorialManagementComponent(
     componentContext: ComponentContext,
-    tutorial: Tutorial
+    tutorial: Tutorial,
 ): TutorialManagementComponent {
     return RealTutorialManagementComponent(
         componentContext,
@@ -93,7 +96,7 @@ fun ComponentFactory.createTutorialManagementComponent(
 }
 
 fun ComponentFactory.createTutorialOverlayComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
 ): TutorialOverlayComponent {
     return RealTutorialOverlayComponent(componentContext, get())
 }
