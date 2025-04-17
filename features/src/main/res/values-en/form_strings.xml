@@ -1,7 +1,0 @@
-<resources>
-    <string name="form_phone_placeholder">Phone</string>
-    <string name="form_password_placeholder">Password</string>
-    <string name="form_policy">I agree to [the terms of use] and [privacy policy]</string>
-    <string name="form_login">Log-in</string>
-    <string name="form_password_error">Your password must be %1$s–%2$s characters long, include at least one digit, one lowercase letter, one uppercase letter, and one special character (%3$s), and must not contain spaces.</string>
-</resources>
