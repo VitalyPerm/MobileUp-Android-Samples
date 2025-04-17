@@ -5,6 +5,7 @@ collapsing_toolbar
 document
 form
 image
+map
 menu
 navigation
 otp
@@ -17,7 +18,6 @@ shared_element_transitions
 tutorial
 uploader
 video
-yandex_map
 photo -> image
 photo -> video
 root -> calendar
@@ -26,6 +26,7 @@ root -> collapsing_toolbar
 root -> document
 root -> form
 root -> image
+root -> map
 root -> menu
 root -> navigation
 root -> otp
@@ -37,5 +38,4 @@ root -> shared_element_transitions
 root -> tutorial
 root -> uploader
 root -> video
-root -> yandex_map
 }
