@@ -18,6 +18,7 @@ import ru.mobileup.samples.features.collapsing_toolbar.createCollapsingToolbarCo
 import ru.mobileup.samples.features.document.createDocumentComponent
 import ru.mobileup.samples.features.form.createFormComponent
 import ru.mobileup.samples.features.image.createImageComponent
+import ru.mobileup.samples.features.map.createMapMainComponent
 import ru.mobileup.samples.features.menu.createMenuComponent
 import ru.mobileup.samples.features.menu.domain.Sample
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
@@ -34,7 +35,6 @@ import ru.mobileup.samples.features.shared_element_transitions.createSharedEleme
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.uploader.createUploaderComponent
 import ru.mobileup.samples.features.video.createVideoComponent
-import ru.mobileup.samples.features.yandex_map.createYandexMapComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -170,9 +170,9 @@ class RealRootComponent(
             )
         }
 
-        ChildConfig.YandexMap -> {
-            RootComponent.Child.YandexMap(
-                componentFactory.createYandexMapComponent(componentContext)
+        ChildConfig.Map -> {
+            RootComponent.Child.Map(
+                componentFactory.createMapMainComponent(componentContext)
             )
         }
 
@@ -201,7 +201,7 @@ class RealRootComponent(
                 Sample.Tutorial -> ChildConfig.Tutorial
                 Sample.SharedTransitions -> ChildConfig.SharedElements
                 Sample.PinCodeSettings -> ChildConfig.PinCodeSettings
-                Sample.YandexMap -> ChildConfig.YandexMap
+                Sample.Map -> ChildConfig.Map
             }.run(navigation::safePush)
 
             MenuComponent.Output.SettingsRequested -> navigation.safePush(ChildConfig.Settings)
@@ -266,7 +266,7 @@ class RealRootComponent(
         data object PinCodeSettings : ChildConfig
 
         @Serializable
-        data object YandexMap : ChildConfig
+        data object Map : ChildConfig
 
         @Serializable
         data object Settings : ChildConfig

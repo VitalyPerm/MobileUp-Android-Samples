@@ -8,8 +8,34 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import ru.mobileup.samples.core.location.GeoCoordinate
+import ru.mobileup.samples.core.map.domain.MapCommand
 
 private const val ANIMATION_DURATION_SECONDS = 1.0f
+
+fun MapView.executeCommand(command: MapCommand) {
+    when (command) {
+        is MapCommand.MoveTo -> moveTo(
+            coordinate = command.coordinate,
+            zoom = command.zoom,
+            animate = command.animate
+        )
+
+        is MapCommand.ZoomIn -> {
+            changeZoomByStep(1.0f, animate = true)
+        }
+
+        is MapCommand.ZoomOut -> {
+            changeZoomByStep(-1.0f, animate = true)
+        }
+
+        is MapCommand.MoveToBoundingBox -> {
+            moveToBoundingBox(
+                coordinates = command.coordinates,
+                animate = command.animate
+            )
+        }
+    }
+}
 
 fun MapView.moveTo(
     coordinate: GeoCoordinate,
@@ -45,7 +71,6 @@ fun MapView.changeZoomByStep(value: Float, animate: Boolean) {
 
 fun MapView.moveToBoundingBox(
     coordinates: List<GeoCoordinate>,
-    zoomShrink: Float,
     azimuth: Float? = null,
     tilt: Float? = null,
     animate: Boolean
@@ -61,7 +86,7 @@ fun MapView.moveToBoundingBox(
         tilt ?: currentPosition.tilt,
         null
     )
-
+    val zoomShrink = 0.3f
     val shrunkPosition = CameraPosition(
         position.target,
         position.zoom - zoomShrink,

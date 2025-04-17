@@ -1,8 +1,9 @@
-package ru.mobileup.samples.core.map.presentation
+package ru.mobileup.samples.core.map.presentation.yandex
 
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.yandex.mapkit.map.ClusterListener
+import com.yandex.mapkit.map.ClusterTapListener
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObjectTapListener
@@ -18,9 +19,10 @@ private const val CLUSTER_RADIUS = 40.0
 private const val CLUSTER_MIN_ZOOM = 12
 private const val PLACE_PIN_SCALE = 0.2f
 
-class PlacePinsOverlay(
-    onPlacePinClick: (GeoCoordinate) -> Unit
-) : MapOverlay {
+class YandexPlacePinsOverlay(
+    onPlacePinClick: (GeoCoordinate) -> Unit,
+    onClusterClick: (List<GeoCoordinate>) -> Unit
+) : YandexMapOverlay {
 
     private var mapView: MapView? = null
     private var clusterListener: ClusterListener? = null
@@ -29,6 +31,12 @@ class PlacePinsOverlay(
     private val markerTapListener = MapObjectTapListener { mapObject, _ ->
         val place = mapObject.userData as? GeoCoordinate ?: return@MapObjectTapListener false
         onPlacePinClick(place)
+        true
+    }
+
+    private val clusterTapListener = ClusterTapListener { cluster ->
+        val places = cluster.placemarks.mapNotNull { it.userData as? GeoCoordinate }
+        onClusterClick(places)
         true
     }
 
@@ -46,6 +54,7 @@ class PlacePinsOverlay(
 
                 )
             )
+            cluster.addClusterTapListener(clusterTapListener)
         }
     }
 

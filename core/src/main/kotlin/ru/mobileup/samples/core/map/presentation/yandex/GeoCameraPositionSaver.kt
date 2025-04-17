@@ -1,12 +1,11 @@
-package ru.mobileup.samples.core.map.presentation
+package ru.mobileup.samples.core.map.presentation.yandex
 
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import ru.mobileup.samples.core.location.DEFAULT_MAP_ZOOM
 import ru.mobileup.samples.core.location.GeoCameraPosition
 import ru.mobileup.samples.core.location.GeoCoordinate
 
-val GeoCameraPositionSaver: Saver<GeoCameraPosition, *> = listSaver(
+val GeoCameraPositionSaver = listSaver<GeoCameraPosition, Any>(
     save = { position ->
         listOf(
             position.geoCoordinate.lat,
@@ -23,15 +22,15 @@ val GeoCameraPositionSaver: Saver<GeoCameraPosition, *> = listSaver(
                 lng = values.getSafe(1, GeoCoordinate.Companion.KREMLIN.lng)
             ),
             zoom = values.getSafe(2, DEFAULT_MAP_ZOOM),
-            azimuth = 0f,
-            tilt = 0f
+            azimuth = values.getSafe(3, 0f),
+            tilt = values.getSafe(4, 0f),
         )
     }
 )
 
-private inline fun <reified T> List<*>.getSafe(index: Int, default: T): T {
+private inline fun <reified T> List<Any>.getSafe(index: Int, default: T): T {
     return try {
-        this.getOrNull(index) as? T ?: default
+        getOrNull(index) as? T ?: default
     } catch (_: ClassCastException) {
         default
     }

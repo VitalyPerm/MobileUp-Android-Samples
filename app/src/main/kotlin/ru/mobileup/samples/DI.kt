@@ -6,7 +6,7 @@ import ru.mobileup.samples.features.photo.photoModule
 import ru.mobileup.samples.features.pin_code.pinCodeModule
 import ru.mobileup.samples.features.uploader.uploaderModule
 import ru.mobileup.samples.features.video.videoModule
-import ru.mobileup.samples.features.yandex_map.yandexMapModule
+import ru.mobileup.samples.features.map.mapModule
 
 val allModules = listOf(
     coreModule(BuildConfig.BACKEND_URL),
@@ -15,5 +15,5 @@ val allModules = listOf(
     documentModule,
     uploaderModule,
     pinCodeModule,
-    yandexMapModule
+    mapModule
 )

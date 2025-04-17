@@ -1,4 +1,4 @@
-package ru.mobileup.samples.core.map.presentation
+package ru.mobileup.samples.core.map.presentation.yandex
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -17,7 +17,7 @@ import ru.mobileup.samples.core.R
 private val ACCURACY_CIRCLE_COLOR = Color.Transparent.toArgb()
 const val DEFAULT_SCALE = 0.4f
 
-class MyLocationMarkerOverlay : MapOverlay, UserLocationObjectListener {
+class MyLocationMarkerOverlay : YandexMapOverlay, UserLocationObjectListener {
 
     private var mapView: MapView? = null
     private var userLocationLayer: UserLocationLayer? = null

@@ -43,6 +43,7 @@ yandexMapKit = "4.12.0-lite"
 gmsLocation = "21.0.1"
 coroutinesPlayServices = "1.4.1"
 androidImageCropper = "4.6.0"
+googleMaps = "6.5.2"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -137,6 +138,8 @@ google-playservice-auth-phone = { module = "com.google.android.gms:play-services
 yandex-mapkit = { module = "com.yandex.android:maps.mobile", version.ref = "yandexMapKit" }
 gms-location = { module = "com.google.android.gms:play-services-location", version.ref = "gmsLocation" }
 gms-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices"}
+google-maps = { module = "com.google.maps.android:maps-compose", version.ref = "googleMaps" }
+google-map-compose-utils = { module = "com.google.maps.android:maps-compose-utils", version.ref = "googleMaps" }
 
 android-image-cropper = { module = "com.vanniktech:android-image-cropper", version.ref = "androidImageCropper"}
 
@@ -165,6 +168,10 @@ hyperion = [
 coil = [
     "coil",
     "coil-okhttp"
+]
+google-maps = [
+    "google-maps",
+    "google-map-compose-utils"
 ]
 
 [plugins]

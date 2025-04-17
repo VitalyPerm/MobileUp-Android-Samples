@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_geo_permission_dialog_disabled_title">We couldn\'t find you</string>
+    <string name="map_geo_permission_dialog_disabled_confirm">To settings</string>
+    <string name="map_geo_permission_dialog_disabled_cancel">Close</string>
+    <string name="map_geo_permission_dialog_text">Allow app to use you location so you don\'t have to enter address manually</string>
+    <string name="map_geo_permission_dialog_denied_title">Allow to access your location</string>
+    <string name="map_geo_permission_dialog_denied_confirm">Allow</string>
+    <string name="map_geo_permission_dialog_denied_cancel">Deny</string>
+    <string name="map_yandex">Yandex</string>
+    <string name="map_google">Google</string>
+    <string name="map_api_key_not_found">You need to add %s=\"API_KEY\" in file local.properties</string>
+</resources>

@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.data
+package ru.mobileup.samples.features.map.data
 
 import kotlinx.coroutines.delay
 import me.aartikov.replica.client.ReplicaClient

@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.yandex_map.presentation
+package ru.mobileup.samples.features.map.presentation.main
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,18 +8,22 @@ import ru.mobileup.samples.core.dialog.simple.fakeSimpleDialogControl
 import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.core.dialog.standard.fakeStandardDialogControl
 import ru.mobileup.samples.core.location.GeoCoordinate
-import ru.mobileup.samples.core.utils.LoadableState
 import ru.mobileup.samples.core.map.domain.MapCommand
 import ru.mobileup.samples.core.map.domain.MapTheme
+import ru.mobileup.samples.core.map.domain.MapVendor
+import ru.mobileup.samples.core.utils.LoadableState
 
-class FakeYandexMapComponent : YandexMapComponent {
+class FakeMapMainComponent : MapMainComponent {
+    override val vendor: MapVendor = MapVendor.Yandex
     override val mapCommands: Flow<MapCommand> = emptyFlow()
     override val isCurrentLocationAvailable = MutableStateFlow(true)
     override val isLocationSearchInProgress = MutableStateFlow(true)
+    override val userCoordinate = MutableStateFlow<GeoCoordinate?>(null)
     override val theme = MutableStateFlow(MapTheme.Default)
-    override val placesState = MutableStateFlow(LoadableState<List<GeoCoordinate>>(data = emptyList()))
+    override val placesState =
+        MutableStateFlow(LoadableState<List<GeoCoordinate>>(data = emptyList()))
     override val placeDialogControl: SimpleDialogControl<GeoCoordinate> =
-        fakeSimpleDialogControl(data = GeoCoordinate.KREMLIN)
+        fakeSimpleDialogControl(data = GeoCoordinate.Companion.KREMLIN)
     override val locationDialogControl: StandardDialogControl = fakeStandardDialogControl()
 
     override fun onMyLocationClick() = Unit
@@ -28,4 +32,5 @@ class FakeYandexMapComponent : YandexMapComponent {
     override fun onPlaceClick(place: GeoCoordinate) = Unit
     override fun onThemeSwitch(newTheme: MapTheme) = Unit
     override fun onRetryClick() = Unit
+    override fun onClusterClick(places: List<GeoCoordinate>) = Unit
 }
