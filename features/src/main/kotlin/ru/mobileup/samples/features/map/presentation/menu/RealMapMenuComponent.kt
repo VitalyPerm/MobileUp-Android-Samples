@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.map.presentation.type
+package ru.mobileup.samples.features.map.presentation.menu
 
 import com.arkivanov.decompose.ComponentContext
 import ru.mobileup.samples.core.BuildConfig
@@ -6,10 +6,10 @@ import ru.mobileup.samples.core.dialog.simple.SimpleDialogControl
 import ru.mobileup.samples.core.dialog.simple.simpleDialogControl
 import ru.mobileup.samples.core.map.domain.MapVendor
 
-class RealMapVendorComponent(
+class RealMapMenuComponent(
     componentContext: ComponentContext,
-    private val onOutput: (MapVendorComponent.Output) -> Unit
-) : ComponentContext by componentContext, MapVendorComponent {
+    private val onOutput: (MapMenuComponent.Output) -> Unit
+) : ComponentContext by componentContext, MapMenuComponent {
 
     override val apiKeyNotFoundDialogControl: SimpleDialogControl<MapVendor> = simpleDialogControl(
         key = "api_key_not_found",
@@ -26,6 +26,6 @@ class RealMapVendorComponent(
                 return
             }
         }
-        onOutput(MapVendorComponent.Output.VendorSelected(vendor))
+        onOutput(MapMenuComponent.Output.VendorSelected(vendor))
     }
 }

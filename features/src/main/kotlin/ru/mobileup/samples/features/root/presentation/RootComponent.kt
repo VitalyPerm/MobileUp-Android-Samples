@@ -12,7 +12,7 @@ import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingTo
 import ru.mobileup.samples.features.document.presentation.DocumentComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
 import ru.mobileup.samples.features.image.presentation.ImageComponent
-import ru.mobileup.samples.features.map.presentation.main.MapMainComponent
+import ru.mobileup.samples.features.map.presentation.MapComponent
 import ru.mobileup.samples.features.menu.presentation.MenuComponent
 import ru.mobileup.samples.features.navigation.NavigationComponent
 import ru.mobileup.samples.features.otp.presentation.OtpComponent
@@ -60,7 +60,7 @@ interface RootComponent : PredictiveBackComponent {
         class Tutorial(val component: TutorialSampleComponent) : Child
         class SharedElements(val component: SharedElementsComponent) : Child
         class PinCodeSettings(val component: PinCodeSettingsComponent) : Child
-        class Map(val component: MapMainComponent) : Child
+        class Map(val component: MapComponent) : Child
         class Settings(val component: SettingsComponent) : Child
     }
 }

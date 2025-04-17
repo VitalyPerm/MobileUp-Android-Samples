@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_geo_permission_dialog_disabled_title">Мы не смогли найти вас</string>
+    <string name="map_geo_permission_dialog_disabled_confirm">В настройки</string>
+    <string name="map_geo_permission_dialog_disabled_cancel">Закрыть</string>
+    <string name="map_geo_permission_dialog_text">Разрешите приложению использовать ваше местоположение, чтоб не вводить адрес вручную.</string>
+    <string name="map_geo_permission_dialog_denied_title">Разрешите использовать ваше местоположение</string>
+    <string name="map_geo_permission_dialog_denied_confirm">Разрешить</string>
+    <string name="map_geo_permission_dialog_denied_cancel">Запретить</string>
+    <string name="map_yandex">Yandex</string>
+    <string name="map_google">Google</string>
+    <string name="map_api_key_not_found">Необходимо добавить %s=\"API_KEY\" в файл local.properties</string>
+</resources>

@@ -1,9 +1,9 @@
-package ru.mobileup.samples.features.map.presentation.type
+package ru.mobileup.samples.features.map.presentation.menu
 
 import ru.mobileup.samples.core.dialog.simple.SimpleDialogControl
 import ru.mobileup.samples.core.map.domain.MapVendor
 
-interface MapVendorComponent {
+interface MapMenuComponent {
 
     val apiKeyNotFoundDialogControl: SimpleDialogControl<MapVendor>
 

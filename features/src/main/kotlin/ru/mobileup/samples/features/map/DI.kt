@@ -7,12 +7,12 @@ import ru.mobileup.samples.core.ComponentFactory
 import ru.mobileup.samples.features.map.data.MapRepository
 import ru.mobileup.samples.features.map.data.MapRepositoryImpl
 import ru.mobileup.samples.core.map.domain.MapVendor
-import ru.mobileup.samples.features.map.presentation.MapComponent
-import ru.mobileup.samples.features.map.presentation.RealMapComponent
 import ru.mobileup.samples.features.map.presentation.main.MapMainComponent
 import ru.mobileup.samples.features.map.presentation.main.RealMapMainComponent
-import ru.mobileup.samples.features.map.presentation.type.MapVendorComponent
-import ru.mobileup.samples.features.map.presentation.type.RealMapVendorComponent
+import ru.mobileup.samples.features.map.presentation.MapComponent
+import ru.mobileup.samples.features.map.presentation.RealMapComponent
+import ru.mobileup.samples.features.map.presentation.menu.MapMenuComponent
+import ru.mobileup.samples.features.map.presentation.menu.RealMapMenuComponent
 
 val mapModule = module {
     single<MapRepository> { MapRepositoryImpl(get()) }
@@ -21,8 +21,8 @@ val mapModule = module {
 fun ComponentFactory.createMapComponent(
     componentContext: ComponentContext,
     type: MapVendor
-): MapComponent {
-    return RealMapComponent(
+): MapMainComponent {
+    return RealMapMainComponent(
         componentContext,
         type,
         get(),
@@ -37,15 +37,15 @@ fun ComponentFactory.createMapComponent(
 
 fun ComponentFactory.createMapMainComponent(
     componentContext: ComponentContext
-): MapMainComponent = RealMapMainComponent(
+): MapComponent = RealMapComponent(
     componentContext,
     get()
 )
 
-fun ComponentFactory.createMapVendorComponent(
+fun ComponentFactory.createMapMenuComponent(
     componentContext: ComponentContext,
-    output: (MapVendorComponent.Output) -> Unit
-): MapVendorComponent = RealMapVendorComponent(
+    output: (MapMenuComponent.Output) -> Unit
+): MapMenuComponent = RealMapMenuComponent(
     componentContext,
     output
 )

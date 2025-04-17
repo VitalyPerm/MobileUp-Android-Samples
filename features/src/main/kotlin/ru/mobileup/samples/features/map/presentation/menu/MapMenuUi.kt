@@ -1,4 +1,4 @@
-package ru.mobileup.samples.features.map.presentation.type
+package ru.mobileup.samples.features.map.presentation.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,8 +21,8 @@ import ru.mobileup.samples.core.widget.button.ButtonType
 import ru.mobileup.samples.features.R
 
 @Composable
-fun MapVendorUi(
-    component: MapVendorComponent,
+fun MapMenuUi(
+    component: MapMenuComponent,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -67,8 +67,8 @@ fun MapVendorUi(
 
 @Preview
 @Composable
-private fun MapVendorPreview() {
+private fun MapMenuPreview() {
     AppTheme {
-        MapVendorUi(FakeMapVendorComponent())
+        MapMenuUi(FakeMapMenuComponent())
     }
 }

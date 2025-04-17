@@ -14,5 +14,5 @@
     <string name="menu_item_tutorial">Туториал</string>
     <string name="menu_item_pin_code_settings">Настройки PIN-кода</string>
     <string name="menu_item_shared_elements_transition">Shared elements transition</string>
-    <string name="menu_item_yandex_map">Яндекс.Карты</string>
+    <string name="menu_item_map">Карта</string>
 </resources>

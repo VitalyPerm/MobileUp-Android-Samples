@@ -32,7 +32,6 @@ import ru.mobileup.samples.core.location.GeoCameraPosition
 import ru.mobileup.samples.core.location.GeoCoordinate
 import ru.mobileup.samples.core.map.domain.MapCommand
 import ru.mobileup.samples.core.map.domain.MapTheme
-import ru.mobileup.samples.core.map.presentation.GeoCameraPositionSaver
 import ru.mobileup.samples.core.map.utils.executeCommand
 import ru.mobileup.samples.core.map.utils.toGeoCoordinate
 import ru.mobileup.samples.core.map.utils.toPoint

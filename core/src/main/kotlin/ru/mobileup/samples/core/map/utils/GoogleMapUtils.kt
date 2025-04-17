@@ -9,6 +9,8 @@ import com.google.maps.android.compose.CameraPositionState
 import ru.mobileup.samples.core.location.GeoCoordinate
 import ru.mobileup.samples.core.map.domain.MapCommand
 
+private const val POINTS_RECTANGLE_PADDING_PX = 100
+
 suspend fun CameraPositionState.executeCommand(command: MapCommand) {
     when (command) {
         is MapCommand.MoveTo -> moveTo(
@@ -60,8 +62,7 @@ suspend fun CameraPositionState.moveToBoundingBox(
         builder.include(latLng.toLatLng())
     }.build()
 
-    val rectanglePaddingPx = 100
-    val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, rectanglePaddingPx)
+    val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, POINTS_RECTANGLE_PADDING_PX)
 
     // move camera to new bounds
     if (animate) animate(cameraUpdate) else move(cameraUpdate)

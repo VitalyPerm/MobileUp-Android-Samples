@@ -1,4 +1,4 @@
-package ru.mobileup.samples.core.map.presentation
+package ru.mobileup.samples.core.map.presentation.yandex
 
 import androidx.compose.runtime.saveable.listSaver
 import ru.mobileup.samples.core.location.DEFAULT_MAP_ZOOM
