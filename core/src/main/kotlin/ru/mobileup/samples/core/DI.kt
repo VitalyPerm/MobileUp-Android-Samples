@@ -74,7 +74,6 @@ fun coreModule(backendUrl: String) = module {
     single<AppSettingsStorage> { AppSettingsStorageImpl(get(), get()) }
     single<SharingService> { SharingServiceImpl(get()) }
     single<LanguageService> { LanguageServiceImpl(get()) }
-    single<AppSettingsStorage> { AppSettingsStorageImpl(get(), get()) }
 }
 
 fun ComponentFactory.createMessageComponent(
