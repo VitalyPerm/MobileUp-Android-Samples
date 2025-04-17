@@ -27,7 +27,7 @@ android {
     namespace = "ru.mobileup.samples.core"
 
     defaultConfig {
-        val googleMapsApiKey = getLocalProperty("google.map.api.key", project) ?: "\"not_found\""
+        val googleMapsApiKey = getLocalProperty("google.map.api.key", project) ?: "not_found"
         manifestPlaceholders["GOOGLE_MAP_API_KEY"] = googleMapsApiKey
         buildConfigField("String", "GOOGLE_MAP_API_KEY", "\"$googleMapsApiKey\"")
 
