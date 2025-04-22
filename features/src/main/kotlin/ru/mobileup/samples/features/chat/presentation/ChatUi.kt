@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -108,7 +109,7 @@ private fun Toolbar(
         )
 
         Text(
-            text = "Test",
+            text = stringResource(R.string.chat_header),
             color = CustomTheme.colors.palette.white,
             modifier = Modifier
                 .weight(2f)
@@ -279,7 +280,7 @@ private fun InputLayout(
     AppTextField(
         modifier = Modifier.fillMaxWidth(),
         inputControl = inputControl,
-        placeholder = "Message",
+        placeholder = stringResource(R.string.chat_input_placeholder),
         colors = AppTextFieldDefaults.colors.copy(
             focusedContainerColor = CustomTheme.colors.button.primaryDisabled,
             unfocusedContainerColor = CustomTheme.colors.button.primaryDisabled
