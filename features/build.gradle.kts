@@ -42,11 +42,17 @@ dependencies {
 
     implementation(libs.form.validation)
 
+    // Room
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+
     // Architecture
     implementation(libs.bundles.decompose)
     implementation(libs.bundles.replica)
     api(libs.moko.resources)
     implementation(libs.moko.resourcesCompose)
+    implementation(libs.sesame.loop)
 
     // Camera
     implementation(libs.camera.core)

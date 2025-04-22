@@ -207,6 +207,7 @@ fun AppTextField(
     textStyle: TextStyle = AppTextFieldDefaults.textStyle,
     labelStyle: TextStyle = AppTextFieldDefaults.labelStyle,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = AppTextFieldDefaults.shape,
     border: BorderStroke? = null,
     visualTransformation: KmmVisualTransformation? = null,
     label: String? = null,
@@ -259,6 +260,7 @@ fun AppTextField(
             hasFocus = hasFocus
         ),
         interactionSource = interactionSource,
+        shape = shape
     )
 }
 

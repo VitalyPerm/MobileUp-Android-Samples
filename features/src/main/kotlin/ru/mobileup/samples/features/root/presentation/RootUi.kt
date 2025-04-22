@@ -20,6 +20,7 @@ import ru.mobileup.samples.core.utils.accumulate
 import ru.mobileup.samples.core.utils.predictiveBackAnimation
 import ru.mobileup.samples.features.calendar.presentation.CalendarUi
 import ru.mobileup.samples.features.charts.presentation.ChartUi
+import ru.mobileup.samples.features.chat.presentation.ChatUi
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarUi
 import ru.mobileup.samples.features.document.presentation.DocumentUi
 import ru.mobileup.samples.features.form.presentation.FormUi
@@ -73,6 +74,7 @@ fun RootUi(
             is RootComponent.Child.Settings -> SettingsUi(instance.component)
             is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
             is RootComponent.Child.Map -> MapUi(instance.component)
+            is RootComponent.Child.Chat -> ChatUi(instance.component)
         }
     }
 
