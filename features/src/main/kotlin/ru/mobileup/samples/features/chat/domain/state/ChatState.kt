@@ -33,7 +33,9 @@ data class ChatState(
 data class ChatMessagesState(
     val messages: List<ChatMessage>,
     val pendingMessages: List<ChatMessage>
-)
+) {
+    val allMessages get() = messages + pendingMessages
+}
 
 data class HistoryLoadingState(
     val inProgress: Boolean,

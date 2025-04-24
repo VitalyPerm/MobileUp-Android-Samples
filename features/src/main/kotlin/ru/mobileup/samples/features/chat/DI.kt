@@ -23,10 +23,10 @@ val chatModule = module {
     single { get<ChatDatabase>().getCachedFileDao() }
     single<CachedFileStorage> { RoomCachedFileStorage(get(), get()) }
     single<FileHelper> { FileHelperImpl(get()) }
-    single<ChatRepository> { FakeChatRepository() }
+    single<ChatRepository> { FakeChatRepository(get(), get()) }
     single<ChatClient> { ChatClientImpl(get(), get(), get()) }
 }
 
 fun ComponentFactory.createChatComponent(componentContext: ComponentContext): ChatComponent {
-    return RealChatComponent(componentContext, get())
+    return RealChatComponent(componentContext, get(), get())
 }

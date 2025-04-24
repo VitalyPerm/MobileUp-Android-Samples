@@ -12,21 +12,20 @@ import kotlinx.coroutines.launch
 import ru.mobileup.samples.features.chat.data.ChatRepository
 import ru.mobileup.samples.features.chat.data.FileHelper
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
-import ru.mobileup.samples.features.chat.domain.loop.utils.ChatLogger
 import ru.mobileup.samples.features.chat.domain.loop.ChatLoop
 import ru.mobileup.samples.features.chat.domain.loop.ChatReducer
 import ru.mobileup.samples.features.chat.domain.loop.ExternalChatEffect
 import ru.mobileup.samples.features.chat.domain.loop.LifecycleAction
 import ru.mobileup.samples.features.chat.domain.loop.UserAction
 import ru.mobileup.samples.features.chat.domain.loop.action_sources.ChatActionSource
-import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.DownloadAttachmentEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.ExternalChatEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.LoadHistoryEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.PrepareOutgoingMessageEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.SendMessageEffectHandler
-import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.loop.utils.ChatLogger
 import ru.mobileup.samples.features.chat.domain.state.ChatState
 import ru.mobileup.samples.features.chat.domain.state.ChatTag
+import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
 
 class ChatClientImpl(
     chatRepository: ChatRepository,
@@ -49,7 +48,8 @@ class ChatClientImpl(
                     _effectFlow.emit(event)
                 }
             },
-            DownloadAttachmentEffectHandler(chatRepository, cachedFileStorage)
+            // (Optional) We can enable manual download if we want so
+            // DownloadAttachmentEffectHandler(chatRepository, cachedFileStorage)
         ),
         actionSources = listOf(
             ChatActionSource(chatTag, chatRepository)
@@ -101,6 +101,7 @@ class ChatClientImpl(
         loop.dispatch(UserAction.RemovePendingMessage(messageId))
     }
 
+    // We can dispose chat after logout
     override fun dispose() {
         loopJob.cancel()
     }

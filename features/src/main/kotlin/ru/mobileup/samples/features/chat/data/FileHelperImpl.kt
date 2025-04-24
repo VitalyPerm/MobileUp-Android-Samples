@@ -6,9 +6,10 @@ import android.provider.OpenableColumns
 import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
 import android.webkit.MimeTypeMap
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.readAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 import ru.mobileup.samples.features.chat.data.FileHelper.Companion.CACHED_FILES_DIR
 import ru.mobileup.samples.features.chat.domain.exception.FileCopingException
 import ru.mobileup.samples.features.chat.domain.exception.InvalidMediaTypeException
@@ -16,6 +17,8 @@ import ru.mobileup.samples.features.chat.domain.exception.TooBigFileSizeExceptio
 import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 import java.io.File
 import java.util.UUID
+
+private const val BUFFER_SIZE = 8 * 1024
 
 class FileHelperImpl(private val context: Context) : FileHelper {
     override val cacheDirPath
@@ -73,7 +76,7 @@ class FileHelperImpl(private val context: Context) : FileHelper {
         }
     }
 
-    override suspend fun downloadCachedFile(body: ResponseBody, filename: String): String {
+    override suspend fun downloadCachedFile(channel: ByteReadChannel, filename: String): String {
         return withContext(Dispatchers.IO) {
             try {
                 val cachedFilesDir = File(context.cacheDir, CACHED_FILES_DIR)
@@ -81,15 +84,21 @@ class FileHelperImpl(private val context: Context) : FileHelper {
                     cachedFilesDir.mkdirs()
                 }
 
-                val inputStream = body.byteStream()
                 val outputFile = File(cachedFilesDir, filename)
                 val outputStream = outputFile.outputStream()
 
-                inputStream.use { input ->
-                    outputStream.use { output ->
-                        input.copyTo(output)
+                outputStream.use { output ->
+                    val buffer = ByteArray(BUFFER_SIZE)
+
+                    while (!channel.isClosedForRead) {
+                        val readBytes = channel.readAvailable(buffer)
+                        if (readBytes > 0) {
+                            output.write(buffer, 0, readBytes)
+                            output.flush()
+                        }
                     }
                 }
+
                 return@withContext outputFile.absolutePath
             } catch (e: Exception) {
                 throw FileCopingException(e)

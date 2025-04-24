@@ -3,13 +3,13 @@ package ru.mobileup.samples.features.chat.domain.loop.effect_handlers
 import me.aartikov.sesame.loop.EffectHandler
 import ru.mobileup.samples.features.chat.data.ChatRepository
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
+import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 import ru.mobileup.samples.features.chat.domain.loop.ChatAction
 import ru.mobileup.samples.features.chat.domain.loop.ChatEffect
 import ru.mobileup.samples.features.chat.domain.loop.HistoryLoadingAction
-import ru.mobileup.samples.features.chat.domain.cache.CachedFile
+import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
-import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import kotlin.coroutines.cancellation.CancellationException
 
 class LoadHistoryEffectHandler(
@@ -27,6 +27,7 @@ class LoadHistoryEffectHandler(
                 effect.currentMessages,
                 actionConsumer
             )
+
             else -> {
                 // Do nothing
             }

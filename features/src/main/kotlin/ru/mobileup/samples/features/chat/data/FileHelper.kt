@@ -1,7 +1,7 @@
 package ru.mobileup.samples.features.chat.data
 
 import android.net.Uri
-import okhttp3.ResponseBody
+import io.ktor.utils.io.ByteReadChannel
 import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 
 interface FileHelper {
@@ -19,7 +19,7 @@ interface FileHelper {
         role: CachedFile.Role
     ): CachedFile
 
-    suspend fun downloadCachedFile(body: ResponseBody, filename: String): String
+    suspend fun downloadCachedFile(channel: ByteReadChannel, filename: String): String
 
     fun getMimeType(uri: Uri): String
 

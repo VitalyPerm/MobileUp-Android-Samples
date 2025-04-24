@@ -9,6 +9,7 @@
     <string name="common_no">Нет</string>
     <string name="common_skip">Пропустить</string>
     <string name="common_cancel">Отмена</string>
+    <string name="common_view">Просмотр</string>
 
     <!-- Errors -->
     <string name="error_unexpected">Что-то пошло не так. Разработчики уже работают над решением проблемы.</string>
