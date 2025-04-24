@@ -2,6 +2,7 @@ package ru.mobileup.samples.features.video.domain.states
 
 import ru.mobileup.samples.features.video.data.render.GlFilter
 import ru.mobileup.samples.features.video.domain.VideoTransform
+import ru.mobileup.samples.features.video.presentation.player.preview.PlayerOrientation
 
 data class PlayerState(
     val startPositionMs: Long,
@@ -11,7 +12,8 @@ data class PlayerState(
     val speed: Float,
     val videoTransform: VideoTransform,
     val glFilter: GlFilter,
-    val renderProgress: Float?
+    val renderProgress: Float?,
+    val orientation: PlayerOrientation,
 ) {
     companion object {
 
@@ -23,7 +25,8 @@ data class PlayerState(
             speed = 1f,
             videoTransform = VideoTransform(),
             glFilter = GlFilter.Default,
-            renderProgress = null
+            renderProgress = null,
+            orientation = PlayerOrientation.Portrait
         )
     }
 

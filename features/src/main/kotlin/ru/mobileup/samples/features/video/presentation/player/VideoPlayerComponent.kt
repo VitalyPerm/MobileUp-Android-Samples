@@ -1,16 +1,18 @@
 package ru.mobileup.samples.features.video.presentation.player
 
-import android.net.Uri
 import kotlinx.coroutines.flow.StateFlow
 import ru.mobileup.samples.core.dialog.standard.StandardDialogControl
 import ru.mobileup.samples.features.video.data.render.GlFilter
 import ru.mobileup.samples.features.video.domain.PlayerConfig
-import ru.mobileup.samples.features.video.domain.states.PlayerState
 import ru.mobileup.samples.features.video.domain.VideoTransform
+import ru.mobileup.samples.features.video.domain.states.PlayerState
+import ru.mobileup.samples.features.video.presentation.player.controller.VideoPlayerController
 
 interface VideoPlayerComponent {
 
-    val uri: Uri
+    val videoPlayerController: VideoPlayerController
+
+    val isPlaying: StateFlow<Boolean>
 
     val playerConfig: StateFlow<PlayerConfig>
 
@@ -33,6 +35,8 @@ interface VideoPlayerComponent {
     fun onCut(startPositionMs: Long, endPositionMs: Long)
 
     fun onUpdateFilter(glFilter: GlFilter)
+
+    fun onChangeOrientation()
 
     fun onSaveClick()
 
