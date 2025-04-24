@@ -5,6 +5,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.strResDesc
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import ru.mobileup.kmm_form_validation.options.ImeAction
 import ru.mobileup.kmm_form_validation.options.KeyboardOptions
 import ru.mobileup.kmm_form_validation.options.KeyboardType
@@ -15,23 +17,30 @@ import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.InputControl
 import ru.mobileup.samples.core.utils.Resource
+import ru.mobileup.samples.core.utils.componentScope
 import ru.mobileup.samples.features.R
-import ru.mobileup.samples.features.chat.domain.ChatClient
+import ru.mobileup.samples.features.chat.domain.ChatClientFactory
 import ru.mobileup.samples.features.chat.domain.exception.isFileCopingException
 import ru.mobileup.samples.features.chat.domain.exception.isTooBigFileSizeException
+import ru.mobileup.samples.features.chat.domain.loop.ExternalChatEffect
+import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
 
 private const val INPUT_MAX_LENGTH = 400
 
 class RealChatComponent(
     componentContext: ComponentContext,
-    private val chatClient: ChatClient,
+    chatClientFactory: ChatClientFactory,
     private val messageService: MessageService
 ) : ComponentContext by componentContext, ChatComponent {
 
+    private val chatClient = chatClientFactory.getOrCreateChatClient(
+        ChatTag("Test Chat")
+    )
+
     override val chatState = chatClient.stateFlow
 
-    override val effectFlow = chatClient.effectFlow
+    override val scrollToEnd = MutableSharedFlow<Unit>()
 
     override val inputControl = InputControl(
         keyboardOptions = KeyboardOptions(
@@ -45,8 +54,6 @@ class RealChatComponent(
     override val messageSendFailedDialog = standardDialogControl("sendFailedDialog")
 
     init {
-        chatClient.initialize()
-
         lifecycle.subscribe(
             object : Lifecycle.Callbacks {
                 override fun onResume() {
@@ -60,6 +67,28 @@ class RealChatComponent(
                 }
             }
         )
+
+        componentScope.launch {
+            chatClient.effectFlow.collect {
+                when (it) {
+                    is ExternalChatEffect.ReactToAddedMessages -> {
+                        scrollToEnd.emit(Unit)
+                    }
+
+                    is ExternalChatEffect.ShowFailedMessageDialog -> {
+                        showMessageSendFailedDialog(it.messageId)
+                    }
+
+                    is ExternalChatEffect.ShowError -> {
+                        showErrorMessage(it.exception)
+                    }
+
+                    else -> {
+                        // Do nothing
+                    }
+                }
+            }
+        }
     }
 
     override fun onReloadClick() {
@@ -79,7 +108,7 @@ class RealChatComponent(
         chatClient.handleMessageClick(messageId)
     }
 
-    override fun onMessageSendFailed(messageId: ChatMessageId) {
+    private fun showMessageSendFailedDialog(messageId: ChatMessageId) {
         messageSendFailedDialog.show(
             StandardDialogData(
                 title = R.string.chat_send_failed_dialog_title.strResDesc(),
@@ -100,7 +129,7 @@ class RealChatComponent(
         )
     }
 
-    override fun onError(exception: Exception) {
+    private fun showErrorMessage(exception: Exception) {
         messageService.showMessage(
             Message(
                 text = StringDesc.Resource(

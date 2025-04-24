@@ -11,8 +11,8 @@ import ru.mobileup.samples.features.chat.data.FileHelper
 import ru.mobileup.samples.features.chat.data.FileHelperImpl
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
 import ru.mobileup.samples.features.chat.data.cached_file.RoomCachedFileStorage
-import ru.mobileup.samples.features.chat.domain.ChatClient
-import ru.mobileup.samples.features.chat.domain.ChatClientImpl
+import ru.mobileup.samples.features.chat.domain.ChatClientFactory
+import ru.mobileup.samples.features.chat.domain.ChatClientFactoryImpl
 import ru.mobileup.samples.features.chat.presentation.ChatComponent
 import ru.mobileup.samples.features.chat.presentation.RealChatComponent
 
@@ -24,7 +24,7 @@ val chatModule = module {
     single<CachedFileStorage> { RoomCachedFileStorage(get(), get()) }
     single<FileHelper> { FileHelperImpl(get()) }
     single<ChatRepository> { FakeChatRepository(get(), get()) }
-    single<ChatClient> { ChatClientImpl(get(), get(), get()) }
+    single<ChatClientFactory> { ChatClientFactoryImpl(get(), get(), get()) }
 }
 
 fun ComponentFactory.createChatComponent(componentContext: ComponentContext): ChatComponent {

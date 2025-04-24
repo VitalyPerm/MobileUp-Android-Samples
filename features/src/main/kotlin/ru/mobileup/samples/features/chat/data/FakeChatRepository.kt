@@ -99,8 +99,8 @@ class FakeChatRepository(
         ),
         buildFakeMessage(
             text = when (languageService.getLanguage()) {
-                AppLanguage.EN -> "Send a message and you will get my response :)"
-                AppLanguage.RU -> "Отправь мне сообщение и получишь мой ответ :)"
+                AppLanguage.EN -> "Send a message and you will get my response :)\nTo test the error case, send a message \"error\""
+                AppLanguage.RU -> "Отправь мне сообщение и получишь мой ответ :)\nДля проверки кейса с ошибкой отправь сообщение \"error\""
             }
         )
     )
@@ -124,6 +124,7 @@ class FakeChatRepository(
 
     override suspend fun sendTextMessage(chatTag: ChatTag, text: String): ChatMessage {
         delay(NETWORK_OPERATION_FAKE_DELAY)
+        if (text.lowercase() == "error") throw Exception("Fake error")
         receiveTextFakeMessageWithDelay()
 
         val resultMessage = ChatMessage(
