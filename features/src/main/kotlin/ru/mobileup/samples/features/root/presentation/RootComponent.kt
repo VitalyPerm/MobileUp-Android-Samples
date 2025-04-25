@@ -8,6 +8,7 @@ import ru.mobileup.samples.core.tutorial.presentation.overlay.TutorialOverlayCom
 import ru.mobileup.samples.core.utils.PredictiveBackComponent
 import ru.mobileup.samples.features.calendar.presentation.CalendarComponent
 import ru.mobileup.samples.features.charts.presentation.ChartComponent
+import ru.mobileup.samples.features.chat.presentation.ChatComponent
 import ru.mobileup.samples.features.collapsing_toolbar.presentation.CollapsingToolbarComponent
 import ru.mobileup.samples.features.document.presentation.DocumentComponent
 import ru.mobileup.samples.features.form.presentation.FormComponent
@@ -61,6 +62,7 @@ interface RootComponent : PredictiveBackComponent {
         class SharedElements(val component: SharedElementsComponent) : Child
         class PinCodeSettings(val component: PinCodeSettingsComponent) : Child
         class Map(val component: MapComponent) : Child
+        class Chat(val component: ChatComponent) : Child
         class Settings(val component: SettingsComponent) : Child
     }
 }

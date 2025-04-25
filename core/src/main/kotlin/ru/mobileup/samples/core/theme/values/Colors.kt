@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import ru.mobileup.samples.core.theme.custom.BackgroundColors
 import ru.mobileup.samples.core.theme.custom.BorderColors
 import ru.mobileup.samples.core.theme.custom.ButtonColors
+import ru.mobileup.samples.core.theme.custom.ChatColors
 import ru.mobileup.samples.core.theme.custom.CommonColors
 import ru.mobileup.samples.core.theme.custom.CustomColors
 import ru.mobileup.samples.core.theme.custom.ExtendedPaletteColor
@@ -66,6 +67,13 @@ val LightAppColors = CustomColors(
     common = CommonColors(
         positive = Color(0xFF00FF00),
         negative = Color(0xFFFF0000)
+    ),
+    chat = ChatColors(
+        primary = Color(0xFF6750A4),
+        secondary = Color(0xFFEADDFF),
+        tertiary = Color(0xFFE7E0EC),
+        background = Color(0xFFFFFBFE),
+        input = Color(0xFFF3EDF7)
     )
 )
 
@@ -113,5 +121,12 @@ val DarkAppColors = CustomColors(
     common = CommonColors(
         positive = Color(0xFF00CC00),
         negative = Color(0xFFCC3333)
+    ),
+    chat = ChatColors(
+        primary = Color(0xFF36343B),
+        secondary = Color(0xFF4F378B),
+        tertiary = Color(0xFF49454F),
+        background = Color(0xFF1C1B1F),
+        input = Color(0xFF2B2930)
     )
 )

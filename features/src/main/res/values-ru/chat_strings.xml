@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_header">Чат</string>
+    <string name="chat_input_placeholder">Сообщение</string>
+    <string name="chat_divider_today">Сегодня</string>
+    <string name="chat_divider_yesterday">Вчера</string>
+    <string name="chat_send_failed_dialog_title">Сообщение не отправлено</string>
+    <string name="chat_send_failed_dialog_message">Пожалуйста, попробуйте еще раз</string>
+    <string name="chat_send_failed_dialog_remove">Удалить</string>
+    <string name="chat_send_failed_dialog_resend">Повторить</string>
+    <string name="chat_error_file_download">Не удалось загрузить файл</string>
+    <string name="chat_error_file_too_big">Файл слишком большой</string>
+    <string name="chat_error_unknown">Что-то пошло не так</string>
+    <string name="chat_error_try_again">Обновить</string>
+</resources>

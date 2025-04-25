@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_header">Chat</string>
+    <string name="chat_input_placeholder">Message</string>
+    <string name="chat_divider_today">Today</string>
+    <string name="chat_divider_yesterday">Yesterday</string>
+    <string name="chat_send_failed_dialog_title">Message not sent</string>
+    <string name="chat_send_failed_dialog_message">Please try again</string>
+    <string name="chat_send_failed_dialog_remove">Remove</string>
+    <string name="chat_send_failed_dialog_resend">Resend</string>
+    <string name="chat_error_file_download">File download failed</string>
+    <string name="chat_error_file_too_big">File is too big</string>
+    <string name="chat_error_unknown">Something went wrong</string>
+    <string name="chat_error_try_again">Try again</string>
+</resources>

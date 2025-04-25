@@ -13,11 +13,20 @@ data class CustomColors(
     val button: ButtonColors,
     val border: BorderColors,
     val textField: TextFieldColors,
+    val chat: ChatColors
 )
 
 data class CommonColors(
     val positive: Color,
     val negative: Color
+)
+
+data class ChatColors(
+    val primary: Color,
+    val secondary: Color,
+    val tertiary: Color,
+    val background: Color,
+    val input: Color
 )
 
 data class BackgroundColors(
