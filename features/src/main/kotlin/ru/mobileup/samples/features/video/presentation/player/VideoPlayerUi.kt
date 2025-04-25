@@ -649,7 +649,7 @@ private fun VideoProgressBar(
 
         Text(
             text = formatMillisToMS(playerState.duration),
-            color = CustomTheme.colors.text.invert,
+            color = CustomTheme.colors.palette.white,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
 
@@ -668,7 +668,7 @@ private fun VideoProgressBar(
 
                 Icon(
                     painter = painterResource(orientationIcon),
-                    tint = CustomTheme.colors.text.invert,
+                    tint = CustomTheme.colors.palette.white,
                     contentDescription = "orientation_icon"
                 )
             }
