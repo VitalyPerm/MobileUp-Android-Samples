@@ -13,6 +13,7 @@ import ru.mobileup.kmm_form_validation.options.KeyboardType
 import ru.mobileup.samples.core.dialog.standard.DialogButton
 import ru.mobileup.samples.core.dialog.standard.StandardDialogData
 import ru.mobileup.samples.core.dialog.standard.standardDialogControl
+import ru.mobileup.samples.core.external_apps.data.ExternalAppService
 import ru.mobileup.samples.core.message.data.MessageService
 import ru.mobileup.samples.core.message.domain.Message
 import ru.mobileup.samples.core.utils.InputControl
@@ -31,6 +32,7 @@ private const val INPUT_MAX_LENGTH = 400
 class RealChatComponent(
     componentContext: ComponentContext,
     chatClientFactory: ChatClientFactory,
+    private val externalAppService: ExternalAppService,
     private val messageService: MessageService
 ) : ComponentContext by componentContext, ChatComponent {
 
@@ -83,8 +85,10 @@ class RealChatComponent(
                         showErrorMessage(it.exception)
                     }
 
-                    else -> {
-                        // Do nothing
+                    is ExternalChatEffect.OpenAttachmentFile -> {
+                        externalAppService.openFile(
+                            filePath = it.filePath
+                        )
                     }
                 }
             }

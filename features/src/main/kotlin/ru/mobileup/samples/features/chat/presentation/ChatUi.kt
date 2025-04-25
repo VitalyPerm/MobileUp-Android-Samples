@@ -200,7 +200,7 @@ private fun ChatComponent(
             exit = fadeOut(),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 56.dp, end = 16.dp)
+                .padding(bottom = 64.dp, end = 16.dp)
         ) {
             IconButton(
                 onClick = {

@@ -75,7 +75,7 @@ class DownloadAttachmentEffectHandler(
             val downloadingJob = launch(start = CoroutineStart.LAZY) {
                 try {
                     message.attachment?.remoteLink?.let { url ->
-                        val filename = "${UUID.randomUUID()}.${message.attachment.extension}"
+                        val filename = UUID.randomUUID().toString() + message.attachment.extension
 
                         val cachedFile = cachedFileStorage.insertCachedFile(
                             id = message.id.value,

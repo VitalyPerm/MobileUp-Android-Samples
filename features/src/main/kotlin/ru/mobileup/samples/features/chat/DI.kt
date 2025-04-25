@@ -28,5 +28,5 @@ val chatModule = module {
 }
 
 fun ComponentFactory.createChatComponent(componentContext: ComponentContext): ChatComponent {
-    return RealChatComponent(componentContext, get(), get())
+    return RealChatComponent(componentContext, get(), get(), get())
 }
