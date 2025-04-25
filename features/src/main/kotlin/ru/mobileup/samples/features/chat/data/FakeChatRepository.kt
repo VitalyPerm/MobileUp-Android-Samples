@@ -21,6 +21,7 @@ import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.message.MessageAuthor
 import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import java.time.LocalDateTime
@@ -180,14 +181,23 @@ class FakeChatRepository(
     private fun receiveAttachmentFakeMessageWithDelay() {
         scope.launch {
             delay(NETWORK_OPERATION_FAKE_DELAY)
+            val link = fakeAttachmentLinkList[Random.nextInt(fakeAttachmentLinkList.size)]
+            val fileName = link.split("/").last()
+            val extension = fileName.split(".").last()
+            val type = when (extension.lowercase()) {
+                "jpg", "png" -> ChatAttachment.Type.IMAGE
+                "mp4" -> ChatAttachment.Type.VIDEO
+                else -> ChatAttachment.Type.FILE
+            }
+
             val message = buildFakeMessage(
                 text = "",
                 attachment = ChatAttachment(
-                    remoteLink = fakeAttachmentLinkList[Random.nextInt(fakeAttachmentLinkList.size)],
-                    filename = UUID.randomUUID().toString(),
-                    extension = ".jpg",
-                    type = ChatAttachment.Type.IMAGE,
-                    downloadingStatus = ChatAttachment.DownloadingStatus.NotDownloaded
+                    remoteLink = link,
+                    filename = fileName,
+                    extension = ".$extension",
+                    type = type,
+                    downloadingStatus = DownloadingStatus.NotDownloaded
                 )
             )
             messageFlow.emit(message)

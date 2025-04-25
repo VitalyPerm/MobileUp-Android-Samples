@@ -2,7 +2,6 @@ package ru.mobileup.samples.features.chat.presentation
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
@@ -66,6 +65,8 @@ import ru.mobileup.samples.features.chat.presentation.widget.AnimatedListItem
 import ru.mobileup.samples.features.chat.presentation.widget.ChatMessageItem
 import ru.mobileup.samples.features.chat.presentation.widget.DateDivider
 import java.time.LocalDate
+
+private val SUPPORTED_MIME_TYPES = arrayOf("image/*", "video/*", "application/pdf")
 
 sealed class ChatListItem {
     data class MessageItem(val message: ChatMessage) : ChatListItem()
@@ -314,7 +315,7 @@ private fun InputLayout(
     val value = inputControl.value.collectAsState()
 
     val pickerLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
                 onSendFile(it)
             }
@@ -335,11 +336,7 @@ private fun InputLayout(
             Icon(
                 modifier = Modifier
                     .clickable {
-                        pickerLauncher.launch(
-                            PickVisualMediaRequest(
-                                ActivityResultContracts.PickVisualMedia.ImageAndVideo
-                            )
-                        )
+                        pickerLauncher.launch(SUPPORTED_MIME_TYPES)
                     }
                     .padding(8.dp),
                 painter = painterResource(

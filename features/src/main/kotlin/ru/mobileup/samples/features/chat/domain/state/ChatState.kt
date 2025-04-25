@@ -3,6 +3,7 @@ package ru.mobileup.samples.features.chat.domain.state
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 
 data class ChatState(
@@ -141,7 +142,7 @@ fun ChatState.changeAttachmentMessage(
 
 fun ChatState.changeAttachmentMessageDownloadingStatus(
     messageId: ChatMessageId,
-    downloadingStatus: ChatAttachment.DownloadingStatus
+    downloadingStatus: DownloadingStatus
 ) = copy(
     chatMessagesState = chatMessagesState.copy(
         messages = chatMessagesState.messages.map {

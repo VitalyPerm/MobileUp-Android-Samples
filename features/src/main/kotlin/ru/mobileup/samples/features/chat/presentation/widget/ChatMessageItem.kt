@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,6 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -44,6 +47,7 @@ import ru.mobileup.samples.features.R
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.message.MessageAuthor
 import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import java.time.LocalDateTime
@@ -169,6 +173,96 @@ private fun MessageAttachment(
     onMessageClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    Box(modifier) {
+        if (attachment.type == ChatAttachment.Type.FILE) {
+            DocumentAttachment(
+                name = attachment.filename,
+                messageStatus = messageStatus,
+                downloadingStatus = attachment.downloadingStatus,
+                onMessageClick = onMessageClick
+            )
+        } else {
+            MediaAttachment(
+                name = attachment.filename,
+                localPath = attachment.localFilePath,
+                messageStatus = messageStatus,
+                downloadingStatus = attachment.downloadingStatus,
+                onMessageClick = onMessageClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun DocumentAttachment(
+    name: String,
+    messageStatus: MessageStatus,
+    downloadingStatus: DownloadingStatus,
+    onMessageClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(CustomTheme.colors.chat.input)
+            .padding(end = 8.dp)
+            .clickable {
+                onMessageClick()
+            }
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_document),
+            contentDescription = null,
+            tint = CustomTheme.colors.chat.primary,
+            modifier = Modifier
+        )
+
+        Text(
+            text = name,
+            style = CustomTheme.typography.body.regular,
+            color = CustomTheme.colors.text.secondary,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+        )
+
+        when {
+            messageStatus == MessageStatus.Sending ||
+                    downloadingStatus == DownloadingStatus.InProgress -> {
+                CircularProgressIndicator(
+                    color = CustomTheme.colors.chat.primary,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickableNoRipple { onMessageClick() }
+                        .padding(start = 4.dp)
+                )
+            }
+
+            downloadingStatus.isNotDownloaded -> {
+                Icon(
+                    painter = painterResource(R.drawable.ic_download),
+                    contentDescription = null,
+                    tint = CustomTheme.colors.chat.primary,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .clickableNoRipple { onMessageClick() }
+                        .padding(start = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MediaAttachment(
+    name: String,
+    localPath: String?,
+    messageStatus: MessageStatus,
+    downloadingStatus: DownloadingStatus,
+    onMessageClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     val imageLoader by remember {
@@ -181,27 +275,61 @@ private fun MessageAttachment(
         }
     }
 
-    Box(modifier) {
+    Box(modifier = modifier) {
         AsyncImage(
             modifier = Modifier
                 .size(180.dp)
                 .clip(RoundedCornerShape(12.dp))
+                .background(CustomTheme.colors.chat.input)
                 .clickable {
                     onMessageClick()
                 },
-            model = attachment.localFilePath ?: attachment.remoteLink,
+            model = if (downloadingStatus == DownloadingStatus.Downloaded) {
+                localPath
+            } else {
+                null
+            },
             imageLoader = imageLoader,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
 
-        if (messageStatus is MessageStatus.Sending) {
-            CircularProgressIndicator(
-                color = CustomTheme.colors.palette.white,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .clickableNoRipple { onMessageClick() }
-            )
+        Text(
+            text = name,
+            style = CustomTheme.typography.caption.regular,
+            color = CustomTheme.colors.palette.white,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .width(180.dp)
+                .clip(RoundedCornerShape(0.dp, 0.dp, 12.dp, 12.dp))
+                .background(CustomTheme.colors.palette.black50)
+                .align(Alignment.BottomStart)
+                .padding(horizontal = 8.dp)
+        )
+
+        when {
+            messageStatus == MessageStatus.Sending ||
+                    downloadingStatus == DownloadingStatus.InProgress -> {
+                CircularProgressIndicator(
+                    color = CustomTheme.colors.chat.primary,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .clickableNoRipple { onMessageClick() }
+                )
+            }
+
+            downloadingStatus.isNotDownloaded -> {
+                Icon(
+                    painter = painterResource(R.drawable.ic_download),
+                    contentDescription = null,
+                    tint = CustomTheme.colors.chat.primary,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .clickableNoRipple { onMessageClick() }
+                )
+            }
         }
     }
 }
@@ -230,6 +358,25 @@ private fun ChatMessageItemPreview() {
                     text = "Hi!",
                     time = LocalDateTime.now(),
                     attachment = null,
+                    messageStatus = MessageStatus.Sent
+                ),
+                onMessageClick = {}
+            )
+
+            ChatMessageItem(
+                message = ChatMessage(
+                    id = ChatMessageId.generateLocalId(),
+                    author = MessageAuthor.Me,
+                    text = "",
+                    time = LocalDateTime.now(),
+                    attachment = ChatAttachment(
+                        localFilePath = "",
+                        remoteLink = "",
+                        filename = "doc.pdf",
+                        extension = ".pdf",
+                        type = ChatAttachment.Type.FILE,
+                        downloadingStatus = DownloadingStatus.NotDownloaded
+                    ),
                     messageStatus = MessageStatus.Sent
                 ),
                 onMessageClick = {}

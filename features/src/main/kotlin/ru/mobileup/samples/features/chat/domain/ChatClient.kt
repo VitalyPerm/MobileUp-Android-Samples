@@ -18,6 +18,7 @@ import ru.mobileup.samples.features.chat.domain.loop.ExternalChatEffect
 import ru.mobileup.samples.features.chat.domain.loop.LifecycleAction
 import ru.mobileup.samples.features.chat.domain.loop.UserAction
 import ru.mobileup.samples.features.chat.domain.loop.action_sources.ChatActionSource
+import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.DownloadAttachmentEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.ExternalChatEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.LoadHistoryEffectHandler
 import ru.mobileup.samples.features.chat.domain.loop.effect_handlers.PrepareOutgoingMessageEffectHandler
@@ -48,8 +49,7 @@ class ChatClient(
                     _effectFlow.emit(event)
                 }
             },
-            // (Optional) We can enable manual download if we want so
-            // DownloadAttachmentEffectHandler(chatRepository, cachedFileStorage)
+            DownloadAttachmentEffectHandler(chatRepository, cachedFileStorage)
         ),
         actionSources = listOf(
             ChatActionSource(chatTag, chatRepository)
