@@ -2,6 +2,7 @@ package ru.mobileup.samples.features.video.presentation.player.controller
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -21,14 +22,18 @@ import ru.mobileup.samples.features.video.domain.events.VideoPlayerEvent
 
 private const val POSITION_REFRESH_DELAY_MILLIS = 18L
 
-@UnstableApi
+typealias PlayerEvent = (VideoPlayerEvent, VideoPlayerController) -> Unit
+
+@OptIn(UnstableApi::class)
 class VideoPlayerController(
-    private val context: Context,
-    private val onVideoPlayerEvent: (VideoPlayerEvent, VideoPlayerController) -> Unit,
+    private val context: Context
 ) : Player.Listener {
+
     private val progressScope = CoroutineScope(Dispatchers.Main)
     private val factory: DefaultMediaSourceFactory = DefaultMediaSourceFactory(context)
     private val _progressState = MutableStateFlow(0f)
+
+    private var onVideoPlayerEvent: PlayerEvent? = null
 
     private var isBuffering = false
     private var progressJob: Job? = null
@@ -45,15 +50,21 @@ class VideoPlayerController(
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        onVideoPlayerEvent(
-            VideoPlayerEvent.PlayingStateChanged(
-                isPlaying = isPlaying,
-                playFrom = 0f
-            ), this@VideoPlayerController
-        )
+        onVideoPlayerEvent?.let {
+            it(
+                VideoPlayerEvent.PlayingStateChanged(
+                    isPlaying = isPlaying,
+                    playFrom = 0f
+                ), this@VideoPlayerController
+            )
+        }
         if (isPlaying) {
             startVideoProgressUpdate()
         }
+    }
+
+    fun setVideoPlayerEvent(onVideoPlayerEvent: PlayerEvent?) {
+        this.onVideoPlayerEvent = onVideoPlayerEvent
     }
 
     fun setMedia(

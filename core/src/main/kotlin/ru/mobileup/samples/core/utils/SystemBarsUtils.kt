@@ -1,5 +1,6 @@
 package ru.mobileup.samples.core.utils
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.ime
@@ -17,10 +18,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.util.fastFold
 import androidx.compose.ui.util.fastMap
+import androidx.core.view.WindowInsetsCompat.Type.InsetsType
+import androidx.core.view.WindowInsetsControllerCompat
 import java.util.UUID
 
 val LocalSystemBarsSettings = staticCompositionLocalOf {
@@ -100,6 +104,32 @@ fun SystemBars(
     }
 }
 
+@Composable
+fun HideWindowInsetsEffect(
+    isHidden: Boolean,
+    @InsetsType insetsTypes: Int,
+) {
+    val view = LocalView.current
+    val activity = LocalActivity.current
+
+    val controller = remember {
+        if (activity != null) {
+            WindowInsetsControllerCompat(activity.window, view)
+        } else {
+            null
+        }
+    }
+
+    DisposableEffect(isHidden) {
+        if (controller != null && isHidden) {
+            controller.hide(insetsTypes)
+        }
+        onDispose {
+            controller?.show(insetsTypes)
+        }
+    }
+}
+
 fun Modifier.systemBarsWithImePadding() = systemBarsPadding().imePadding()
 
 fun Modifier.navigationBarsWithImePadding() = navigationBarsPadding().imePadding()
@@ -119,3 +149,5 @@ val imePaddingDp: Dp
 val navigationBarsWithImePaddingDp: Dp
     @Composable
     get() = max(navigationBarsPaddingDp, imePaddingDp)
+
+val zeroWindowInsets: WindowInsets = WindowInsets(0, 0, 0, 0)

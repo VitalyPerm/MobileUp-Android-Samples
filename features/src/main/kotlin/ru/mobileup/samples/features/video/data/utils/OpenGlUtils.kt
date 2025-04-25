@@ -126,18 +126,35 @@ object OpenGlUtils {
         surfaceAspectRatio: Float,
         inputSizeAspectRatio: Float,
     ): FloatArray {
-        val isHorizontal = inputSizeAspectRatio > 1
+        val isHorizontalOutput = surfaceAspectRatio > 1
+        val isHorizontalInput = inputSizeAspectRatio > 1
         val x: Float
         val y: Float
         when {
-            inputSizeAspectRatio <= surfaceAspectRatio || isHorizontal -> {
-                x = 1f
-                y = x / inputSizeAspectRatio
+            isHorizontalOutput -> {
+                when {
+                    inputSizeAspectRatio > surfaceAspectRatio -> {
+                        x = 1f
+                        y = surfaceAspectRatio / inputSizeAspectRatio
+                    }
+                    else -> {
+                        y = 1f / surfaceAspectRatio
+                        x = inputSizeAspectRatio * y
+                    }
+                }
             }
-
             else -> {
-                y = 1f / surfaceAspectRatio
-                x = inputSizeAspectRatio * y
+                when {
+                    inputSizeAspectRatio <= surfaceAspectRatio || isHorizontalInput -> {
+                        x = 1f
+                        y = x / inputSizeAspectRatio
+                    }
+
+                    else -> {
+                        y = 1f / surfaceAspectRatio
+                        x = inputSizeAspectRatio * y
+                    }
+                }
             }
         }
         val vertices = floatArrayOf(

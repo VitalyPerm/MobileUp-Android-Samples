@@ -17,6 +17,7 @@ import ru.mobileup.samples.features.video.presentation.menu.RealVideoMenuCompone
 import ru.mobileup.samples.features.video.presentation.menu.VideoMenuComponent
 import ru.mobileup.samples.features.video.presentation.player.RealVideoPlayerComponent
 import ru.mobileup.samples.features.video.presentation.player.VideoPlayerComponent
+import ru.mobileup.samples.features.video.presentation.player.controller.VideoPlayerController
 import ru.mobileup.samples.features.video.presentation.recorder.RealVideoRecorderComponent
 import ru.mobileup.samples.features.video.presentation.recorder.VideoRecorderComponent
 
@@ -24,6 +25,7 @@ val videoModule = module {
     single<VideoRepository> { VideoRepositoryImpl(get()) }
     single<VideoFileManager> { VideoFileManagerImpl(get()) }
     single<VideoRender> { VideoRenderImpl(get()) }
+    factory { VideoPlayerController(get()) }
 }
 
 fun ComponentFactory.createVideoComponent(componentContext: ComponentContext): VideoComponent {
@@ -48,5 +50,5 @@ fun ComponentFactory.createVideoPlayerComponent(
     uri: Uri,
     componentContext: ComponentContext,
 ): VideoPlayerComponent {
-    return RealVideoPlayerComponent(uri, componentContext, get(), get(), get(), get(), get())
+    return RealVideoPlayerComponent(uri, componentContext, get(), get(), get(), get(), get(), get())
 }
