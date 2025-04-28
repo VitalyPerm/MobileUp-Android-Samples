@@ -7,13 +7,13 @@ import kotlinx.coroutines.launch
 import me.aartikov.sesame.loop.EffectHandler
 import ru.mobileup.samples.features.chat.data.ChatRepository
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
+import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 import ru.mobileup.samples.features.chat.domain.loop.AttachmentDownloadingAction
 import ru.mobileup.samples.features.chat.domain.loop.ChatAction
 import ru.mobileup.samples.features.chat.domain.loop.ChatEffect
-import ru.mobileup.samples.features.chat.domain.cache.CachedFile
-import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import java.util.UUID
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -34,6 +34,7 @@ class DownloadAttachmentEffectHandler(
                 effect.messageId,
                 actionConsumer
             )
+
             else -> {
                 // Do nothing
             }
@@ -74,7 +75,7 @@ class DownloadAttachmentEffectHandler(
             val downloadingJob = launch(start = CoroutineStart.LAZY) {
                 try {
                     message.attachment?.remoteLink?.let { url ->
-                        val filename = "${UUID.randomUUID()}.${message.attachment.extension}"
+                        val filename = UUID.randomUUID().toString() + message.attachment.extension
 
                         val cachedFile = cachedFileStorage.insertCachedFile(
                             id = message.id.value,
@@ -90,7 +91,7 @@ class DownloadAttachmentEffectHandler(
                                 messageId = message.id,
                                 attachment = message.attachment.copy(
                                     localFilePath = cachedFile.absolutePath,
-                                    downloadingStatus = ChatAttachment.DownloadingStatus.InProgress
+                                    downloadingStatus = DownloadingStatus.InProgress
                                 )
                             )
                         )
@@ -107,7 +108,7 @@ class DownloadAttachmentEffectHandler(
                                 messageId = message.id,
                                 attachment = message.attachment.copy(
                                     localFilePath = cachedFile.absolutePath,
-                                    downloadingStatus = ChatAttachment.DownloadingStatus.Downloaded
+                                    downloadingStatus = DownloadingStatus.Downloaded
                                 )
                             )
                         )

@@ -25,4 +25,6 @@ interface ChatComponent {
     fun onSendFile(uri: Uri)
 
     fun onMessageClick(messageId: ChatMessageId)
+
+    fun onScrolledToNotDownloadedImage(messageId: ChatMessageId)
 }

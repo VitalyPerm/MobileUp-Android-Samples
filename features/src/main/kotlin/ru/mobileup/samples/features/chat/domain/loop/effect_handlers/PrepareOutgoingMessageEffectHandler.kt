@@ -12,6 +12,7 @@ import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.message.MessageAuthor
 import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import ru.mobileup.samples.features.chat.domain.state.message.toChatAttachment
@@ -107,7 +108,7 @@ class PrepareOutgoingMessageEffectHandler(
             type = type,
             extension = extension,
             name = filename,
-            downloadingStatus = ChatAttachment.DownloadingStatus.Downloaded
+            downloadingStatus = DownloadingStatus.Downloaded
         )
     }
 }

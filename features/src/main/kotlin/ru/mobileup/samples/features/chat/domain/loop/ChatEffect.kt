@@ -24,5 +24,5 @@ sealed class ExternalChatEffect : ChatEffect {
     data class ReactToAddedMessages(val pendingMessage: Boolean) : ExternalChatEffect()
     data class ShowError(val exception: Exception) : ExternalChatEffect()
     data class ShowFailedMessageDialog(val messageId: ChatMessageId) : ExternalChatEffect()
-    data class OpenAttachmentFile(val filepath: String) : ExternalChatEffect()
+    data class OpenAttachmentFile(val filePath: String) : ExternalChatEffect()
 }

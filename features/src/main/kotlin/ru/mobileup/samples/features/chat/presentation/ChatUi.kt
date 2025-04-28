@@ -2,7 +2,6 @@ package ru.mobileup.samples.features.chat.presentation
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
@@ -66,6 +65,8 @@ import ru.mobileup.samples.features.chat.presentation.widget.AnimatedListItem
 import ru.mobileup.samples.features.chat.presentation.widget.ChatMessageItem
 import ru.mobileup.samples.features.chat.presentation.widget.DateDivider
 import java.time.LocalDate
+
+private val SUPPORTED_MIME_TYPES = arrayOf("image/*", "video/*", "application/pdf")
 
 sealed class ChatListItem {
     data class MessageItem(val message: ChatMessage) : ChatListItem()
@@ -181,7 +182,8 @@ private fun ChatComponent(
                     MessageListContent(
                         state = state,
                         chatItems = chatItems,
-                        onMessageClick = component::onMessageClick
+                        onMessageClick = component::onMessageClick,
+                        onScrolledToNotDownloadedImage = component::onScrolledToNotDownloadedImage
                     )
                 }
             }
@@ -199,7 +201,7 @@ private fun ChatComponent(
             exit = fadeOut(),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 56.dp, end = 16.dp)
+                .padding(bottom = 64.dp, end = 16.dp)
         ) {
             IconButton(
                 onClick = {
@@ -233,7 +235,7 @@ private fun ColumnScope.LoaderContent() {
     ) {
         CircularProgressIndicator(
             color = CustomTheme.colors.button.primary,
-            strokeWidth = 2.dp,
+            strokeWidth = 4.dp,
             modifier = Modifier.align(Alignment.Center)
         )
     }
@@ -275,7 +277,8 @@ private fun ColumnScope.ErrorContent(
 private fun ColumnScope.MessageListContent(
     state: LazyListState,
     chatItems: List<ChatListItem>,
-    onMessageClick: (ChatMessageId) -> Unit
+    onMessageClick: (ChatMessageId) -> Unit,
+    onScrolledToNotDownloadedImage: (ChatMessageId) -> Unit
 ) {
     LazyColumn(state = state, modifier = Modifier.weight(1f), reverseLayout = true) {
         items(
@@ -296,6 +299,9 @@ private fun ColumnScope.MessageListContent(
                             onMessageClick = {
                                 onMessageClick(item.message.id)
                             },
+                            onScrolledToNotDownloadedImage = {
+                                onScrolledToNotDownloadedImage(item.message.id)
+                            },
                             modifier = it
                         )
                     }
@@ -314,7 +320,7 @@ private fun InputLayout(
     val value = inputControl.value.collectAsState()
 
     val pickerLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
                 onSendFile(it)
             }
@@ -335,11 +341,7 @@ private fun InputLayout(
             Icon(
                 modifier = Modifier
                     .clickable {
-                        pickerLauncher.launch(
-                            PickVisualMediaRequest(
-                                ActivityResultContracts.PickVisualMedia.ImageAndVideo
-                            )
-                        )
+                        pickerLauncher.launch(SUPPORTED_MIME_TYPES)
                     }
                     .padding(8.dp),
                 painter = painterResource(

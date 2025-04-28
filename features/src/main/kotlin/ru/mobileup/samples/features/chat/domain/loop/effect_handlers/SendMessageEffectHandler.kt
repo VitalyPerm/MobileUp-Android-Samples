@@ -7,14 +7,14 @@ import kotlinx.coroutines.launch
 import me.aartikov.sesame.loop.EffectHandler
 import ru.mobileup.samples.features.chat.data.ChatRepository
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
+import ru.mobileup.samples.features.chat.domain.cache.CachedFile
 import ru.mobileup.samples.features.chat.domain.loop.ChatAction
 import ru.mobileup.samples.features.chat.domain.loop.ChatEffect
 import ru.mobileup.samples.features.chat.domain.loop.MessageSendingAction
-import ru.mobileup.samples.features.chat.domain.cache.CachedFile
-import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
+import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
-import ru.mobileup.samples.features.chat.domain.state.ChatTag
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import kotlin.coroutines.cancellation.CancellationException
 
 class SendMessageEffectHandler(
@@ -114,11 +114,11 @@ class SendMessageEffectHandler(
         }
     }
 
-    private fun getDownloadingStatus(cachedFile: CachedFile?): ChatAttachment.DownloadingStatus {
+    private fun getDownloadingStatus(cachedFile: CachedFile?): DownloadingStatus {
         return when {
-            cachedFile == null -> ChatAttachment.DownloadingStatus.NotDownloaded
-            cachedFile.downloaded -> ChatAttachment.DownloadingStatus.Downloaded
-            else -> ChatAttachment.DownloadingStatus.NotDownloaded
+            cachedFile == null -> DownloadingStatus.NotDownloaded
+            cachedFile.downloaded -> DownloadingStatus.Downloaded
+            else -> DownloadingStatus.NotDownloaded
         }
     }
 }

@@ -10,6 +10,7 @@ import ru.mobileup.samples.features.chat.domain.loop.HistoryLoadingAction
 import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import kotlin.coroutines.cancellation.CancellationException
 
 class LoadHistoryEffectHandler(
@@ -76,11 +77,11 @@ class LoadHistoryEffectHandler(
         }
     }
 
-    private fun getDownloadingStatus(cachedFile: CachedFile?): ChatAttachment.DownloadingStatus {
+    private fun getDownloadingStatus(cachedFile: CachedFile?): DownloadingStatus {
         return when {
-            cachedFile == null -> ChatAttachment.DownloadingStatus.NotDownloaded
-            cachedFile.downloaded -> ChatAttachment.DownloadingStatus.Downloaded
-            else -> ChatAttachment.DownloadingStatus.NotDownloaded
+            cachedFile == null -> DownloadingStatus.NotDownloaded
+            cachedFile.downloaded -> DownloadingStatus.Downloaded
+            else -> DownloadingStatus.NotDownloaded
         }
     }
 

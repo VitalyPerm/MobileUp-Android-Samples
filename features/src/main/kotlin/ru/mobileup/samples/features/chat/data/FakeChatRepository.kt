@@ -21,6 +21,7 @@ import ru.mobileup.samples.features.chat.domain.state.ChatTag
 import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessage
 import ru.mobileup.samples.features.chat.domain.state.message.ChatMessageId
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.message.MessageAuthor
 import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import java.time.LocalDateTime
@@ -68,11 +69,22 @@ class FakeChatRepository(
         }
     }
 
-    private val fakeAttachmentLinkList = listOf(
+    private val fakeImageAttachmentLinkList = listOf(
         "https://cs10.pikabu.ru/post_img/2019/12/28/7/1577531889179623112.jpg",
         "https://cs9.pikabu.ru/post_img/2019/12/28/7/157753254512846777.jpg",
         "https://cs9.pikabu.ru/post_img/2019/12/28/7/1577533280132850978.jpg",
         "https://cs9.pikabu.ru/post_img/2019/12/28/7/1577532813122134198.jpg"
+    )
+
+    private val fakeVideoAttachmentLinkList = listOf(
+        "https://cs18.pikabu.ru/s/2025/04/28/13/umhrd5bz_s0f0d8m0_540x960.mp4",
+        "https://cs19.pikabu.ru/s/2025/04/27/06/bfjn5ni7_s0f0d9m0_720x1280.mp4",
+        "https://cs19.pikabu.ru/s/2025/04/26/15/qw555csb_s0f0d6m0_720x1280.mp4"
+    )
+
+    private val fakeFileAttachmentLinkList = listOf(
+        "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        "https://static.googleusercontent.com/media/www.google.com/ru//help/hc/images/android/android_ug_50/Android-Lollipop-Quick-Start-Guide.pdf",
     )
 
     private val historyList = mutableListOf(
@@ -144,7 +156,9 @@ class FakeChatRepository(
         attachment: ChatAttachment
     ): ChatMessage {
         delay(NETWORK_OPERATION_FAKE_DELAY)
-        receiveAttachmentFakeMessageWithDelay()
+        receiveAttachmentFakeMessageWithDelay(
+            type = attachment.type
+        )
 
         val resultMessage = ChatMessage(
             id = generateGlobalId(),
@@ -177,17 +191,29 @@ class FakeChatRepository(
         }
     }
 
-    private fun receiveAttachmentFakeMessageWithDelay() {
+    private fun receiveAttachmentFakeMessageWithDelay(
+        type: ChatAttachment.Type
+    ) {
         scope.launch {
             delay(NETWORK_OPERATION_FAKE_DELAY)
+            val attachmentList = when (type) {
+                ChatAttachment.Type.IMAGE -> fakeImageAttachmentLinkList
+                ChatAttachment.Type.VIDEO -> fakeVideoAttachmentLinkList
+                ChatAttachment.Type.FILE -> fakeFileAttachmentLinkList
+            }
+
+            val link = attachmentList[Random.nextInt(attachmentList.size)]
+            val fileName = link.split("/").last()
+            val extension = fileName.split(".").last()
+
             val message = buildFakeMessage(
                 text = "",
                 attachment = ChatAttachment(
-                    remoteLink = fakeAttachmentLinkList[Random.nextInt(fakeAttachmentLinkList.size)],
-                    filename = UUID.randomUUID().toString(),
-                    extension = ".jpg",
-                    type = ChatAttachment.Type.IMAGE,
-                    downloadingStatus = ChatAttachment.DownloadingStatus.NotDownloaded
+                    remoteLink = link,
+                    filename = fileName,
+                    extension = ".$extension",
+                    type = type,
+                    downloadingStatus = DownloadingStatus.NotDownloaded
                 )
             )
             messageFlow.emit(message)

@@ -5,15 +5,15 @@ import me.aartikov.sesame.loop.Reducer
 import me.aartikov.sesame.loop.effects
 import me.aartikov.sesame.loop.next
 import me.aartikov.sesame.loop.nothing
-import ru.mobileup.samples.features.chat.domain.state.message.ChatAttachment
 import ru.mobileup.samples.features.chat.domain.state.ChatState
-import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import ru.mobileup.samples.features.chat.domain.state.addMessage
 import ru.mobileup.samples.features.chat.domain.state.addPendingMessage
 import ru.mobileup.samples.features.chat.domain.state.changeAttachmentMessage
 import ru.mobileup.samples.features.chat.domain.state.changeAttachmentMessageDownloadingStatus
 import ru.mobileup.samples.features.chat.domain.state.changePendingMessageSendingStatus
 import ru.mobileup.samples.features.chat.domain.state.mergeWithLoadedHistory
+import ru.mobileup.samples.features.chat.domain.state.message.DownloadingStatus
+import ru.mobileup.samples.features.chat.domain.state.message.MessageStatus
 import ru.mobileup.samples.features.chat.domain.state.removePendingMessage
 import ru.mobileup.samples.features.chat.domain.state.setActive
 import ru.mobileup.samples.features.chat.domain.state.setConnected
@@ -105,18 +105,18 @@ class ChatReducer : Reducer<ChatState, ChatAction, ChatEffect> {
                 message.messageStatus is MessageStatus.Failed ->
                     effects(ExternalChatEffect.ShowFailedMessageDialog(message.id))
 
-                message.attachment?.downloadingStatus == ChatAttachment.DownloadingStatus.InProgress ->
+                message.attachment?.downloadingStatus == DownloadingStatus.InProgress ->
                     effects(ChatEffect.CancelDownloadingAttachment(action.messageId))
 
                 message.messageStatus == MessageStatus.Sending ->
                     effects(ChatEffect.CancelSendingAttachment(action.messageId))
 
-                message.attachment?.localFilePath != null && message.attachment.downloadingStatus == ChatAttachment.DownloadingStatus.Downloaded ->
+                message.attachment?.localFilePath != null && message.attachment.downloadingStatus == DownloadingStatus.Downloaded ->
                     effects(ExternalChatEffect.OpenAttachmentFile(message.attachment.localFilePath))
 
-                message.attachment?.downloadingStatus == ChatAttachment.DownloadingStatus.NotDownloaded ||
-                        message.attachment?.downloadingStatus == ChatAttachment.DownloadingStatus.DownloadingCancelled ||
-                        message.attachment?.downloadingStatus is ChatAttachment.DownloadingStatus.DownloadingFailed ->
+                message.attachment?.downloadingStatus == DownloadingStatus.NotDownloaded ||
+                        message.attachment?.downloadingStatus == DownloadingStatus.DownloadingCancelled ||
+                        message.attachment?.downloadingStatus is DownloadingStatus.DownloadingFailed ->
                     effects(ChatEffect.DownloadAttachment(message))
 
                 else -> nothing()
@@ -251,14 +251,14 @@ class ChatReducer : Reducer<ChatState, ChatAction, ChatEffect> {
         is AttachmentDownloadingAction.AttachmentDownloadingCancelled -> next(
             state.changeAttachmentMessageDownloadingStatus(
                 action.messageId,
-                ChatAttachment.DownloadingStatus.DownloadingCancelled
+                DownloadingStatus.DownloadingCancelled
             )
         )
 
         is AttachmentDownloadingAction.AttachmentDownloadingFailed -> next(
             state.changeAttachmentMessageDownloadingStatus(
                 action.messageId,
-                ChatAttachment.DownloadingStatus.DownloadingFailed(action.exception)
+                DownloadingStatus.DownloadingFailed(action.exception)
             )
         )
     }

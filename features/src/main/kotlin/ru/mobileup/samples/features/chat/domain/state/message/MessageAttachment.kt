@@ -14,21 +14,26 @@ data class ChatAttachment(
     enum class Type {
         IMAGE, VIDEO, FILE
     }
+}
 
-    sealed class DownloadingStatus {
-        data object NotDownloaded : DownloadingStatus()
-        data object InProgress : DownloadingStatus()
-        data object Downloaded : DownloadingStatus()
-        data object DownloadingCancelled : DownloadingStatus()
-        data class DownloadingFailed(val exception: Exception) : DownloadingStatus()
-    }
+sealed class DownloadingStatus {
+    data object NotDownloaded : DownloadingStatus()
+    data object InProgress : DownloadingStatus()
+    data object Downloaded : DownloadingStatus()
+    data object DownloadingCancelled : DownloadingStatus()
+    data class DownloadingFailed(val exception: Exception) : DownloadingStatus()
+
+    val canStartDownload
+        get() = this == NotDownloaded ||
+                this == DownloadingCancelled ||
+                this is DownloadingFailed
 }
 
 fun CachedFile.toChatAttachment(
     type: ChatAttachment.Type,
     extension: String,
     name: String,
-    downloadingStatus: ChatAttachment.DownloadingStatus
+    downloadingStatus: DownloadingStatus
 ) = ChatAttachment(
     localFilePath = absolutePath,
     remoteLink = null,
