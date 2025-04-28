@@ -8,6 +8,8 @@
     <string name="chat_send_failed_dialog_message">Please try again</string>
     <string name="chat_send_failed_dialog_remove">Remove</string>
     <string name="chat_send_failed_dialog_resend">Resend</string>
+    <string name="chat_attachment_type_image">Image</string>
+    <string name="chat_attachment_type_video">Video</string>
     <string name="chat_error_file_download">File download failed</string>
     <string name="chat_error_file_too_big">File is too big</string>
     <string name="chat_error_unknown">Something went wrong</string>

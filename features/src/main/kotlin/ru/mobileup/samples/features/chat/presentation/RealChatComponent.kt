@@ -112,6 +112,10 @@ class RealChatComponent(
         chatClient.handleMessageClick(messageId)
     }
 
+    override fun onScrolledToNotDownloadedImage(messageId: ChatMessageId) {
+        chatClient.scrolledToNotDownloadedImage(messageId)
+    }
+
     private fun showMessageSendFailedDialog(messageId: ChatMessageId) {
         messageSendFailedDialog.show(
             StandardDialogData(

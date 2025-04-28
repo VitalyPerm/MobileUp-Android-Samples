@@ -101,7 +101,6 @@ class ChatClient(
         loop.dispatch(UserAction.RemovePendingMessage(messageId))
     }
 
-    // We can dispose chat after logout
     fun dispose() {
         loopJob.cancel()
     }

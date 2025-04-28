@@ -182,7 +182,8 @@ private fun ChatComponent(
                     MessageListContent(
                         state = state,
                         chatItems = chatItems,
-                        onMessageClick = component::onMessageClick
+                        onMessageClick = component::onMessageClick,
+                        onScrolledToNotDownloadedImage = component::onScrolledToNotDownloadedImage
                     )
                 }
             }
@@ -234,7 +235,7 @@ private fun ColumnScope.LoaderContent() {
     ) {
         CircularProgressIndicator(
             color = CustomTheme.colors.button.primary,
-            strokeWidth = 2.dp,
+            strokeWidth = 4.dp,
             modifier = Modifier.align(Alignment.Center)
         )
     }
@@ -276,7 +277,8 @@ private fun ColumnScope.ErrorContent(
 private fun ColumnScope.MessageListContent(
     state: LazyListState,
     chatItems: List<ChatListItem>,
-    onMessageClick: (ChatMessageId) -> Unit
+    onMessageClick: (ChatMessageId) -> Unit,
+    onScrolledToNotDownloadedImage: (ChatMessageId) -> Unit
 ) {
     LazyColumn(state = state, modifier = Modifier.weight(1f), reverseLayout = true) {
         items(
@@ -296,6 +298,9 @@ private fun ColumnScope.MessageListContent(
                             message = item.message,
                             onMessageClick = {
                                 onMessageClick(item.message.id)
+                            },
+                            onScrolledToNotDownloadedImage = {
+                                onScrolledToNotDownloadedImage(item.message.id)
                             },
                             modifier = it
                         )

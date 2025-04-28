@@ -1,9 +1,14 @@
 package ru.mobileup.samples.features.chat.domain
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import ru.mobileup.samples.features.chat.data.ChatRepository
 import ru.mobileup.samples.features.chat.data.FileHelper
 import ru.mobileup.samples.features.chat.data.cached_file.CachedFileStorage
 import ru.mobileup.samples.features.chat.domain.state.ChatTag
+import java.time.LocalDateTime
 
 class ChatClientFactoryImpl(
     private val chatRepository: ChatRepository,
@@ -17,6 +22,14 @@ class ChatClientFactoryImpl(
 
         val client = ChatClient(chatTag, chatRepository, cachedFileStorage, fileHelper)
         clientMap[chatTag] = client
+
+        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+            // Clean up chat cache
+            cachedFileStorage.checkAndClearIfNeedCachedFiles(
+                LocalDateTime.now().minusMinutes(10)
+            )
+        }
+
         client.initialize()
         return client
     }

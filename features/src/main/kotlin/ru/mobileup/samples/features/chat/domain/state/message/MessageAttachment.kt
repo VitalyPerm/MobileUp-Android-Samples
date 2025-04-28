@@ -23,7 +23,7 @@ sealed class DownloadingStatus {
     data object DownloadingCancelled : DownloadingStatus()
     data class DownloadingFailed(val exception: Exception) : DownloadingStatus()
 
-    val isNotDownloaded
+    val canStartDownload
         get() = this == NotDownloaded ||
                 this == DownloadingCancelled ||
                 this is DownloadingFailed

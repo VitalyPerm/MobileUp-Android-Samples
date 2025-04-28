@@ -17,4 +17,5 @@ class FakeChatComponent : ChatComponent {
     override fun onSendMessage() = Unit
     override fun onSendFile(uri: Uri) = Unit
     override fun onMessageClick(messageId: ChatMessageId) = Unit
+    override fun onScrolledToNotDownloadedImage(messageId: ChatMessageId) = Unit
 }
