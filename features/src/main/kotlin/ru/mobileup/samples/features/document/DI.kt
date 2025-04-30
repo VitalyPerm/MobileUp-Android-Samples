@@ -2,6 +2,8 @@ package ru.mobileup.samples.features.document
 
 import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
+import com.yandex.div.data.DivParsingEnvironment
+import com.yandex.div.json.ParsingErrorLogger
 import org.koin.core.component.get
 import org.koin.dsl.module
 import ru.mobileup.samples.core.ComponentFactory
@@ -16,6 +18,7 @@ import ru.mobileup.samples.features.document.presentation.preview.RealDocumentPr
 
 val documentModule = module {
     single<DocumentManager> { DocumentManagerImpl(get()) }
+    single<DivParsingEnvironment> { DivParsingEnvironment(ParsingErrorLogger.LOG) }
 }
 
 fun ComponentFactory.createDocumentComponent(componentContext: ComponentContext): DocumentComponent {

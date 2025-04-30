@@ -108,6 +108,9 @@ dependencies {
     // Geo
     implementation(libs.yandex.mapkit)
 
+    // DivKit
+    implementation(libs.bundles.divkit)
+
     // Debugging
     debugImplementation(libs.bundles.hyperion)
     debugImplementation(libs.chucker)

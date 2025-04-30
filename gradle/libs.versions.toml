@@ -46,6 +46,7 @@ androidImageCropper = "4.6.0"
 googleMaps = "6.5.2"
 sesame = "1.5.0"
 room = "2.7.0"
+divkit = "31.13.0"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -152,6 +153,12 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room"}
 
 android-image-cropper = { module = "com.vanniktech:android-image-cropper", version.ref = "androidImageCropper" }
 
+divkit-div = { module = "com.yandex.div:div", version.ref = "divkit"}
+divkit-core = { module = "com.yandex.div:div-core", version.ref = "divkit"}
+divkit-json = { module = "com.yandex.div:div-json", version.ref = "divkit"}
+divkit-glide = { module = "com.yandex.div:glide", version.ref = "divkit"}
+divkit-video = { module = "com.yandex.div:div-video", version.ref = "divkit"}
+
 [bundles]
 decompose = ["decompose-core", "decompose-compose", "decompose-compose-experimental"]
 replica = ["replica-core", "replica-algebra", "replica-android-network", "replica-decompose"]
@@ -182,6 +189,13 @@ coil = [
 google-maps = [
     "google-maps",
     "google-map-compose-utils"
+]
+divkit = [
+    "divkit-core",
+    "divkit-div",
+    "divkit-json",
+    "divkit-glide",
+    "divkit-video"
 ]
 
 [plugins]

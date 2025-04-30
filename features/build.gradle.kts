@@ -85,6 +85,9 @@ dependencies {
 
     // Image Cropping
     implementation(libs.android.image.cropper)
+
+    // DivKit
+    implementation(libs.bundles.divkit)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles
