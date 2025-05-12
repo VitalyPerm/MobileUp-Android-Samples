@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="work_notification_title">Привет!</string>
+    <string name="work_notification_message_with_id">Это напоминание с ID: %1$d</string>
+    <string name="work_notification_channel_name">Напоминания каждые 15 минут</string>
+    <string name="work_reminder_toggle_label">Показывать уведомление каждые 15 минут</string>
+</resources>

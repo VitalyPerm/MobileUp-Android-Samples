@@ -26,6 +26,7 @@ import ru.mobileup.samples.features.shared_element_transitions.presentation.Shar
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleComponent
 import ru.mobileup.samples.features.uploader.presentation.UploaderComponent
 import ru.mobileup.samples.features.video.presentation.VideoComponent
+import ru.mobileup.samples.features.work_manager.presentation.WorkManagerComponent
 
 /**
  * A root of a Decompose component tree.
@@ -64,5 +65,6 @@ interface RootComponent : PredictiveBackComponent {
         class Map(val component: MapComponent) : Child
         class Chat(val component: ChatComponent) : Child
         class Settings(val component: SettingsComponent) : Child
+        class WorkManager(val component: WorkManagerComponent) : Child
     }
 }

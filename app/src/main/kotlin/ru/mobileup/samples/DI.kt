@@ -8,6 +8,7 @@ import ru.mobileup.samples.features.pin_code.pinCodeModule
 import ru.mobileup.samples.features.uploader.uploaderModule
 import ru.mobileup.samples.features.video.videoModule
 import ru.mobileup.samples.features.map.mapModule
+import ru.mobileup.samples.features.work_manager.workManagerModule
 
 val allModules = listOf(
     coreModule(BuildConfig.BACKEND_URL),
@@ -17,5 +18,6 @@ val allModules = listOf(
     uploaderModule,
     pinCodeModule,
     mapModule,
-    chatModule
+    chatModule,
+    workManagerModule,
 )

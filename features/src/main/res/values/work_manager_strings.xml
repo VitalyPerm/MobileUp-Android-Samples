@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="work_notification_title">Hello!</string>
+    <string name="work_notification_message_with_id">This is a reminder with ID: %1$d</string>
+    <string name="work_notification_channel_name">15-minute reminders</string>
+    <string name="work_reminder_toggle_label">Show notification every 15 minutes</string>
+</resources>
