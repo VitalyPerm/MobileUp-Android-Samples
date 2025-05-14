@@ -1,33 +1,41 @@
 package ru.mobileup.samples.features.work_manager.data
 
+import android.content.Context
 import androidx.work.Constraints
+import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import kotlinx.coroutines.flow.map
-import ru.mobileup.samples.features.work_manager.data.workers.FrequentNotificationWorker
-import java.util.concurrent.TimeUnit
+import ru.mobileup.samples.features.R
+import ru.mobileup.samples.features.work_manager.data.workers.NotificationWorker
+import java.time.Duration
 
 class ReminderSchedulerImpl(
     private val workManager: WorkManager,
+    private val context: Context,
 ) : ReminderScheduler {
 
     companion object {
-        private const val WORK_NAME = "reminder_notification"
-        private const val REPEAT_INTERVAL = 15L
+        private const val PERIODIC_WORK_NAME = "periodic_notification"
+        private const val ONE_TIME_WORK_NAME = "one_time_notification"
     }
 
-    override val isReminderActive = workManager.getWorkInfosForUniqueWorkFlow(WORK_NAME).map {
-        it.any { it.state == WorkInfo.State.ENQUEUED || it.state == WorkInfo.State.RUNNING }
-    }
+    override val periodicReminderState =
+        workManager.getWorkInfosForUniqueWorkFlow(PERIODIC_WORK_NAME)
 
-    override fun scheduleFrequentReminder() {
-        val request = PeriodicWorkRequestBuilder<FrequentNotificationWorker>(
-            REPEAT_INTERVAL,
-            TimeUnit.MINUTES
-        )
-            .setInitialDelay(REPEAT_INTERVAL, TimeUnit.MINUTES)
+    override fun schedulePeriodicReminder(interval: Duration, initialDelay: Duration) {
+        val request = PeriodicWorkRequestBuilder<NotificationWorker>(interval)
+            .setInitialDelay(initialDelay)
+            .setInputData(
+                Data.Builder()
+                    .putString(
+                        NotificationWorker.TITLE_KEY,
+                        context.getString(R.string.work_periodic_notification_title)
+                    )
+                    .build()
+            )
             .setConstraints(
                 Constraints.Builder()
                     .setRequiresBatteryNotLow(true)
@@ -36,13 +44,45 @@ class ReminderSchedulerImpl(
             .build()
 
         workManager.enqueueUniquePeriodicWork(
-            WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
+            PERIODIC_WORK_NAME,
+            ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
             request
         )
     }
 
-    override fun cancelReminder() {
-        workManager.cancelUniqueWork(WORK_NAME)
+    override fun cancelPeriodicReminder() {
+        workManager.cancelUniqueWork(PERIODIC_WORK_NAME)
+    }
+
+    override val oneTimeReminderState =
+        workManager.getWorkInfosForUniqueWorkFlow(ONE_TIME_WORK_NAME)
+
+    override fun scheduleOneTimeReminder(initialDelay: Duration) {
+        val request = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setInitialDelay(initialDelay)
+            .setInputData(
+                Data.Builder()
+                    .putString(
+                        NotificationWorker.TITLE_KEY,
+                        context.getString(R.string.work_one_time_notification_title)
+                    )
+                    .build()
+            )
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .build()
+            )
+            .build()
+
+        workManager.enqueueUniqueWork(
+            ONE_TIME_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            request
+        )
+    }
+
+    override fun cancelOneTimeReminder() {
+        workManager.cancelUniqueWork(ONE_TIME_WORK_NAME)
     }
 }
