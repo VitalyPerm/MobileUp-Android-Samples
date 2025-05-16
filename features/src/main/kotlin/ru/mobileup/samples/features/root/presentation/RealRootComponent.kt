@@ -36,6 +36,7 @@ import ru.mobileup.samples.features.shared_element_transitions.createSharedEleme
 import ru.mobileup.samples.features.tutorial.createTutorialSampleComponent
 import ru.mobileup.samples.features.uploader.createUploaderComponent
 import ru.mobileup.samples.features.video.createVideoComponent
+import ru.mobileup.samples.features.work_manager.createWorkManagerComponent
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -188,6 +189,12 @@ class RealRootComponent(
                 componentFactory.createChatComponent(componentContext)
             )
         }
+
+        ChildConfig.WorkManager -> {
+            RootComponent.Child.WorkManager(
+                componentFactory.createWorkManagerComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -210,6 +217,7 @@ class RealRootComponent(
                 Sample.PinCodeSettings -> ChildConfig.PinCodeSettings
                 Sample.Map -> ChildConfig.Map
                 Sample.Chat -> ChildConfig.Chat
+                Sample.WorkManager -> ChildConfig.WorkManager
             }.run(navigation::safePush)
 
             MenuComponent.Output.SettingsRequested -> navigation.safePush(ChildConfig.Settings)
@@ -281,5 +289,8 @@ class RealRootComponent(
 
         @Serializable
         data object Settings : ChildConfig
+
+        @Serializable
+        data object WorkManager : ChildConfig
     }
 }

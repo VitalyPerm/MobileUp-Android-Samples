@@ -38,6 +38,7 @@ import ru.mobileup.samples.features.shared_element_transitions.presentation.Shar
 import ru.mobileup.samples.features.tutorial.presentation.TutorialSampleUi
 import ru.mobileup.samples.features.uploader.presentation.UploaderUi
 import ru.mobileup.samples.features.video.presentation.VideoUi
+import ru.mobileup.samples.features.work_manager.presentation.WorkManagerUi
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -75,6 +76,7 @@ fun RootUi(
             is RootComponent.Child.PinCodeSettings -> PinCodeSettingsUi(instance.component)
             is RootComponent.Child.Map -> MapUi(instance.component)
             is RootComponent.Child.Chat -> ChatUi(instance.component)
+            is RootComponent.Child.WorkManager -> WorkManagerUi(instance.component)
         }
     }
 
