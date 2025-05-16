@@ -24,10 +24,15 @@ import divkit.dsl.text
 object DivKitTemplate {
 
     object CategoryTitle {
-        val titleRef = reference<String>("productTitle")
-        val clickActionRef = reference<Action>("onProductTitleClick")
-        val backgroundColorRef = reference<List<Background>>("productTitleBgColor")
-        val textColorRef = reference<Color>("productTitleColor")
+        private const val CATEGORY_TITLE_REF_NAME = "categoryTitle"
+        private const val CATEGORY_TITLE_CLICK_REF_NAME = "onCategoryTitleClick"
+        private const val CATEGORY_TITLE_BACKGROUND_COLOR_REF_NAME = "categoryTitleBgColor"
+        private const val CATEGORY_TITLE_TEXT_COLOR_REF_NAME = "categoryTitleTextColor"
+
+        val titleRef = reference<String>(CATEGORY_TITLE_REF_NAME)
+        val clickActionRef = reference<Action>(CATEGORY_TITLE_CLICK_REF_NAME)
+        val backgroundColorRef = reference<List<Background>>(CATEGORY_TITLE_BACKGROUND_COLOR_REF_NAME)
+        val textColorRef = reference<Color>(CATEGORY_TITLE_TEXT_COLOR_REF_NAME)
         val template by lazy(LazyThreadSafetyMode.NONE) {
             template("productCategory") {
                 text(
@@ -52,10 +57,15 @@ object DivKitTemplate {
     }
 
     object Product {
-        val titleRef = reference<String>("productName")
-        val weightRef = reference<String>("productWeight")
-        val clickActionRef = reference<Action>("onProductClick")
-        val iconUrl = reference<Url>("icon")
+        private const val PRODUCT_TITLE_REF_NAME = "productTitle"
+        private const val PRODUCT_TITLE_CLICK_REF_NAME = "onProductTitleClick"
+        private const val PRODUCT_WEIGHT_REF_NAME = "productWeight"
+        private const val PRODUCT_ICON_URL_REF_NAME = "productIconUrl"
+
+        val titleRef = reference<String>(PRODUCT_TITLE_REF_NAME)
+        val weightRef = reference<String>(PRODUCT_WEIGHT_REF_NAME)
+        val clickActionRef = reference<Action>(PRODUCT_TITLE_CLICK_REF_NAME)
+        val iconUrl = reference<Url>(PRODUCT_ICON_URL_REF_NAME)
 
         val template by lazy(LazyThreadSafetyMode.NONE) {
             template("product") {

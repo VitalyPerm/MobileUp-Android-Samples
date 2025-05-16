@@ -53,8 +53,8 @@ class DivKitApiImpl(
             DivKitProductType.Vegetable.name
         )
         val filters = listOf(
-            DivKitGoodsListComponent.Sort.BY_NAME to sortByNameEnable,
-            DivKitGoodsListComponent.Sort.BY_WEIGHT to sortByWeightEnable
+            "Sort by name" to sortByNameEnable,
+            "Sort by weight" to sortByWeightEnable
         )
 
         val card = divan {
@@ -141,7 +141,7 @@ private fun DivScope.item(
     currentCategory: String,
     categories: List<String>,
     goods: List<DivKitProduct>,
-    filters: List<Pair<DivKitGoodsListComponent.Sort, Boolean>>
+    filters: List<Pair<String, Boolean>>
 ): State.Item {
     val filteredGoods = when (currentCategory) {
         DivKitProductType.Fruit.name -> goods.filter { it.type == DivKitProductType.Fruit }
@@ -155,11 +155,11 @@ private fun DivScope.item(
                 container(
                     orientation = horizontal,
                     margins = edgeInsets(16),
-                    items = filters.map { (filter, enabled) ->
+                    items = filters.map { (filterName, enabled) ->
                         with(DivKitTemplate.CategoryTitle) {
                             render(
                                 template,
-                                titleRef bind filter.title,
+                                titleRef bind filterName,
                                 backgroundColorRef bind listOf(
                                     solidBackground(
                                         color = color(if (enabled) "#3F54DF" else "#FFFFFFFF")
@@ -167,8 +167,8 @@ private fun DivScope.item(
                                 ),
                                 textColorRef bind color(if (enabled) "#FFFFFFFF" else "#000000"),
                                 clickActionRef bind action(
-                                    logId = "on_filter_category_click_$filter",
-                                    url = url(DivKitGoodsListComponent.createApplySortUrl(filter.title))
+                                    logId = "on_filter_category_click_$filterName",
+                                    url = url(DivKitGoodsListComponent.createApplySortUrl(filterName))
                                 ),
                             )
                         }
@@ -217,102 +217,3 @@ private fun DivScope.item(
         )
     )
 }
-
-private val productsList = listOf(
-    DivKitProductDBO(
-        id = 0,
-        name = "Banana",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://banana.webp"
-    ),
-    DivKitProductDBO(
-        id = 1,
-        name = "Potato",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://potato.webp"
-    ),
-    DivKitProductDBO(
-        id = 2,
-        name = "Carrot",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://carrot.webp"
-    ),
-    DivKitProductDBO(
-        id = 3,
-        name = "Apple",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://apple.webp"
-    ),
-    DivKitProductDBO(
-        id = 4,
-        name = "Cherry",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://cherry.webp"
-    ),
-    DivKitProductDBO(
-        id = 5,
-        name = "Grape",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://grape.webp"
-    ),
-    DivKitProductDBO(
-        id = 6,
-        name = "Mango",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://mango.webp"
-    ),
-    DivKitProductDBO(
-        id = 7,
-        name = "Watermelon",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://watermelon.webp"
-    ),
-    DivKitProductDBO(
-        id = 8,
-        name = "Pear",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://pear.webp"
-    ),
-    DivKitProductDBO(
-        id = 9,
-        name = "Lime",
-        type = DivKitProductType.Fruit.name,
-        imageUrl = "divkit-asset://lime.webp"
-    ),
-    DivKitProductDBO(
-        id = 10,
-        name = "Peas",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://peas.webp"
-    ),
-    DivKitProductDBO(
-        id = 11,
-        name = "Beet",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://beet.webp"
-    ),
-    DivKitProductDBO(
-        id = 12,
-        name = "Pepper",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://pepper.webp"
-    ),
-    DivKitProductDBO(
-        id = 13,
-        name = "Radish",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://radish.webp"
-    ),
-    DivKitProductDBO(
-        id = 14,
-        name = "Cucumber",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://cucumber.webp"
-    ),
-    DivKitProductDBO(
-        id = 15,
-        name = "Bean",
-        type = DivKitProductType.Vegetable.name,
-        imageUrl = "divkit-asset://bean.webp"
-    )
-)

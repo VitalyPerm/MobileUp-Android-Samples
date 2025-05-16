@@ -50,19 +50,17 @@ class RealDivKitGoodsListComponent(
                     }
                     url.contains(DivKitGoodsListComponent.APPLY_SORT) -> {
                         val sortString = url.toUri().getQueryParameter(DivKitGoodsListComponent.SORT_NAME)
-                        val sortType = DivKitGoodsListComponent.Sort.fromString(sortString)
-                        when (sortType) {
-                            DivKitGoodsListComponent.Sort.BY_NAME -> {
+                        when (sortString) {
+                            DivKitGoodsListComponent.SORT_BY_NAME_TYPE -> {
                                 sortByNameEnable = !sortByNameEnable
                                 sortByWeightEnable = false
                                 fetchData()
                             }
-                            DivKitGoodsListComponent.Sort.BY_WEIGHT -> {
+                            DivKitGoodsListComponent.SORT_BY_WEIGHT_TYPE -> {
                                 sortByNameEnable = false
                                 sortByWeightEnable = !sortByWeightEnable
                                 fetchData()
                             }
-                            DivKitGoodsListComponent.Sort.Unknown -> Unit
                         }
                     }
                 }

@@ -5,25 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface DivKitGoodsListComponent {
 
-    val content: StateFlow<Div2View?>
-
-    sealed interface Output {
-        data class DetailsRequested(val id: Long) : Output
-    }
-
-    enum class Sort(val title: String) {
-        BY_NAME("Sort by name"), BY_WEIGHT("Sort by weight"), Unknown("Unknown");
-
-        companion object {
-            fun fromString(string: String?) = when (string) {
-                BY_NAME.title -> BY_NAME
-                BY_WEIGHT.title -> BY_WEIGHT
-                else -> Unknown
-            }
-        }
-    }
-
     companion object {
+        const val SORT_BY_NAME_TYPE = "Sort by name"
+        const val SORT_BY_WEIGHT_TYPE = "Sort by weight"
         const val DETAILS_URL_PATH = "div_action://details"
         const val OPEN_DETAILS = "open_details"
         const val QUERY_ID = "id"
@@ -33,5 +17,11 @@ interface DivKitGoodsListComponent {
         fun createApplySortUrl(
             sortName: String
         ): String = "$DETAILS_URL_PATH/$APPLY_SORT?$SORT_NAME=$sortName"
+    }
+
+    val content: StateFlow<Div2View?>
+
+    sealed interface Output {
+        data class DetailsRequested(val id: Long) : Output
     }
 }

@@ -10,13 +10,7 @@ data class AppDivData(
     val templates: JSONObject?
 ) {
 
-    fun toDivData(parser: DivParsingEnvironment) = DivData(
-        env = parser.apply { this@AppDivData.templates?.let(::parseTemplates) },
-        json = card
-    )
-
     companion object {
-
         private const val CARD_OBJECT = "card"
         private const val TEMPLATES_OBJECT = "templates"
 
@@ -29,4 +23,9 @@ data class AppDivData(
             )
         }
     }
+
+    fun toDivData(parser: DivParsingEnvironment) = DivData(
+        env = parser.apply { this@AppDivData.templates?.let(::parseTemplates) },
+        json = card
+    )
 }
