@@ -32,6 +32,8 @@ import ru.mobileup.samples.core.message.presentation.RealMessageComponent
 import ru.mobileup.samples.core.network.NetworkApiFactory
 import ru.mobileup.samples.core.network.createOkHttpEngine
 import ru.mobileup.samples.core.permissions.PermissionService
+import ru.mobileup.samples.core.resource.ResourceProvider
+import ru.mobileup.samples.core.resource.ResourceProviderImpl
 import ru.mobileup.samples.core.settings.AndroidSettingsFactory
 import ru.mobileup.samples.core.settings.SettingsFactory
 import ru.mobileup.samples.core.sharing.data.SharingService
@@ -74,6 +76,7 @@ fun coreModule(backendUrl: String) = module {
     single<AppSettingsStorage> { AppSettingsStorageImpl(get(), get()) }
     single<SharingService> { SharingServiceImpl(get()) }
     single<LanguageService> { LanguageServiceImpl(get()) }
+    single<ResourceProvider> { ResourceProviderImpl(get()) }
 }
 
 fun ComponentFactory.createMessageComponent(

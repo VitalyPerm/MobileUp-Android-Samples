@@ -47,6 +47,8 @@ googleMaps = "6.5.2"
 sesame = "1.5.0"
 room = "2.7.0"
 work = "2.10.1"
+arCore = "1.48.0"
+java-gl-obj = "0.4.0"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTime" }
@@ -156,6 +158,9 @@ android-image-cropper = { module = "com.vanniktech:android-image-cropper", versi
 
 work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
+ar-core = { module = "com.google.ar:core", version.ref = "arCore" }
+java-gl-obj = { module = "de.javagl:obj", version.ref = "java-gl-obj"}
+
 [bundles]
 decompose = ["decompose-core", "decompose-compose", "decompose-compose-experimental"]
 replica = ["replica-core", "replica-algebra", "replica-android-network", "replica-decompose"]
@@ -186,6 +191,10 @@ coil = [
 google-maps = [
     "google-maps",
     "google-map-compose-utils"
+]
+ar = [
+    "ar-core",
+    "java-gl-obj"
 ]
 
 [plugins]

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ar_menu_item_placement">Placement</string>
+    <string name="ar_depth_use_explanation">When Depth is enabled on supported devices, virtual objects adapt to the environment by blending in with the real world.</string>
+    <string name="ar_button_text_enable_depth">Enable</string>
+    <string name="ar_button_text_disable_depth">Disable</string>
+    <string name="ar_options_title_with_depth">Your device supports depth</string>
+    <string name="ar_options_title_without_depth">Your device does not support depth</string>
+    <string name="ar_done">Done</string>
+    <string-array name="ar_depth_options_array">
+        <item>Enable depth</item>
+        <item>Show depth map</item>
+    </string-array>
+    <string name="ar_options_title_instant_placement">Instant Placement options</string>
+    <string-array name="ar_instant_placement_options_array">
+        <item>Enable Instant Placement</item>
+    </string-array>
+
+    <string name="ar_searching_planes">Searching for surfaces…</string>
+    <string name="ar_waiting_taps">Tap on a surface to place an object.</string>
+</resources>

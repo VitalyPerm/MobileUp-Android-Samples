@@ -12,6 +12,7 @@ import ru.mobileup.samples.core.createThemeComponent
 import ru.mobileup.samples.core.createTutorialOverlayComponent
 import ru.mobileup.samples.core.utils.safePush
 import ru.mobileup.samples.core.utils.toStateFlow
+import ru.mobileup.samples.features.ar.createArComponent
 import ru.mobileup.samples.features.calendar.createCalendarComponent
 import ru.mobileup.samples.features.charts.createChartComponent
 import ru.mobileup.samples.features.chat.createChatComponent
@@ -195,6 +196,12 @@ class RealRootComponent(
                 componentFactory.createWorkManagerComponent(componentContext)
             )
         }
+
+        ChildConfig.AR -> {
+            RootComponent.Child.Ar(
+                componentFactory.createArComponent(componentContext)
+            )
+        }
     }
 
     private fun onMenuOutput(output: MenuComponent.Output) {
@@ -218,6 +225,7 @@ class RealRootComponent(
                 Sample.Map -> ChildConfig.Map
                 Sample.Chat -> ChildConfig.Chat
                 Sample.WorkManager -> ChildConfig.WorkManager
+                Sample.Ar -> ChildConfig.AR
             }.run(navigation::safePush)
 
             MenuComponent.Output.SettingsRequested -> navigation.safePush(ChildConfig.Settings)
@@ -292,5 +300,8 @@ class RealRootComponent(
 
         @Serializable
         data object WorkManager : ChildConfig
+
+        @Serializable
+        data object AR : ChildConfig
     }
 }

@@ -1,13 +1,14 @@
 package ru.mobileup.samples
 
 import ru.mobileup.samples.core.coreModule
+import ru.mobileup.samples.features.ar.arModule
 import ru.mobileup.samples.features.chat.chatModule
 import ru.mobileup.samples.features.document.documentModule
+import ru.mobileup.samples.features.map.mapModule
 import ru.mobileup.samples.features.photo.photoModule
 import ru.mobileup.samples.features.pin_code.pinCodeModule
 import ru.mobileup.samples.features.uploader.uploaderModule
 import ru.mobileup.samples.features.video.videoModule
-import ru.mobileup.samples.features.map.mapModule
 import ru.mobileup.samples.features.work_manager.workManagerModule
 
 val allModules = listOf(
@@ -20,4 +21,5 @@ val allModules = listOf(
     mapModule,
     chatModule,
     workManagerModule,
+    arModule
 )

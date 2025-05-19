@@ -89,6 +89,9 @@ dependencies {
 
     // Work Manager
     implementation(libs.work.ktx)
+
+    // AR
+    implementation(libs.bundles.ar)
 }
 
 // Usage: ./gradlew generateModuleGraph detectGraphCycles
